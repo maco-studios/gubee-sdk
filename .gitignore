@@ -1,0 +1,8 @@
+# Vendor directory
+/vendor/
+
+# PHPCS cache
+/.phpcs-cache
+
+# Test cache
+/.phpunit.result.cache
