@@ -7,6 +7,20 @@ namespace Gubee\SDK\Interfaces\Catalog\Product;
 interface MediaInterface
 {
     /**
+     * Set the ID of the media.
+     *
+     * @param string $id The ID of the media.
+     */
+    public function setId(string $id): self;
+
+    /**
+     * Get the ID of the media.
+     *
+     * @return string The ID of the media.
+     */
+    public function getId(): string;
+
+    /**
      * Set whether the media is the main media for the product.
      *
      * @param bool $main Whether the media is the main media.
@@ -47,4 +61,16 @@ interface MediaInterface
      * @return string The URL of the media.
      */
     public function getUrl(): string;
+
+    /**
+     * Set the order of the media.
+     *
+     * @return MediaInterface
+     */
+    public function setOrder(int $order): self;
+
+    /**
+     * Get the order of the media.
+     */
+    public function getOrder(): int;
 }

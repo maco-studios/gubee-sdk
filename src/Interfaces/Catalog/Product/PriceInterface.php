@@ -12,6 +12,9 @@ use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\ValidityPeriodInter
  */
 interface PriceInterface extends TypedValueInterface
 {
+    public const DEFAULT   = "DEFAULT";
+    public const PROMOTION = "PROMOTION";
+
     /**
      * Sets the validity period for the price.
      *

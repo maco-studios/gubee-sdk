@@ -12,6 +12,9 @@ use Gubee\SDK\Interfaces\Catalog\Product\StockInterface;
 
 interface VariationInterface
 {
+    public const ACTIVE   = "ACTIVE";
+    public const INACTIVE = "INACTIVE";
+
     /**
      * Set the cost of the variation.
      *

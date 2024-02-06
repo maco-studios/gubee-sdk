@@ -11,6 +11,24 @@ use Gubee\SDK\Interfaces\Gubee\AccountInterface;
 
 interface ProductInterface
 {
+    // phpcs:disable
+    public const FOREIGN_ACQUIRED_IN_THE_INTERNAL_MARKET_WITHOUT_SIMILAR = "FOREIGN_ACQUIRED_IN_THE_INTERNAL_MARKET_WITHOUT_SIMILAR";
+    // phpcs:enable
+    public const FOREIGN_DIRECTION_IMPORTATION    = "FOREIGN_DIRECTION_IMPORTATION";
+    public const FOREIGN_INTERNAL_MARKET          = "FOREIGN_INTERNAL_MARKET";
+    public const FOREIGN_WITHOUT_NATIONAL_SIMILAR = "FOREIGN_WITHOUT_NATIONAL_SIMILAR";
+    public const NATIONAL                         = "NATIONAL";
+    public const NATIONAL_CONFORMITY_ADJUSTMENTS  = "NATIONAL_CONFORMITY_ADJUSTMENTS";
+    public const NATIONAL_IMPORTS_PLUS_40_PERCENT = "NATIONAL_IMPORTS_PLUS_40_PERCENT";
+    public const NATIONAL_IMPORTS_PLUS_70_PERCENT = "NATIONAL_IMPORTS_PLUS_70_PERCENT";
+    public const NATIONAL_IMPORT_MINUS_40_PERCENT = "NATIONAL_IMPORT_MINUS_40_PERCENT";
+    public const ACTIVE                           = "ACTIVE";
+    public const INACTIVE                         = "INACTIVE";
+    public const KIT                              = "KIT";
+    public const SIMPLE                           = "SIMPLE";
+    public const VARIANT                          = "VARIANT";
+    public const VIRTUAL                          = "VIRTUAL";
+
     /**
      * Get the product related accounts
      *
