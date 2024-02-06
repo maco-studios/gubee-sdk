@@ -16,11 +16,23 @@ class ResponseHandler
      * @var array<string> Supported content types
      */
     public const CONTENT_TYPES = [
-        'application/json',
+        self::JSON_CONTENT_TYPE,
         'application/hal+json',
-        'application/octet-stream',
-        'multipart/form-data',
+        self::STREAM_CONTENT_TYPE,
+        self::MULTIPART_CONTENT_TYPE,
     ];
+
+    /**
+     * @var string Default content type for JSON
+     */
+    public const JSON_CONTENT_TYPE = 'application/json';
+
+    /**
+     * @var string Default content type for streams
+     */
+    public const STREAM_CONTENT_TYPE = 'application/octet-stream';
+
+    public const MULTIPART_CONTENT_TYPE = 'multipart/form-data';
 
     /**
      * @var string HTTP header for content type
