@@ -10,6 +10,7 @@ use Gubee\SDK\Library\HttpClient\Exception\NotFoundException;
 use Gubee\SDK\Library\HttpClient\Exception\RequestTimeoutException;
 use Gubee\SDK\Library\HttpClient\Exception\TooManyRequestsException;
 use Gubee\SDK\Library\HttpClient\Exception\UnauthorizedException;
+use Gubee\SDK\Library\HttpClient\ResponseHandler;
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
@@ -44,6 +45,8 @@ class ExceptionThrower implements Plugin
                         $response
                     );
                 }
+
+                return $response;
             }
         );
     }
@@ -59,19 +62,19 @@ class ExceptionThrower implements Plugin
     ): ErrorException {
         switch ($code) {
             case 401:
-                return new UnauthorizedException($message, $code, $request, $response);
+                return new UnauthorizedException($request, $response, $message, $code);
             case 403:
-                return new ForbiddenException($message, $code, $request, $response);
+                return new ForbiddenException($request, $response, $message, $code);
             case 404:
-                return new NotFoundException($message, $code, $request, $response);
+                return new NotFoundException($request, $response, $message, $code);
             case 408:
-                return new RequestTimeoutException($message, $code, $request, $response);
+                return new RequestTimeoutException($request, $response, $message, $code);
             case 429:
-                return new TooManyRequestsException($message, $code, $request, $response);
+                return new TooManyRequestsException($request, $response, $message, $code);
             case 500:
             case 400:
             default:
-                return new ErrorException($message, $code, $request, $response);
+                return new ErrorException($request, $response, $message, $code);
         }
     }
 }

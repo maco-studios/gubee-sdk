@@ -30,14 +30,14 @@ class ErrorException extends \ErrorException
      * @return mixed
      */
     public function __construct(
-        string $message = "",
-        int $code = 0,
         ?RequestInterface $request = null,
         ?ResponseInterface $response = null,
-        ?int $severity = E_ERROR,
-        ?string $filename = null,
-        ?int $line = null,
-        ?Throwable $previous = null
+        $message = "",
+        $code = 0,
+        $severity = E_ERROR,
+        $filename = null,
+        $line = null,
+        $previous = null
     ) {
         if ($request !== null) {
             $this->request = $request;
@@ -48,10 +48,7 @@ class ErrorException extends \ErrorException
         parent::__construct(
             $message,
             $code,
-            $severity,
-            $filename,
-            $line,
-            $previous
+            $severity
         );
     }
 
