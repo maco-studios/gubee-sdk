@@ -6,7 +6,7 @@ namespace Gubee\SDK;
 
 use Gubee\SDK\Library\HttpClient\Builder;
 use Http\Client\Common\HttpMethodsClientInterface;
-use Http\Client\Common\Plugin\BaseUriPlugin;
+use Http\Client\Common\Plugin\AddHostPlugin;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -15,7 +15,7 @@ class Gubee
     /**
      * @var string The base URL for the Gubee API
      */
-    public const BASE_URL = 'https://api.gubee.com';
+    public const BASE_URL = 'https://api.gubee.com.br';
 
     /**
      * @var string The version of the Gubee PHP SDK
@@ -45,18 +45,12 @@ class Gubee
 
     /**
      * Set the base URL
-     *
-     * @return Gubee
      */
-    public function setBaseUrl(string $baseUrl): self
+    public function setBaseUrl(string $url): self
     {
-        $uri = $this->clientBuilder->getUriFactory()->createUri($baseUrl);
-
-        $this->clientBuilder->addPlugin(
-            new BaseUriPlugin(
-                $uri
-            )
-        );
+        $uri = $this->getClientBuilder()->getUriFactory()->createUri($url);
+        $this->getClientBuilder()->removePlugin(AddHostPlugin::class);
+        $this->getClientBuilder()->addPlugin(new AddHostPlugin($uri));
         return $this;
     }
 
@@ -66,5 +60,16 @@ class Gubee
     public function getHttpClient(): HttpMethodsClientInterface
     {
         return $this->clientBuilder->getHttpClient();
+    }
+
+    public function getClientBuilder(): Builder
+    {
+        return $this->clientBuilder;
+    }
+
+    public function setClientBuilder(Builder $clientBuilder): self
+    {
+        $this->clientBuilder = $clientBuilder;
+        return $this;
     }
 }

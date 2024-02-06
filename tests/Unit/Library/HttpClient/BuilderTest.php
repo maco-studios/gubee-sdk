@@ -11,6 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
 
 class BuilderTest extends TestCase
 {
@@ -20,9 +21,9 @@ class BuilderTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->clientMock = $this->createMock(ClientInterface::class);
+        $this->clientMock         = $this->createMock(ClientInterface::class);
         $this->requestFactoryMock = $this->createMock(RequestFactoryInterface::class);
-        $this->streamFactoryMock = $this->createMock(StreamFactoryInterface::class);
+        $this->streamFactoryMock  = $this->createMock(StreamFactoryInterface::class);
     }
 
     public function testConstructor()
@@ -34,7 +35,7 @@ class BuilderTest extends TestCase
     public function testAddPlugin()
     {
         $pluginMock = $this->createMock(Plugin::class);
-        $builder = new Builder($this->clientMock, $this->requestFactoryMock, $this->streamFactoryMock);
+        $builder    = new Builder($this->clientMock, $this->requestFactoryMock, $this->streamFactoryMock);
 
         $builder->addPlugin($pluginMock);
         $this->assertInstanceOf(Builder::class, $builder);
@@ -44,7 +45,7 @@ class BuilderTest extends TestCase
     public function testRemovePlugin()
     {
         $pluginMock = $this->getMockBuilder(Plugin::class)->getMock();
-        $fqcn = $pluginMock::class;
+        $fqcn       = $pluginMock::class;
 
         $builder = new Builder($this->clientMock, $this->requestFactoryMock, $this->streamFactoryMock);
         $builder->addPlugin($pluginMock);
@@ -55,7 +56,7 @@ class BuilderTest extends TestCase
 
     public function testGetHttpClient()
     {
-        $builder = new Builder($this->clientMock, $this->requestFactoryMock, $this->streamFactoryMock);
+        $builder    = new Builder($this->clientMock, $this->requestFactoryMock, $this->streamFactoryMock);
         $httpClient = $builder->getHttpClient();
 
         $this->assertInstanceOf(HttpMethodsClientInterface::class, $httpClient);
@@ -64,8 +65,8 @@ class BuilderTest extends TestCase
     public function testUriFactory()
     {
         $builder = new Builder($this->clientMock, $this->requestFactoryMock, $this->streamFactoryMock);
-        $uri = $builder->getUriFactory();
+        $uri     = $builder->getUriFactory();
 
-        $this->assertInstanceOf(\Psr\Http\Message\UriFactoryInterface::class, $uri);
+        $this->assertInstanceOf(UriFactoryInterface::class, $uri);
     }
 }
