@@ -2,21 +2,27 @@
     "name": "gubee/sdk",
     "type": "library",
     "description": "Gubee SDK for PHP",
-    "keywords": ["gubee", "sdk", "api", "client"],
+    "keywords": [
+        "gubee",
+        "sdk",
+        "api",
+        "client"
+    ],
     "require": {
+        "php": "^7.4",
         "php-http/client-common": "^2.7",
         "psr/http-client": "^1.0",
         "psr/http-factory": "^1.0",
-        "psr/log": "^3.0"
+        "psr/log": "^1.1"
     },
     "require-dev": {
-        "captainhook/captainhook": "^5.21",
-        "squizlabs/php_codesniffer": "^3.8",
-        "phpcompatibility/php-compatibility": "^9.3",
-        "phpunit/phpunit": "^11.0",
+        "captainhook/captainhook": "^5.18",
+        "laminas/laminas-coding-standard": "^2.5",
+        "laminas/laminas-diactoros": "^2.17",
         "php-http/curl-client": "^2.3",
-        "laminas/laminas-diactoros": "^3.3",
-        "laminas/laminas-coding-standard": "^2.5"
+        "phpcompatibility/php-compatibility": "^9.3",
+        "phpunit/phpunit": "^9.6",
+        "squizlabs/php_codesniffer": "^3.8"
     },
     "autoload": {
         "psr-4": {
@@ -25,7 +31,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Gubee\\SDK\\Test\\":"tests/"
+            "Gubee\\SDK\\Test\\": "tests/"
         }
     },
     "config": {
