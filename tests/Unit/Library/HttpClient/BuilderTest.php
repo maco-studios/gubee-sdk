@@ -5,20 +5,18 @@ declare(strict_types=1);
 namespace Gubee\SDK\Test\Unit\Library\HttpClient;
 
 use Gubee\SDK\Library\HttpClient\Builder;
-use PHPUnit\Framework\TestCase;
 use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin;
-use Http\Client\Common\PluginClientFactory;
+use PHPUnit\Framework\TestCase;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 
-
 class BuilderTest extends TestCase
 {
-    private $clientMock;
-    private $requestFactoryMock;
-    private $streamFactoryMock;
+    private ClientInterface $clientMock;
+    private RequestFactoryInterface $requestFactoryMock;
+    private StreamFactoryInterface $streamFactoryMock;
 
     protected function setUp(): void
     {
@@ -46,7 +44,7 @@ class BuilderTest extends TestCase
     public function testRemovePlugin()
     {
         $pluginMock = $this->getMockBuilder(Plugin::class)->getMock();
-        $fqcn = get_class($pluginMock);
+        $fqcn = $pluginMock::class;
 
         $builder = new Builder($this->clientMock, $this->requestFactoryMock, $this->streamFactoryMock);
         $builder->addPlugin($pluginMock);
@@ -61,5 +59,13 @@ class BuilderTest extends TestCase
         $httpClient = $builder->getHttpClient();
 
         $this->assertInstanceOf(HttpMethodsClientInterface::class, $httpClient);
+    }
+
+    public function testUriFactory()
+    {
+        $builder = new Builder($this->clientMock, $this->requestFactoryMock, $this->streamFactoryMock);
+        $uri = $builder->getUriFactory();
+
+        $this->assertInstanceOf(\Psr\Http\Message\UriFactoryInterface::class, $uri);
     }
 }

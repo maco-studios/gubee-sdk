@@ -13,6 +13,7 @@ use Http\Discovery\Psr17FactoryDiscovery;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
 
 class Builder
 {
@@ -25,17 +26,21 @@ class Builder
 
     protected StreamFactoryInterface $streamFactory;
 
+    protected UriFactoryInterface $uriFactory;
+
     public function __construct(
-        ? ClientInterface $httpClient = null,
-        ? RequestFactoryInterface $requestFactoryInterface = null,
-        ? StreamFactoryInterface $streamFactoryInterface = null
-    )
-    {
-        $this->httpClient = $httpClient
+        ?ClientInterface $httpClient = null,
+        ?RequestFactoryInterface $requestFactoryInterface = null,
+        ?StreamFactoryInterface $streamFactoryInterface = null,
+        ?UriFactoryInterface $uriFactoryInterface = null
+    ) {
+        $this->uriFactory     = $uriFactoryInterface
+            ?: Psr17FactoryDiscovery::findUriFactory();
+        $this->httpClient     = $httpClient
             ?: HttpClientDiscovery::find();
         $this->requestFactory = $requestFactoryInterface
             ?: Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory = $streamFactoryInterface
+        $this->streamFactory  = $streamFactoryInterface
             ?: Psr17FactoryDiscovery::findStreamFactory();
     }
 
@@ -82,8 +87,8 @@ class Builder
 
         return new HttpMethodsClient(
             $pluginClient,
-                $this->requestFactory,
-                $this->streamFactory
+            $this->requestFactory,
+            $this->streamFactory
         );
     }
 
@@ -100,8 +105,7 @@ class Builder
      */
     public function setRequestFactory(
         RequestFactoryInterface $requestFactoryInterface
-    ): self
-    {
+    ): self {
         $this->requestFactory = $requestFactoryInterface;
         return $this;
     }
@@ -120,6 +124,17 @@ class Builder
     public function setStreamFactory(StreamFactoryInterface $streamFactoryInterface): self
     {
         $this->streamFactory = $streamFactoryInterface;
+        return $this;
+    }
+
+    public function getUriFactory(): UriFactoryInterface
+    {
+        return $this->uriFactory;
+    }
+
+    public function setUriFactory(UriFactoryInterface $uriFactory): self
+    {
+        $this->uriFactory = $uriFactory;
         return $this;
     }
 }
