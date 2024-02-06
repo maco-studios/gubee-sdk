@@ -6,3 +6,6 @@
 
 # Test cache
 /.phpunit.result.cache
+
+# asdf version manager
+/.tool-versions
