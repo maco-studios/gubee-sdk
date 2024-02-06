@@ -44,7 +44,7 @@
         ],
         "cs:check": "phpcs",
         "cs:fix": "phpcbf",
-        "cs:setup": "vendor/bin/phpcs --config-set installed_paths vendor/laminas/laminas-coding-standard,vendor/phpcompatibility/php-compatibility,vendor/webimpress/coding-standard/src",
+        "cs:setup": "vendor/bin/phpcs --config-set installed_paths ../../laminas/laminas-coding-standard/src,../../phpcompatibility/php-compatibility,../../slevomat/coding-standard,../../webimpress,../../webimpress/coding-standard/src",
         "test": [
             "@test:unit",
             "@test:integration"
