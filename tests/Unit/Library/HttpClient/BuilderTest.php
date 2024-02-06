@@ -13,6 +13,8 @@ use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Http\Message\UriFactoryInterface;
 
+use function get_class;
+
 class BuilderTest extends TestCase
 {
     private ClientInterface $clientMock;
@@ -45,7 +47,7 @@ class BuilderTest extends TestCase
     public function testRemovePlugin()
     {
         $pluginMock = $this->getMockBuilder(Plugin::class)->getMock();
-        $fqcn       = $pluginMock::class;
+        $fqcn       = get_class($pluginMock);
 
         $builder = new Builder($this->clientMock, $this->requestFactoryMock, $this->streamFactoryMock);
         $builder->addPlugin($pluginMock);
