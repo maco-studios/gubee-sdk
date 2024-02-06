@@ -26,15 +26,16 @@ class Builder
     protected StreamFactoryInterface $streamFactory;
 
     public function __construct(
-        ?ClientInterface $httpClient = null,
-        ?RequestFactoryInterface $requestFactoryInterface = null,
-        ?StreamFactoryInterface $streamFactoryInterface = null
-    ) {
-        $this->httpClient     = $httpClient
+        ? ClientInterface $httpClient = null,
+        ? RequestFactoryInterface $requestFactoryInterface = null,
+        ? StreamFactoryInterface $streamFactoryInterface = null
+    )
+    {
+        $this->httpClient = $httpClient
             ?: HttpClientDiscovery::find();
         $this->requestFactory = $requestFactoryInterface
             ?: Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory  = $streamFactoryInterface
+        $this->streamFactory = $streamFactoryInterface
             ?: Psr17FactoryDiscovery::findStreamFactory();
     }
 
@@ -62,6 +63,16 @@ class Builder
     }
 
     /**
+     * Get the list of plugins
+     *
+     * @return array<Plugin>
+     */
+    public function getPlugins(): array
+    {
+        return $this->plugins;
+    }
+
+    /**
      * Create a new HTTP client with the plugins added
      */
     public function getHttpClient(): HttpMethodsClientInterface
@@ -71,8 +82,8 @@ class Builder
 
         return new HttpMethodsClient(
             $pluginClient,
-            $this->requestFactory,
-            $this->streamFactory
+                $this->requestFactory,
+                $this->streamFactory
         );
     }
 
@@ -89,7 +100,8 @@ class Builder
      */
     public function setRequestFactory(
         RequestFactoryInterface $requestFactoryInterface
-    ): self {
+    ): self
+    {
         $this->requestFactory = $requestFactoryInterface;
         return $this;
     }
