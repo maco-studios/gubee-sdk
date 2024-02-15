@@ -30,9 +30,10 @@ class Gubee
     protected Builder $clientBuilder;
 
     public function __construct(
-        ?Builder $clientBuilder = null,
-        ?LoggerInterface $logger = null
-    ) {
+        ? Builder $clientBuilder = null,
+        ? LoggerInterface $logger = null
+    )
+    {
         if ($clientBuilder === null) {
             $clientBuilder = new Builder();
         }
