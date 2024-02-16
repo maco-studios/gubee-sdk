@@ -4,9 +4,13 @@ declare(strict_types=1);
 
 namespace Gubee\SDK;
 
+use Gubee\SDK\Api\Gubee\TokenRenewApi;
 use Gubee\SDK\Library\HttpClient\Builder;
+use Gubee\SDK\Library\HttpClient\Plugin\ExceptionThrower;
+use Gubee\SDK\Library\HttpClient\Plugin\History;
 use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\AddHostPlugin;
+use Http\Client\Common\Plugin\HistoryPlugin;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -29,6 +33,8 @@ class Gubee
 
     protected Builder $clientBuilder;
 
+    protected History $responseHistory;
+
     public function __construct(
         ? Builder $clientBuilder = null,
         ? LoggerInterface $logger = null
@@ -40,7 +46,15 @@ class Gubee
         if ($logger === null) {
             $logger = new NullLogger();
         }
+        $this->responseHistory = new History($logger);
         $this->clientBuilder = $clientBuilder;
+        $this->clientBuilder->addPlugin(
+            new HistoryPlugin($this->responseHistory)
+        );
+        $this->clientBuilder->addPlugin(
+            new ExceptionThrower()
+        );
+
         $this->setBaseUrl(self::BASE_URL);
     }
 
@@ -53,6 +67,11 @@ class Gubee
         $this->getClientBuilder()->removePlugin(AddHostPlugin::class);
         $this->getClientBuilder()->addPlugin(new AddHostPlugin($uri));
         return $this;
+    }
+
+    public function token(): TokenRenewApi
+    {
+        return new TokenRenewApi($this);
     }
 
     /**
