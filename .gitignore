@@ -9,3 +9,6 @@
 
 # asdf version manager
 /.tool-versions
+
+# tests cache
+/var
