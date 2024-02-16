@@ -16,8 +16,7 @@ class History implements Journal
 
     public function __construct(
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->logger = $logger;
     }
 
@@ -32,8 +31,8 @@ class History implements Journal
         $this->getLogger()->info(
             'Request successful',
             [
-                'request' => $request,
-                'response' => $response
+                'request'  => $request,
+                'response' => $response,
             ]
         );
     }
@@ -49,16 +48,12 @@ class History implements Journal
         $this->getLogger()->error(
             'Request failed',
             [
-                'request' => $request,
-                'exception' => $exception
+                'request'   => $request,
+                'exception' => $exception,
             ]
         );
     }
 
-
-    /**
-     * @return LoggerInterface
-     */
     public function getLogger(): LoggerInterface
     {
         return $this->logger;
