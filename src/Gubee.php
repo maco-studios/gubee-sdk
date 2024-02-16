@@ -36,10 +36,9 @@ class Gubee
     protected History $responseHistory;
 
     public function __construct(
-        ? Builder $clientBuilder = null,
-        ? LoggerInterface $logger = null
-    )
-    {
+        ?Builder $clientBuilder = null,
+        ?LoggerInterface $logger = null
+    ) {
         if ($clientBuilder === null) {
             $clientBuilder = new Builder();
         }
@@ -47,7 +46,7 @@ class Gubee
             $logger = new NullLogger();
         }
         $this->responseHistory = new History($logger);
-        $this->clientBuilder = $clientBuilder;
+        $this->clientBuilder   = $clientBuilder;
         $this->clientBuilder->addPlugin(
             new HistoryPlugin($this->responseHistory)
         );
