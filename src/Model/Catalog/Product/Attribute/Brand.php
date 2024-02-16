@@ -9,7 +9,7 @@ use Gubee\SDK\Model\AbstractModel;
 
 class Brand extends AbstractModel implements BrandInterface
 {
-    protected string $description;
+    protected ?string $description = "";
     protected string $hubeeId;
     protected string $id;
     protected string $name;

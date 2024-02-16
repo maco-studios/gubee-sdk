@@ -13,7 +13,9 @@ class Account extends AbstractModel implements AccountInterface
     protected string $platform;
 
     /**
-     * @return string
+     * Get the account ID.
+     *
+     * @return string The account ID.
      */
     public function getAccountId(): string
     {
@@ -21,8 +23,9 @@ class Account extends AbstractModel implements AccountInterface
     }
 
     /**
-     * @param string $accountId
-     * @return self
+     * Set the account ID.
+     *
+     * @param string $accountId The account ID.
      */
     public function setAccountId(string $accountId): self
     {
@@ -31,7 +34,9 @@ class Account extends AbstractModel implements AccountInterface
     }
 
     /**
-     * @return string
+     * Get the platform.
+     *
+     * @return string The platform.
      */
     public function getPlatform(): string
     {
@@ -39,8 +44,9 @@ class Account extends AbstractModel implements AccountInterface
     }
 
     /**
-     * @param string $platform
-     * @return self
+     * Set the platform.
+     *
+     * @param string $platform The platform.
      */
     public function setPlatform(string $platform): self
     {

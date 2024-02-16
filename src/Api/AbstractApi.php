@@ -104,6 +104,43 @@ abstract class AbstractApi
     }
 
     /**
+     * @param array<string,mixed>  $params
+     * @param array<string,string> $headers
+     * @param array<string,string> $files
+     * @param array<string,mixed>  $uriParams
+     * @return mixed
+     */
+    protected function put(
+        string $uri,
+        array $params = [],
+        array $headers = [],
+        array $files = [],
+        array $uriParams = [],
+        ?string $rawBody = null
+    ) {
+        if ($rawBody !== null) {
+            $body = $rawBody;
+        } elseif (0 < count($files)) {
+            $builder = $this->createMultipartStreamBuilder($params, $files);
+            $body    = self::prepareMultipartBody($builder);
+            $headers = self::addMultipartContentType($headers, $builder);
+        } else {
+            $body = self::prepareJsonBody($params);
+            if ($body !== null) {
+                $headers = self::addJsonContentType($headers);
+            }
+        }
+
+        $response = $this->client->getHttpClient()->put(
+            self::prepareUri($uri, $uriParams),
+            $headers,
+            $body
+        );
+
+        return ResponseHandler::getContent($response);
+    }
+
+    /**
      * Add the JSON content type to the headers if one is not already present.
      *
      * @param array<string,string> $headers
