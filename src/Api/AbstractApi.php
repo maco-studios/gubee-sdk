@@ -8,6 +8,7 @@ use finfo;
 use Gubee\SDK\Gubee;
 use Gubee\SDK\Library\HttpClient\ResponseHandler;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
+use Laminas\Hydrator\ReflectionHydrator;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
@@ -20,6 +21,7 @@ use function fopen;
 use function func_get_args;
 use function implode;
 use function json_encode;
+use function ltrim;
 use function rawurlencode;
 use function restore_error_handler;
 use function set_error_handler;
@@ -37,10 +39,13 @@ abstract class AbstractApi
     protected const URI_PREFIX = '/api/';
 
     protected Gubee $client;
+    protected ReflectionHydrator $hydrator;
 
     public function __construct(Gubee $client)
     {
-        $this->client = $client;
+        $this->client   = $client;
+        $hydrator       = new ReflectionHydrator();
+        $this->hydrator = $hydrator;
     }
 
     /**
@@ -54,7 +59,7 @@ abstract class AbstractApi
     protected function get(string $uri, array $params = [], array $headers = [])
     {
         $response = $this->client->getHttpClient()->get(
-            self::prepareUri(self::URI_PREFIX . $uri, $params),
+            self::prepareUri($uri, $params),
             $headers
         );
 
@@ -89,8 +94,11 @@ abstract class AbstractApi
                 $headers = self::addJsonContentType($headers);
             }
         }
-
-        $response = $this->client->getHttpClient()->post(self::prepareUri($uri, $uriParams), $headers, $body);
+        $response = $this->client->getHttpClient()->post(
+            self::prepareUri($uri, $uriParams),
+            $headers,
+            $body
+        );
 
         return ResponseHandler::getContent($response);
     }
@@ -181,7 +189,8 @@ abstract class AbstractApi
             $uri .= (strpos($uri, '?') === false ? '?' : '&')
                 . implode('&', $queryParams);
         }
-        return $uri;
+
+        return self::URI_PREFIX . ltrim($uri, "/");
     }
 
     /**
@@ -312,5 +321,10 @@ abstract class AbstractApi
         $type  = $finfo->file($file);
 
         return false !== $type ? $type : ResponseHandler::STREAM_CONTENT_TYPE;
+    }
+
+    public function getHydrator(): ReflectionHydrator
+    {
+        return $this->hydrator;
     }
 }
