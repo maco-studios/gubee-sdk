@@ -16,6 +16,8 @@ use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
+use function print_r;
+
 class ExceptionThrower implements Plugin
 {
     /**
@@ -36,6 +38,9 @@ class ExceptionThrower implements Plugin
         return $next($request)->then(
             function (ResponseInterface $response) use ($request): ResponseInterface {
                 $status = $response->getStatusCode();
+                print_r(
+                    ResponseHandler::getContent($response)
+                );
                 if ($status >= 400) {
                     throw self::createException(
                         $status,

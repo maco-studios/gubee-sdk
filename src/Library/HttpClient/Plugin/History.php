@@ -31,8 +31,17 @@ class History implements Journal
         $this->getLogger()->info(
             'Request successful',
             [
-                'request'  => $request,
-                'response' => $response,
+                'request'  => [
+                    'method'  => $request->getMethod(),
+                    'uri'     => $request->getUri(),
+                    'headers' => $request->getHeaders(),
+                    'body'    => $request->getBody()->getContents(),
+                ],
+                'response' => [
+                    'statusCode' => $response->getStatusCode(),
+                    'headers'    => $response->getHeaders(),
+                    'body'       => $response->getBody()->getContents(),
+                ],
             ]
         );
     }

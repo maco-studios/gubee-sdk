@@ -63,6 +63,9 @@ class ResponseHandler
     public static function getErrorMessage(ResponseInterface $response): ?string
     {
         $content = self::getContent($response);
+        if (is_array($content) && isset($content['error'])) {
+            return $content['error'];
+        }
         if (is_array($content) && isset($content['message'])) {
             return $content['message'];
         }
