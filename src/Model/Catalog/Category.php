@@ -6,6 +6,13 @@ namespace Gubee\SDK\Model\Catalog;
 
 use Gubee\SDK\Api\Catalog\CategoryInterface;
 use Gubee\SDK\Model\AbstractModel;
+use ReflectionClass;
+
+use function array_filter;
+use function array_map;
+use function in_array;
+
+use const ARRAY_FILTER_USE_KEY;
 
 class Category extends AbstractModel implements CategoryInterface
 {
@@ -155,5 +162,29 @@ class Category extends AbstractModel implements CategoryInterface
     public function getParent(): CategoryInterface
     {
         return $this->parent;
+    }
+
+    /**
+     * Serialize the object to JSON
+     *
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        $values     = parent::jsonSerialize();
+        $properties = (new ReflectionClass(self::class))->getProperties();
+        /**
+         * Filter array based on the class properties
+         */
+        $values = array_filter($values, function ($key) use ($properties) {
+            return in_array($key, array_map(function ($property) {
+                return $property->getName();
+            }, $properties));
+        }, ARRAY_FILTER_USE_KEY);
+
+        if (isset($values['parent'])) {
+            $values['parent'] = $values['parent']->getId();
+        }
+        return $values;
     }
 }

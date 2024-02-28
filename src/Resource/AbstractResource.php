@@ -30,6 +30,8 @@ use function str_replace;
 use function strpos;
 
 use const FILEINFO_MIME_TYPE;
+use const JSON_NUMERIC_CHECK;
+use const JSON_PRETTY_PRINT;
 
 abstract class AbstractResource
 {
@@ -44,8 +46,7 @@ abstract class AbstractResource
     public function __construct(Gubee $client)
     {
         $this->client   = $client;
-        $hydrator       = new ReflectionHydrator();
-        $this->hydrator = $hydrator;
+        $this->hydrator = new ReflectionHydrator();
     }
 
     /**
@@ -94,6 +95,7 @@ abstract class AbstractResource
                 $headers = self::addJsonContentType($headers);
             }
         }
+
         $response = $this->client->getHttpClient()->post(
             self::prepareUri($uri, $uriParams),
             $headers,
@@ -193,7 +195,7 @@ abstract class AbstractResource
             return null;
         }
 
-        return json_encode($params);
+        return json_encode($params, JSON_PRETTY_PRINT | JSON_NUMERIC_CHECK);
     }
 
     /**

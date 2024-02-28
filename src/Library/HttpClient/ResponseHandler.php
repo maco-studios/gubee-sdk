@@ -17,7 +17,8 @@ class ResponseHandler
      */
     public const CONTENT_TYPES = [
         self::JSON_CONTENT_TYPE,
-        'application/hal+json',
+        self::JSON_PROBLEM_CONTENT_TYPE,
+        self::JSON_HAL_CONTENT_TYPE,
         self::STREAM_CONTENT_TYPE,
         self::MULTIPART_CONTENT_TYPE,
     ];
@@ -25,7 +26,9 @@ class ResponseHandler
     /**
      * @var string Default content type for JSON
      */
-    public const JSON_CONTENT_TYPE = 'application/json';
+    public const JSON_CONTENT_TYPE         = 'application/json';
+    public const JSON_HAL_CONTENT_TYPE     = 'application/hal+json';
+    public const JSON_PROBLEM_CONTENT_TYPE = 'application/problem+json';
 
     /**
      * @var string Default content type for streams

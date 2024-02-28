@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Api\Catalog;
 
-interface CategoryInterface
+use Gubee\SDK\Api\ModelInterface;
+
+interface CategoryInterface extends ModelInterface
 {
     /**
      * Set the category active status

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Gubee\SDK;
 
-use Gubee\SDK\Api\Gubee\TokenRenewApi;
 use Gubee\SDK\Library\HttpClient\Builder;
+use Gubee\SDK\Library\HttpClient\Plugin\Authencation;
 use Gubee\SDK\Library\HttpClient\Plugin\ExceptionThrower;
 use Gubee\SDK\Library\HttpClient\Plugin\History;
+use Gubee\SDK\Resource\TokenResource;
 use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\AddHostPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
@@ -68,9 +69,15 @@ class Gubee
         return $this;
     }
 
-    public function token(): TokenRenewApi
+    public function authenticate(string $token)
     {
-        return new TokenRenewApi($this);
+        $this->getClientBuilder()->removePlugin(Authencation::class);
+        $this->getClientBuilder()->addPlugin(new Authencation($token));
+    }
+
+    public function token(): TokenResource
+    {
+        return new TokenResource($this);
     }
 
     /**
