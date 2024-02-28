@@ -17,6 +17,7 @@ use function sprintf;
 class Attribute extends AbstractModel implements AttributeInterface
 {
     protected string $attrType;
+    protected string $id;
     protected string $hubeeId;
     protected string $label;
     protected string $name;
@@ -24,7 +25,29 @@ class Attribute extends AbstractModel implements AttributeInterface
 
     /** @var array<string> */
     protected array $options;
-    protected bool $variant;
+    protected bool $variant = false;
+
+    /**
+     * Set the attribute ID.
+     *
+     * @param string $id The attribute ID.
+     * @return AttributeInterface
+     */
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    /**
+     * Get the attribute ID.
+     *
+     * @return string The attribute ID.
+     */
+    public function getId(): string
+    {
+        return $this->id;
+    }
 
     /**
      * Set the attribute type.

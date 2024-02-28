@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Api\Catalog\Product\Attribute;
 
+use Gubee\SDK\Api\ModelInterface;
+
 /**
  * Interface for the Brand attribute of a product.
  */
-interface BrandInterface
+interface BrandInterface extends ModelInterface
 {
     /**
      * Get the description of the brand.

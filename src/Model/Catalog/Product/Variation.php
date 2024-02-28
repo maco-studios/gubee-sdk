@@ -19,7 +19,6 @@ use function gettype;
 use function implode;
 use function in_array;
 use function is_object;
-use function is_string;
 use function sprintf;
 
 class Variation extends AbstractModel implements VariationInterface
@@ -153,7 +152,7 @@ class Variation extends AbstractModel implements VariationInterface
     public function setImages(array $images): self
     {
         foreach ($images as $image) {
-            if (! is_string($image)) {
+            if (! $image instanceof ImageInterface) {
                 throw new InvalidArgumentException(
                     sprintf(
                         "The image must be a instance of '%s', '%s' given.",
