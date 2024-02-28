@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog\Product;
 
-use Gubee\SDK\Interfaces\Catalog\Product\AttributeInterface;
+use Gubee\SDK\Api\Catalog\Product\AttributeInterface;
 use Gubee\SDK\Model\AbstractModel;
 use InvalidArgumentException;
 use ReflectionClass;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gubee\SDK\Model\Catalog\Product\Attribute\Dimension;
 
 use DateTimeInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\ValidityPeriodInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\ValidityPeriodInterface;
 use Gubee\SDK\Model\AbstractModel;
 
 class ValidityPeriod extends AbstractModel implements ValidityPeriodInterface

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Interfaces\Catalog\Product;
+namespace Gubee\SDK\Api\Catalog\Product;
 
 interface MediaInterface
 {

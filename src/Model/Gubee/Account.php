@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Gubee;
 
-use Gubee\SDK\Interfaces\Gubee\AccountInterface;
+use Gubee\SDK\Api\Gubee\AccountInterface;
 use Gubee\SDK\Model\AbstractModel;
 
 class Account extends AbstractModel implements AccountInterface

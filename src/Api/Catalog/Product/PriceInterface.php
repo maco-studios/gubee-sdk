@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Interfaces\Catalog\Product;
+namespace Gubee\SDK\Api\Catalog\Product;
 
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\TypedValueInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\ValidityPeriodInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\TypedValueInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\ValidityPeriodInterface;
 
 /**
  * Interface for defining the price of a product.

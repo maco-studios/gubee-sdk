@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Interfaces\Catalog\Product;
+namespace Gubee\SDK\Api\Catalog\Product;
 
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\UnitTimeInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\UnitTimeInterface;
 
 interface StockInterface
 {

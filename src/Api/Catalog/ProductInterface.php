@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Interfaces\Catalog;
+namespace Gubee\SDK\Api\Catalog;
 
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\BrandInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\ValueInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\VariationInterface;
-use Gubee\SDK\Interfaces\Gubee\AccountInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\BrandInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\ValueInterface;
+use Gubee\SDK\Api\Catalog\Product\VariationInterface;
+use Gubee\SDK\Api\Gubee\AccountInterface;
 
 interface ProductInterface
 {

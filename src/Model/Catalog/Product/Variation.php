@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog\Product;
 
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\UnitTimeInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\DimensionInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\ValueInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\Media\ImageInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\PriceInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\StockInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\VariationInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\UnitTimeInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\DimensionInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\ValueInterface;
+use Gubee\SDK\Api\Catalog\Product\Media\ImageInterface;
+use Gubee\SDK\Api\Catalog\Product\PriceInterface;
+use Gubee\SDK\Api\Catalog\Product\StockInterface;
+use Gubee\SDK\Api\Catalog\Product\VariationInterface;
 use Gubee\SDK\Model\AbstractModel;
 use InvalidArgumentException;
 

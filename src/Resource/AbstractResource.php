@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Api;
+namespace Gubee\SDK\Resource;
 
 use finfo;
 use Gubee\SDK\Gubee;
@@ -31,7 +31,7 @@ use function strpos;
 
 use const FILEINFO_MIME_TYPE;
 
-abstract class AbstractApi
+abstract class AbstractResource
 {
     /**
      * @var string The base URI for the API

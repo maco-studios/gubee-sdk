@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Resource\Sales\Order;
 
-class QueueResource
+use Gubee\SDK\Resource\AbstractResource;
+
+class QueueResource extends AbstractResource
 {
 }

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Interfaces\Catalog\Product\Attribute;
+namespace Gubee\SDK\Api\Catalog\Product\Attribute;
 
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\MeasureInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\WeightInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\MeasureInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\WeightInterface;
 
 /**
  * Interface for defining dimensions of a product attribute.

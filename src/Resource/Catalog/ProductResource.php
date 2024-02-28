@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Resource\Catalog;
 
-class ProductResource
+use Gubee\SDK\Resource\AbstractResource;
+
+class ProductResource extends AbstractResource
 {
 }

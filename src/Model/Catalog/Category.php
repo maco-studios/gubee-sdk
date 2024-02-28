@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog;
 
-use Gubee\SDK\Interfaces\Catalog\CategoryInterface;
+use Gubee\SDK\Api\Catalog\CategoryInterface;
 use Gubee\SDK\Model\AbstractModel;
 
 class Category extends AbstractModel implements CategoryInterface

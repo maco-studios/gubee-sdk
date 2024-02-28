@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension;
+namespace Gubee\SDK\Api\Catalog\Product\Attribute\Dimension;
 
 interface WeightInterface extends TypedValueInterface
 {

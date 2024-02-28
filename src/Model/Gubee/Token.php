@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Gubee\SDK\Model\Gubee;
 
 use DateTimeInterface;
-use Gubee\SDK\Interfaces\Gubee\TokenInterface;
+use Gubee\SDK\Api\Gubee\TokenInterface;
 use Gubee\SDK\Model\AbstractModel;
 use InvalidArgumentException;
 

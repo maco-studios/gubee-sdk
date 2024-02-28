@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Resource\Catalog\Product\Attribute;
 
-class BrandResource
+use Gubee\SDK\Resource\AbstractResource;
+
+class BrandResource extends AbstractResource
 {
 }

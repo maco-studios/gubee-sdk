@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Interfaces\Catalog;
+namespace Gubee\SDK\Api\Catalog;
 
 interface CategoryInterface
 {

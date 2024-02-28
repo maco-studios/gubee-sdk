@@ -8,9 +8,10 @@ use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 
+use function sprintf;
+
 class Authencation implements Plugin
 {
-
     private string $token;
 
     public function __construct(string $token)
@@ -18,14 +19,15 @@ class Authencation implements Plugin
         $this->token = $token;
     }
 
-
     /**
      * Handle the request and return the response coming from the next callable.
      *
      * @see http://docs.php-http.org/en/latest/plugins/build-your-own.html
      *
-     * @param callable(RequestInterface): Promise $next  Next middleware in the chain, the request is passed as the first argument
-     * @param callable(RequestInterface): Promise $first First middleware in the chain, used to to restart a request
+     * @param callable(RequestInterface): Promise $next  Next middleware in the
+     * chain, the request is passed as the first argument
+     * @param callable(RequestInterface): Promise $first First middleware in the
+     *  chain, used to to restart a request
      *
      * @return Promise Resolves a PSR-7 Response or fails with an Http\Client\Exception (The same as HttpAsyncClient)
      */
@@ -37,5 +39,4 @@ class Authencation implements Plugin
         );
         return $next($request);
     }
-
 }

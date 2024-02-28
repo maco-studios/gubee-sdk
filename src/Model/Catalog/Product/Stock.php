@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog\Product;
 
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\UnitTimeInterface;
-use Gubee\SDK\Interfaces\Catalog\Product\StockInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\UnitTimeInterface;
+use Gubee\SDK\Api\Catalog\Product\StockInterface;
 use Gubee\SDK\Model\AbstractModel;
 
 class Stock extends AbstractModel implements StockInterface

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Interfaces\Gubee;
+namespace Gubee\SDK\Api\Gubee;
 
 interface AccountInterface
 {
@@ -17,7 +17,6 @@ interface AccountInterface
      * Set the account ID.
      *
      * @param string $accountId The account ID.
-     * @return self
      */
     public function setAccountId(string $accountId): self;
 
@@ -32,8 +31,6 @@ interface AccountInterface
      * Set the platform.
      *
      * @param string $platform The platform.
-     * @return self
      */
     public function setPlatform(string $platform): self;
-
 }

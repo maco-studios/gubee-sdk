@@ -4,6 +4,6 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Resource;
 
-class TagResource
+class TagResource extends AbstractResource
 {
 }

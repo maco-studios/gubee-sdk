@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog\Product\Attribute\Dimension;
 
-use Gubee\SDK\Interfaces\Catalog\Product\Attribute\Dimension\TypedValueInterface;
+use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\TypedValueInterface;
 use Gubee\SDK\Model\AbstractModel;
 use InvalidArgumentException;
 use ReflectionClass;
