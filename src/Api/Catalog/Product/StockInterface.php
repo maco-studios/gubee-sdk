@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace Gubee\SDK\Api\Catalog\Product;
 
 use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\UnitTimeInterface;
+use Gubee\SDK\Api\ModelInterface;
 
-interface StockInterface
+interface StockInterface extends ModelInterface
 {
     /**
      * Set the cross docking time for the product.

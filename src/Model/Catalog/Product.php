@@ -12,7 +12,10 @@ use Gubee\SDK\Api\Catalog\ProductInterface;
 use Gubee\SDK\Api\Gubee\AccountInterface;
 use Gubee\SDK\Model\AbstractModel;
 use InvalidArgumentException;
+use ReflectionClass;
 
+use function array_filter;
+use function array_map;
 use function get_class;
 use function gettype;
 use function implode;
@@ -20,6 +23,8 @@ use function in_array;
 use function is_object;
 use function is_string;
 use function sprintf;
+
+use const ARRAY_FILTER_USE_KEY;
 
 class Product extends AbstractModel implements ProductInterface
 {
@@ -492,5 +497,40 @@ class Product extends AbstractModel implements ProductInterface
     public function getVariations(): array
     {
         return $this->variations;
+    }
+
+    /**
+     * Serialize the object to JSON
+     *
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        $values     = parent::jsonSerialize();
+        $properties = (new ReflectionClass(self::class))->getProperties();
+        /**
+         * Filter array based on the class properties
+         */
+        $values = array_filter($values, function ($key) use ($properties) {
+            return in_array($key, array_map(function ($property) {
+                return $property->getName();
+            }, $properties));
+        }, ARRAY_FILTER_USE_KEY);
+
+        if (isset($values['mainCategory'])) {
+            $values['mainCategory'] = $values['mainCategory']->getId();
+        }
+
+        if (isset($values['brand'])) {
+            $values['brand'] = $values['brand']->getId();
+        }
+
+        if (isset($values['categories'])) {
+            $values['categories'] = array_map(function ($category) {
+                return $category->getId();
+            }, $values['categories']);
+        }
+
+        return array_filter($values);
     }
 }

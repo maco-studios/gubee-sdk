@@ -13,13 +13,18 @@ use Gubee\SDK\Api\Catalog\Product\StockInterface;
 use Gubee\SDK\Api\Catalog\Product\VariationInterface;
 use Gubee\SDK\Model\AbstractModel;
 use InvalidArgumentException;
+use ReflectionClass;
 
+use function array_filter;
+use function array_map;
 use function get_class;
 use function gettype;
 use function implode;
 use function in_array;
 use function is_object;
 use function sprintf;
+
+use const ARRAY_FILTER_USE_KEY;
 
 class Variation extends AbstractModel implements VariationInterface
 {
@@ -414,5 +419,26 @@ class Variation extends AbstractModel implements VariationInterface
     public function getWarrantyTime(): UnitTimeInterface
     {
         return $this->warrantyTime;
+    }
+
+    /**
+     * Serialize the object to JSON
+     *
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        $values     = parent::jsonSerialize();
+        $properties = (new ReflectionClass(self::class))->getProperties();
+        /**
+         * Filter array based on the class properties
+         */
+        $values = array_filter($values, function ($key) use ($properties) {
+            return in_array($key, array_map(function ($property) {
+                return $property->getName();
+            }, $properties));
+        }, ARRAY_FILTER_USE_KEY);
+
+        return array_filter($values);
     }
 }

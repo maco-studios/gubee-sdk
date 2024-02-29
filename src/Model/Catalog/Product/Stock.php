@@ -7,6 +7,13 @@ namespace Gubee\SDK\Model\Catalog\Product;
 use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\UnitTimeInterface;
 use Gubee\SDK\Api\Catalog\Product\StockInterface;
 use Gubee\SDK\Model\AbstractModel;
+use ReflectionClass;
+
+use function array_filter;
+use function array_map;
+use function in_array;
+
+use const ARRAY_FILTER_USE_KEY;
 
 class Stock extends AbstractModel implements StockInterface
 {
@@ -97,5 +104,25 @@ class Stock extends AbstractModel implements StockInterface
     public function getWarehouseId(): string
     {
         return $this->warehouseId;
+    }
+
+    /**
+     * Serialize the object to JSON
+     *
+     * @return mixed
+     */
+    public function jsonSerialize()
+    {
+        $values     = parent::jsonSerialize();
+        $properties = (new ReflectionClass(self::class))->getProperties();
+        /**
+         * Filter array based on the class properties
+         */
+        $values = array_filter($values, function ($key) use ($properties) {
+            return in_array($key, array_map(function ($property) {
+                return $property->getName();
+            }, $properties));
+        }, ARRAY_FILTER_USE_KEY);
+        return $values;
     }
 }

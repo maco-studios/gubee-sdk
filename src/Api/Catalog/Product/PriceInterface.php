@@ -6,11 +6,12 @@ namespace Gubee\SDK\Api\Catalog\Product;
 
 use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\TypedValueInterface;
 use Gubee\SDK\Api\Catalog\Product\Attribute\Dimension\ValidityPeriodInterface;
+use Gubee\SDK\Api\ModelInterface;
 
 /**
  * Interface for defining the price of a product.
  */
-interface PriceInterface extends TypedValueInterface
+interface PriceInterface extends TypedValueInterface, ModelInterface
 {
     public const DEFAULT   = "DEFAULT";
     public const PROMOTION = "PROMOTION";

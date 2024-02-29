@@ -36,11 +36,12 @@ class ExceptionThrower implements Plugin
         return $next($request)->then(
             function (ResponseInterface $response) use ($request): ResponseInterface {
                 $status = $response->getStatusCode();
+
                 if ($status >= 400) {
                     throw self::createException(
                         $status,
                         ResponseHandler::getErrorMessage($response)
-                        ?: $response->getReasonPhrase(),
+                            ?: $response->getReasonPhrase(),
                         $request,
                         $response
                     );

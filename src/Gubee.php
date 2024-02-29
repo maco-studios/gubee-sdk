@@ -8,6 +8,7 @@ use Gubee\SDK\Library\HttpClient\Builder;
 use Gubee\SDK\Library\HttpClient\Plugin\Authencation;
 use Gubee\SDK\Library\HttpClient\Plugin\ExceptionThrower;
 use Gubee\SDK\Library\HttpClient\Plugin\History;
+use Gubee\SDK\Resource\Catalog\Product\AttributeResource;
 use Gubee\SDK\Resource\TokenResource;
 use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\AddHostPlugin;
@@ -78,6 +79,11 @@ class Gubee
     public function token(): TokenResource
     {
         return new TokenResource($this);
+    }
+
+    public function attribute(): AttributeResource
+    {
+        return new AttributeResource($this);
     }
 
     /**

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Api\Catalog\Product;
 
-interface AttributeInterface
+use Gubee\SDK\Api\ModelInterface;
+
+interface AttributeInterface extends ModelInterface
 {
     /**
      * Attribute types for product attributes.

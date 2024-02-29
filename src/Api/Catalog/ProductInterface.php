@@ -8,8 +8,9 @@ use Gubee\SDK\Api\Catalog\Product\Attribute\BrandInterface;
 use Gubee\SDK\Api\Catalog\Product\Attribute\ValueInterface;
 use Gubee\SDK\Api\Catalog\Product\VariationInterface;
 use Gubee\SDK\Api\Gubee\AccountInterface;
+use Gubee\SDK\Api\ModelInterface;
 
-interface ProductInterface
+interface ProductInterface extends ModelInterface
 {
     // phpcs:disable
     public const FOREIGN_ACQUIRED_IN_THE_INTERNAL_MARKET_WITHOUT_SIMILAR = "FOREIGN_ACQUIRED_IN_THE_INTERNAL_MARKET_WITHOUT_SIMILAR";
