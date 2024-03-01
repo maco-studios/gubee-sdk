@@ -1,0 +1,44 @@
+{
+    "name": "gubee/sdk",
+    "description": "Gubee SDK for PHP",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Marcos 'Marcão' Aurelio",
+            "email": "macosaures+git@gmail.com"
+        },
+        {
+            "name": "Gubee",
+            "email": "contato@gubee.com.br"
+        }
+    ],
+    "require": {
+        "php": "^7.4"
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    },
+    "require-dev": {
+        "magento/magento-coding-standard": "^31.0",
+        "phpcompatibility/php-compatibility": "^9.3",
+        "phpunit/phpunit": "^9.6"
+    },
+    "scripts": {
+        "cs:check": "phpcs",
+        "cs:fix": "phpcbf",
+        "cs:setup": "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/, ../../phpcompatibility/php-compatibility/)",
+        "post-install-cmd": [
+            "@cs:setup"
+        ],
+        "post-update-cmd": [
+            "@cs:setup"
+        ],
+        "test": [
+            "@test:unit",
+            "@test:integration"
+        ],
+        "test:integration": "phpunit --testsuite=Integration",
+        "test:unit": "phpunit --testsuite=Unit"
+    }
+}

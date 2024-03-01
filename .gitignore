@@ -1,0 +1,13 @@
+# Editor
+/.fleet
+/.idea
+/.vscode
+
+# PHPUnit
+/.phpunit.cache
+phpunit.xml
+.phpunit.result.cache
+
+# Composer
+/vendor
+auth.json
