@@ -20,7 +20,6 @@
         "sort-packages": true
     },
     "require-dev": {
-        "magento/magento-coding-standard": "^31.0",
         "phpcompatibility/php-compatibility": "^9.3",
         "phpunit/phpunit": "^9.6"
     },
