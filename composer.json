@@ -20,13 +20,14 @@
         "sort-packages": true
     },
     "require-dev": {
+        "laminas/laminas-coding-standard": "^2.5",
         "phpcompatibility/php-compatibility": "^9.3",
         "phpunit/phpunit": "^9.6"
     },
     "scripts": {
         "cs:check": "phpcs",
         "cs:fix": "phpcbf",
-        "cs:setup": "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/, ../../phpcompatibility/php-compatibility/)",
+        "cs:setup": "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../laminas/laminas-coding-standard/, ../../phpcompatibility/php-compatibility/)",
         "post-install-cmd": [
             "@cs:setup"
         ],
