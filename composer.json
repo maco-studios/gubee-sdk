@@ -15,6 +15,16 @@
     "require": {
         "php": "^7.4"
     },
+    "autoload": {
+        "psr-4": {
+            "Gubee\\SDK\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gubee\\SDK\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "optimize-autoloader": true,
         "sort-packages": true
@@ -22,18 +32,17 @@
     "require-dev": {
         "laminas/laminas-coding-standard": "^2.5",
         "phpcompatibility/php-compatibility": "^9.3",
+        "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.6"
     },
     "scripts": {
+        "cs": [
+            "@cs:check",
+            "@cs:stan"
+        ],
         "cs:check": "phpcs",
         "cs:fix": "phpcbf",
-        "cs:setup": "([ $COMPOSER_DEV_MODE -eq 0 ] || vendor/bin/phpcs --config-set installed_paths ../../laminas/laminas-coding-standard/, ../../phpcompatibility/php-compatibility/)",
-        "post-install-cmd": [
-            "@cs:setup"
-        ],
-        "post-update-cmd": [
-            "@cs:setup"
-        ],
+        "cs:stan": "vendor/bin/phpstan analyse src tests --level=6",
         "test": [
             "@test:unit",
             "@test:integration"
