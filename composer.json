@@ -13,7 +13,15 @@
         }
     ],
     "require": {
-        "php": "^7.4"
+        "php": "^7.4",
+        "php-di/php-di": "^6.4",
+        "php-http/client-common": "^2.7",
+        "php-http/discovery": "^1.19",
+        "psr/container-implementation": "^1.0",
+        "psr/http-client": "^1.0",
+        "psr/http-client-implementation": "^1.0",
+        "psr/http-factory": "^1.0",
+        "psr/log": "^1.1"
     },
     "autoload": {
         "psr-4": {
@@ -22,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Gubee\\SDK\\Tests\\": "tests/"
+            "Gubee\\SDK\\Tests\\": "test/"
         }
     },
     "config": {
@@ -30,7 +38,10 @@
         "sort-packages": true
     },
     "require-dev": {
+        "guzzlehttp/guzzle": "^7.8",
         "laminas/laminas-coding-standard": "^2.5",
+        "php-http/curl-client": "^2.3",
+        "php-http/mock-client": "^1.6",
         "phpcompatibility/php-compatibility": "^9.3",
         "phpstan/phpstan": "^1.10",
         "phpunit/phpunit": "^9.6"
