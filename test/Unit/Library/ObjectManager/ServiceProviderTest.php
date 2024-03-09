@@ -9,8 +9,8 @@ use DI\NotFoundException;
 use Gubee\SDK\Api\ServiceProviderInterface;
 use Gubee\SDK\Client;
 use Gubee\SDK\Library\ObjectManager\ServiceProvider;
-use NotRegistered;
 use PHPUnit\Framework\TestCase;
+use stdClass;
 
 /**
  * @see \Gubee\SDK\Library\ObjectManager\ServiceProvider
@@ -29,20 +29,22 @@ class ServiceProviderTest extends TestCase
                 return new Client();
             },
         ]);
-        $this->container = $containerBuilder->build();
+        /** @var ServiceProvider $container */
+        $container       = $containerBuilder->build();
+        $this->container = $container;
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $client = $this->container->create(Client::class);
         $this->assertInstanceOf(Client::class, $client);
     }
 
-    public function testCreateNotRegistered()
+    public function testCreateNotRegistered(): void
     {
         $this->expectException(
             NotFoundException::class
         );
-        $this->container->create(NotRegistered::class);
+        $this->container->create(stdClass::class);
     }
 }

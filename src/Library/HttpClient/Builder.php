@@ -58,8 +58,8 @@ class Builder
      */
     public function getClient(): HttpMethodsClientInterface
     {
-            $pluginClient = (new PluginClientFactory())
-                ->createClient($this->client, $this->plugins);
+        $pluginClient = (new PluginClientFactory())
+            ->createClient($this->client, $this->plugins);
 
         return new HttpMethodsClient(
             $pluginClient,
@@ -93,7 +93,7 @@ class Builder
     }
 
     /**
-     * @return array
+     * @return array<Plugin>
      */
     public function getPlugins(): array
     {

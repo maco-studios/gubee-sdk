@@ -8,9 +8,11 @@ use Gubee\SDK\Api\ServiceProviderInterface;
 use Gubee\SDK\Library\HttpClient\Builder;
 use Gubee\SDK\Library\HttpClient\Plugin\Authenticate;
 use Gubee\SDK\Library\ObjectManager\ServiceProvider;
+use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\Plugin\RetryPlugin;
+use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
@@ -59,6 +61,14 @@ class Client
     }
 
     /**
+     * Get the HTTP client.
+     */
+    public function getHttpClient(): HttpMethodsClientInterface
+    {
+        return $this->httpClientBuilder->getClient();
+    }
+
+    /**
      * Set the base URL for the client.
      */
     public function setUrl(string $url): self
@@ -87,5 +97,10 @@ class Client
     public function getHttpClientBuilder(): Builder
     {
         return $this->httpClientBuilder;
+    }
+
+    public function getStreamFactory(): StreamFactoryInterface
+    {
+        return $this->httpClientBuilder->getStreamFactory();
     }
 }

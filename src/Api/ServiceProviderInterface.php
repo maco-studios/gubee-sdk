@@ -11,7 +11,7 @@ interface ServiceProviderInterface extends ContainerInterface
     /**
      * Instantiate a new service of the given type.
      *
-     * @param array $arguments
+     * @param array<mixed, mixed> $arguments
      * @return mixed
      */
     public function create(string $type, array $arguments = []);

@@ -48,8 +48,8 @@ abstract class AbstractResource
      * headers.
      *
      * @param string $uri The URI to send the GET request to.
-     * @param array $params Optional parameters to include in the request.
-     * @param array $headers Optional headers to include in the request.
+     * @param array<mixed, string> $params Optional parameters to include in the request.
+     * @param array<mixed, string> $headers Optional headers to include in the request.
      * @return ResponseInterface The response from the GET request.
      */
     protected function get(
@@ -69,11 +69,11 @@ abstract class AbstractResource
      * headers, files, and URI parameters.
      *
      * @param string $uri The URI to send the request to.
-     * @param array $params The parameters to include in the request body.
-     * @param array $headers The headers to include in the request.
-     * @param array $files The files to include in the request body (if any).
-     * @param array $uriParams The parameters to include in the URI (if any).
-     * @return array The response from the server, parsed as a JSON array.
+     * @param array<mixed, mixed> $params The parameters to include in the request body.
+     * @param array<mixed, mixed> $headers The headers to include in the request.
+     * @param array<mixed, mixed> $files The files to include in the request body (if any).
+     * @param array<mixed, mixed> $uriParams The parameters to include in the URI (if any).
+     * @return array<string, mixed> The response from the server, parsed as a JSON array.
      */
     protected function post(
         string $uri,
@@ -111,10 +111,10 @@ abstract class AbstractResource
      * a JSON request will be created.
      *
      * @param string $uri The URI to send the request to.
-     * @param array $params The parameters to include in the request.
-     * @param array $headers The headers to include in the request.
-     * @param array $files The files to include in the request (optional).
-     * @return array The response from the server, decoded as an associative array.
+     * @param array<mixed, mixed> $params The parameters to include in the request.
+     * @param array<mixed, mixed> $headers The headers to include in the request.
+     * @param array<mixed, mixed> $files The files to include in the request (optional).
+     * @return array<string, mixed> The response from the server, decoded as an associative array.
      */
     protected function put(
         string $uri,
@@ -152,10 +152,10 @@ abstract class AbstractResource
      * headers, and files.
      *
      * @param string $uri The URI to send the PATCH request to.
-     * @param array $params The parameters to include in the request.
-     * @param array $headers The headers to include in the request.
-     * @param array $files The files to include in the request.
-     * @return array The response from the PATCH request, decoded as an
+     * @param array<mixed, mixed> $params The parameters to include in the request.
+     * @param array<mixed, mixed> $headers The headers to include in the request.
+     * @param array<mixed, mixed> $files The files to include in the request.
+     * @return array<string, mixed> The response from the PATCH request, decoded as an
      * associative array.
      */
     protected function patch(
@@ -204,10 +204,11 @@ abstract class AbstractResource
     /**
      * Adds the multipart content type to the headers array.
      *
-     * @param array $headers The original headers array.
+     * @param array<string, string> $headers The original headers array.
      * @param MultipartStreamBuilder $builder The MultipartStreamBuilder
      * instance.
-     * @return array The updated headers array with the added content type.
+     * @return array<string, string> The updated headers array with the added
+     * content type.
      */
     private static function addMultipartContentType(
         array $headers,
@@ -246,9 +247,9 @@ abstract class AbstractResource
      * and headers.
      *
      * @param string $uri The URI to send the DELETE request to.
-     * @param array $params An array of parameters to include in the request.
-     * @param array $headers An array of headers to include in the request.
-     * @return array The response from the DELETE request, parsed as a JSON
+     * @param array<mixed, string> $params An array of parameters to include in the request.
+     * @param array<mixed, string> $headers An array of headers to include in the request.
+     * @return array<string, string> The response from the DELETE request, parsed as a JSON
      * array.
      */
     protected function delete(
@@ -278,7 +279,7 @@ abstract class AbstractResource
      * Prepares the URI by appending the URI prefix and query parameters.
      *
      * @param string $uri The URI to be prepared.
-     * @param array $query The query parameters to be appended to the URI.
+     * @param array<mixed, string> $query The query parameters to be appended to the URI.
      * @return string The prepared URI.
      */
     private static function prepareUri(string $uri, array $query = []): string
@@ -301,7 +302,7 @@ abstract class AbstractResource
     /**
      * Builds a query string from an array of query parameters.
      *
-     * @param array $query The array of query parameters.
+     * @param array<mixed, string> $query The array of query parameters.
      * @return string The generated query string.
      */
     public static function build(array $query): string
@@ -368,7 +369,7 @@ abstract class AbstractResource
     /**
      * Checks if an array is a list.
      *
-     * @param array $query The array to check.
+     * @param array<mixed, string> $query The array to check.
      * @return bool Returns true if the array is a list, false otherwise.
      */
     private static function isList(array $query): bool
@@ -387,7 +388,7 @@ abstract class AbstractResource
      * Prepares the JSON body by filtering out null values from the given
      * parameters array and encoding it as JSON.
      *
-     * @param array $params The parameters array to be filtered and encoded.
+     * @param array<mixed, string> $params The parameters array to be filtered and encoded.
      * @return string|null The JSON-encoded string of the filtered parameters
      * array, or null if the array is empty.
      */
@@ -411,10 +412,10 @@ abstract class AbstractResource
      * Adds the 'Content-Type' header with the value 'application/json' to the
      * given array of headers.
      *
-     * @param array $headers The array of headers to add the 'Content-Type'
-     * header to.
-     * @return array The updated array of headers with the 'Content-Type'
-     * header added.
+     * @param array<string, string> $headers The array of headers to add the
+     * 'Content-Type' header to.
+     * @return array<string, string> The updated array of headers with the
+     * 'Content-Type' header added.
      */
     private static function addJsonContentType(array $headers): array
     {
@@ -430,10 +431,10 @@ abstract class AbstractResource
      * Creates a MultipartStreamBuilder object with the given parameters and
      * files.
      *
-     * @param array $params An array of parameters to be added to the multipart
-     * stream.
-     * @param array $files An array of files to be added to the multipart
-     * stream.
+     * @param array<mixed, string> $params An array of parameters to be added to
+     * the multipart stream.
+     * @param array<mixed, string> $files An array of files to be added to the
+     * multipart stream.
      * @return MultipartStreamBuilder The created MultipartStreamBuilder object.
      */
     private function createMultipartStreamBuilder(
@@ -490,16 +491,20 @@ abstract class AbstractResource
     private static function tryFopen(string $filename, string $mode)
     {
         $ex = null;
-        set_error_handler(function () use ($filename, $mode, &$ex): void {
-            $ex = new RuntimeException(
-                sprintf(
-                    'Unable to open %s using mode %s: %s',
-                    $filename,
-                    $mode,
-                    func_get_args()[1]
-                )
-            );
-        });
+        set_error_handler(
+            function () use ($filename, $mode, &$ex): bool {
+                $ex = new RuntimeException(
+                    sprintf(
+                        'Unable to open %s using mode %s: %s',
+                        $filename,
+                        $mode,
+                        func_get_args()[1]
+                    )
+                );
+
+                return true;
+            }
+        );
 
         $handle = fopen($filename, $mode);
         restore_error_handler();
