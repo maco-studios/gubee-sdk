@@ -6,6 +6,7 @@ namespace Gubee\SDK;
 
 use Gubee\SDK\Api\ServiceProviderInterface;
 use Gubee\SDK\Library\HttpClient\Builder;
+use Gubee\SDK\Library\HttpClient\Plugin\Authenticate;
 use Gubee\SDK\Library\ObjectManager\ServiceProvider;
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
@@ -45,6 +46,16 @@ class Client
             ])
         );
         $this->setUrl(self::BASE_URI);
+    }
+
+    public function authenticate(string $token): self
+    {
+        $this->httpClientBuilder->removePlugin(
+            Authenticate::class
+        )->addPlugin(
+            new Authenticate($token)
+        );
+        return $this;
     }
 
     /**

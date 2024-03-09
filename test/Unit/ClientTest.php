@@ -6,6 +6,7 @@ namespace Gubee\SDK\Tests\Unit;
 
 use Gubee\SDK\Client;
 use Gubee\SDK\Library\HttpClient\Builder;
+use Gubee\SDK\Library\HttpClient\Plugin\Authenticate;
 use Gubee\SDK\Library\ObjectManager\ServiceProvider;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
@@ -27,6 +28,18 @@ class ClientTest extends TestCase
             $logger,
             $httpClientBuilder
         );
+    }
+
+    public function testAuthenticate(): void
+    {
+        $this->client->authenticate("token");
+        $headers = null;
+        foreach ($this->client->getHttpClientBuilder()->getPlugins() as $plugin) {
+            if ($plugin instanceof Authenticate) {
+                $headers = $plugin;
+            }
+        }
+        $this->assertNotNull($headers, "HeaderDefaultsPlugin not found");
     }
 
     public function testGetServiceProvider(): void
