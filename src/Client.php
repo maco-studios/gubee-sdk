@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gubee\SDK;
 
+use DI\ContainerBuilder;
 use Gubee\SDK\Api\ServiceProviderInterface;
 use Gubee\SDK\Library\HttpClient\Builder;
 use Gubee\SDK\Library\HttpClient\Plugin\Authenticate;
@@ -35,7 +36,7 @@ class Client
         ?Builder $httpClientBuilder = null,
         int $retryCount = 3
     ) {
-        $this->serviceProvider   = $serviceProvider ?? new ServiceProvider();
+        $this->serviceProvider   = $serviceProvider ?? $this->buildServiceProvider();
         $this->logger            = $logger ?? new NullLogger();
         $this->httpClientBuilder = $httpClientBuilder ?? new Builder();
         $history                 = new History($logger);
@@ -114,5 +115,20 @@ class Client
     public function getRequestFactory(): RequestFactoryInterface
     {
         return $this->httpClientBuilder->getRequestFactory();
+    }
+
+    public function buildServiceProvider(): ServiceProviderInterface
+    {
+        $containerBuilder = new ContainerBuilder(
+            ServiceProvider::class
+        );
+        $defs             = include __DIR__ . '/config/di.php';
+        $containerBuilder->addDefinitions(
+            $defs
+        );
+        $containerBuilder->useAutowiring(true);
+        $result = $containerBuilder->build();
+
+        return $result->get(ServiceProviderInterface::class);
     }
 }
