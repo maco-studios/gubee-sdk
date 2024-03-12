@@ -21,17 +21,7 @@ class ServiceProviderTest extends TestCase
 
     public function setUp(): void
     {
-        $containerBuilder = new ContainerBuilder(
-            ServiceProvider::class
-        );
-        $containerBuilder->addDefinitions([
-            Client::class => function () {
-                return new Client();
-            },
-        ]);
-        /** @var ServiceProvider $container */
-        $container       = $containerBuilder->build();
-        $this->container = $container;
+        $this->container = container();
     }
 
     public function testCreate(): void
@@ -45,6 +35,7 @@ class ServiceProviderTest extends TestCase
         $this->expectException(
             NotFoundException::class
         );
-        $this->container->create(stdClass::class);
+        // @phpstan-ignore-next-line
+        $this->container->create(\Anonymous::class);
     }
 }

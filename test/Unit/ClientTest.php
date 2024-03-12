@@ -19,15 +19,12 @@ class ClientTest extends TestCase
 
     protected function setUp(): void
     {
-        $serviceProvider   = new ServiceProvider();
-        $logger            = $this->createMock(LoggerInterface::class);
-        $httpClientBuilder = new Builder();
+        $serviceProvider = container();
 
-        $this->client = new Client(
-            $serviceProvider,
-            $logger,
-            $httpClientBuilder
+        $this->client = $serviceProvider->get(
+            Client::class
         );
+
     }
 
     public function testAuthenticate(): void
