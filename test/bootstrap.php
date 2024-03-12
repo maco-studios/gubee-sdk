@@ -1,5 +1,9 @@
 <?php
 
+/** phpcs:disable */
+declare(strict_types=1);
+
+use DI\ContainerBuilder;
 use Gubee\SDK\Library\ObjectManager\ServiceProvider;
 
 define('ROOT', dirname(__DIR__));
@@ -15,10 +19,10 @@ function container(): ServiceProvider
 {
     static $container;
     if ($container === null) {
-        $containerBuilder = new \DI\ContainerBuilder(
-                ServiceProvider::class
+        $containerBuilder = new ContainerBuilder(
+            ServiceProvider::class
         );
-        $defs = include ROOT . '/src/config/di.php';
+        $defs             = include ROOT . '/src/config/di.php';
         $containerBuilder->addDefinitions(
             $defs
         );
@@ -28,3 +32,4 @@ function container(): ServiceProvider
 
     return $container;
 }
+/** phpcs:enable */

@@ -24,7 +24,6 @@ class ClientTest extends TestCase
         $this->client = $serviceProvider->get(
             Client::class
         );
-
     }
 
     public function testAuthenticate(): void

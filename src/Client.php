@@ -13,7 +13,6 @@ use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
-use Http\Client\Common\Plugin\Journal;
 use Http\Client\Common\Plugin\RetryPlugin;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
@@ -23,8 +22,8 @@ use Psr\Log\NullLogger;
 class Client
 {
     public const USER_AGENT = 'gubee-sdk/' . self::VERSION;
-    public const VERSION = '1.0.0';
-    public const BASE_URI = 'https://api.gubee.com.br';
+    public const VERSION    = '1.0.0';
+    public const BASE_URI   = 'https://api.gubee.com.br';
 
     protected ServiceProviderInterface $serviceProvider;
     protected LoggerInterface $logger;
@@ -35,12 +34,11 @@ class Client
         ?LoggerInterface $logger = null,
         ?Builder $httpClientBuilder = null,
         int $retryCount = 3
-    )
-    {
-        $this->serviceProvider = $serviceProvider ?? new ServiceProvider();
-        $this->logger = $logger ?? new NullLogger();
+    ) {
+        $this->serviceProvider   = $serviceProvider ?? new ServiceProvider();
+        $this->logger            = $logger ?? new NullLogger();
         $this->httpClientBuilder = $httpClientBuilder ?? new Builder();
-        $history = new History($logger);
+        $history                 = new History($logger);
         $this->httpClientBuilder->addPlugin(
             new HistoryPlugin($history)
         );
@@ -64,8 +62,8 @@ class Client
         $this->httpClientBuilder->removePlugin(
             Authenticate::class
         )->addPlugin(
-                new Authenticate($token)
-            );
+            new Authenticate($token)
+        );
         return $this;
     }
 
@@ -88,8 +86,8 @@ class Client
         $this->httpClientBuilder->removePlugin(
             BaseUriPlugin::class
         )->addPlugin(
-                new BaseUriPlugin($uri)
-            );
+            new BaseUriPlugin($uri)
+        );
         return $this;
     }
 
