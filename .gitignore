@@ -8,8 +8,11 @@
 phpunit.xml
 .phpunit.result.cache
 .phpcs-cache
-/var/test
+/var/
 
 # Composer
 /vendor
 auth.json
+
+# Nodejs
+/node_modules
