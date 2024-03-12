@@ -13,21 +13,9 @@
             <directory suffix=".php">./src</directory>
         </whitelist>
     </filter>
-
-    <listeners>
-        <listener class="PhpPact\Consumer\Listener\PactTestListener">
-            <arguments>
-                <array>
-                    <element key="0">
-                        <string>Integration</string>
-                    </element>
-                </array>
-            </arguments>
-        </listener>
-    </listeners>
     <php>
         <env name="PACT_MOCK_SERVER_HOST" value="localhost"/>
-        <env name="PACT_MOCK_SERVER_PORT" value="7200"/>
+        <env name="PACT_MOCK_SERVER_PORT" value="7201"/>
         <env name="PACT_CONSUMER_NAME" value="gubeeConsumer"/>
         <env name="PACT_CONSUMER_VERSION" value="1.0.0"/>
         <env name="PACT_CONSUMER_TAG" value="master"/>

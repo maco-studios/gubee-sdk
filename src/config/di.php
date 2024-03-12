@@ -4,6 +4,7 @@
 declare(strict_types=1);
 
 use Gubee\SDK\Client;
+use Gubee\SDK\Model\Token;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Monolog\Processor\MemoryUsageProcessor;
@@ -41,6 +42,6 @@ return [
         ->constructor(
             null,
             get(LoggerInterface::class)
-        ),
+        )
 ];
 //phpcs:enable

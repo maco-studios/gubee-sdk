@@ -18,7 +18,6 @@ use Http\Client\Common\Plugin\RetryPlugin;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
-use Psr\Log\NullLogger;
 
 class Client
 {
@@ -37,9 +36,9 @@ class Client
         int $retryCount = 3
     ) {
         $this->serviceProvider   = $serviceProvider ?? $this->buildServiceProvider();
-        $this->logger            = $logger ?? new NullLogger();
+        $this->logger            = $logger ?? $this->serviceProvider->get(LoggerInterface::class);
         $this->httpClientBuilder = $httpClientBuilder ?? new Builder();
-        $history                 = new History($logger);
+        $history                 = new History($this->logger);
         $this->httpClientBuilder->addPlugin(
             new HistoryPlugin($history)
         );
@@ -56,6 +55,11 @@ class Client
             ])
         );
         $this->setUrl(self::BASE_URI);
+    }
+
+    public function token(): Resource\TokenResource
+    {
+        return new Resource\TokenResource($this);
     }
 
     public function authenticate(string $token): self

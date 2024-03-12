@@ -6,6 +6,7 @@ namespace Gubee\SDK\Resource;
 
 use finfo;
 use Gubee\SDK\Client;
+use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
@@ -242,6 +243,37 @@ abstract class AbstractResource
         MultipartStreamBuilder $builder
     ): StreamInterface {
         return $builder->build();
+    }
+
+    /**
+     * @param  array   $files
+     * @param  array   $headers
+     * @return mixed
+     */
+    public function postForm(
+        string $uri,
+        string $params,
+        array $files = [],
+        array $headers = []
+    ) {
+        $request = Psr17FactoryDiscovery::findRequestFactory()->createRequest(
+            'POST',
+            self::prepareUri($uri)
+        );
+
+        $request = $request->withBody(
+            Psr17FactoryDiscovery::findStreamFactory()
+                ->createStream(
+                    $params
+                )
+        );
+
+        foreach ($headers as $key => $header) {
+            $request = $request->withHeader($key, $header);
+        }
+
+        $response = $this->client->getHttpClient()->sendRequest($request);
+        return json_decode((string) $response->getBody(), true);
     }
 
     /**
