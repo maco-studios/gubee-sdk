@@ -103,4 +103,9 @@ class Client
     {
         return $this->httpClientBuilder->getStreamFactory();
     }
+
+    public function getRequestFactory(): RequestFactoryInterface
+    {
+        return $this->httpClientBuilder->getRequestFactory();
+    }
 }
