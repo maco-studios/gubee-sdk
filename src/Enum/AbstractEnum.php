@@ -43,4 +43,6 @@ abstract class AbstractEnum implements Stringable
     {
         return (string) $this->value;
     }
+
+    abstract public static function fromValue($value): self;
 }

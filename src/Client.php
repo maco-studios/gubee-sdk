@@ -57,6 +57,10 @@ class Client
         $this->setUrl(self::BASE_URI);
     }
 
+    public function attribute(): Resource\Catalog\Product\AttributeResource {
+        return new Resource\Catalog\Product\AttributeResource($this);
+    }
+
     public function token(): Resource\TokenResource
     {
         return new Resource\TokenResource($this);

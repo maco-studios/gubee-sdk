@@ -550,4 +550,11 @@ abstract class AbstractResource
 
         return $handle;
     }
+
+	/**
+	 * @return Gubee\SDK\Client
+	 */
+	public function getClient(): Gubee\SDK\Client {
+		return $this->client;
+	}
 }

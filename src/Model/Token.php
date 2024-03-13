@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model;
 
+use DateTime;
+use DateTimeInterface;
+
 class Token extends AbstractModel
 {
     protected string $id;
@@ -12,8 +15,18 @@ class Token extends AbstractModel
     protected string $sellerId;
     protected string $token;
     protected string $tokenType;
-    protected string $validity;
+    protected DateTimeInterface $validity;
 
+    /**
+     * Summary of __construct
+     * @param string $id
+     * @param string $login
+     * @param bool $revoked
+     * @param string $sellerId
+     * @param string $token
+     * @param string $tokenType
+     * @param string|DateTimeInterface $validity
+     */
     public function __construct(
         string $id,
         string $login,
@@ -21,7 +34,7 @@ class Token extends AbstractModel
         string $sellerId,
         string $token,
         string $tokenType,
-        string $validity
+        $validity
     ) {
         $this->id        = $id;
         $this->login     = $login;
@@ -29,7 +42,12 @@ class Token extends AbstractModel
         $this->sellerId  = $sellerId;
         $this->token     = $token;
         $this->tokenType = $tokenType;
-        $this->validity  = $validity;
+        if (!$validity instanceof DateTimeInterface) {
+            $this->validity = DateTime::createFromFormat(
+                'Y-m-d\TH:i:s.v', 
+                $validity
+            );
+        }
     }
 
     public function getId(): string
@@ -98,13 +116,26 @@ class Token extends AbstractModel
         return $this;
     }
 
-    public function getValidity(): string
+    public function getValidity(): DateTimeInterface
     {
         return $this->validity;
     }
 
-    public function setValidity(string $validity): self
+    /**
+     * Set the validity of the token.
+     * 
+     * @param string|DateTimeInterface $validity
+     * @return Token
+     */
+    public function setValidity($validity): self
     {
+        if (!$validity instanceof DateTimeInterface) {
+            $validity = DateTime::createFromFormat(
+                'Y-m-d\TH:i:s.v', 
+                $validity
+            );
+        }
+
         $this->validity = $validity;
         return $this;
     }
