@@ -10,11 +10,11 @@ class Category extends AbstractModel
 {
     protected string $id;
     protected string $name;
-    protected ?bool $active = null;
-    protected ?string $description = null;
+    protected ?bool $active                 = null;
+    protected ?string $description          = null;
     protected ?bool $enabledAutoIntegration = null;
-    protected ?string $hubeeId = null;
-    protected ?Category $parent = null;
+    protected ?string $hubeeId              = null;
+    protected ?Category $parent             = null;
 
     public function __construct(
         string $id,
@@ -24,8 +24,7 @@ class Category extends AbstractModel
         ?bool $enabledAutoIntegration = null,
         ?string $hubeeId = null,
         ?Category $parent = null
-    )
-    {
+    ) {
         $this->setId($id);
         $this->setName($name);
         if ($active !== null) {

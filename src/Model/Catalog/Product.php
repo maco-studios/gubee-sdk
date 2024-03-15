@@ -15,6 +15,7 @@ use Gubee\SDK\Model\Catalog\Product\Attribute\Brand;
 use Gubee\SDK\Model\Catalog\Product\Variation;
 use Gubee\SDK\Model\Gubee\Account;
 
+use function array_values;
 use function is_array;
 use function is_string;
 
@@ -28,8 +29,8 @@ class Product extends AbstractModel
     protected StatusEnum $status;
     protected TypeEnum $type;
     protected ?string $hubeeId = null;
-    protected ?string $name = null;
-    protected ?string $nbm = null;
+    protected ?string $name    = null;
+    protected ?string $nbm     = null;
     /** @var array<Account>|null */
     protected ?array $accounts = null;
     /** @var array<Category>|null */
@@ -70,9 +71,7 @@ class Product extends AbstractModel
         ?array $specifications = null,
         ?array $variantAttributes = null,
         ?array $variations = null
-    )
-    {
-
+    ) {
         $this->setId($id)
             ->setMainCategory($mainCategory)
             ->setMainSku($mainSku);
@@ -374,9 +373,9 @@ class Product extends AbstractModel
 
             unset($values['categories'][$key]);
         }
-        $values['categories'] = array_values($values['categories']);
+        $values['categories']   = array_values($values['categories']);
         $values['mainCategory'] = $values['mainCategory']->getId();
-        if (isset($value['brand'])) {
+        if (isset($value['brand'])) { /** @phpstan-ignore-line */
             $values['brand'] = $values['brand']->getId();
         }
         foreach ($values['specifications'] as $key => $specification) {

@@ -7,6 +7,8 @@ namespace Gubee\SDK\Model\Catalog\Product\Attribute\Dimension;
 use Gubee\SDK\Enum\Catalog\Product\Attribute\Dimension\Weight\TypeEnum;
 use Gubee\SDK\Model\AbstractModel;
 
+use function is_string;
+
 class Weight extends AbstractModel
 {
     protected TypeEnum $type;
@@ -15,7 +17,6 @@ class Weight extends AbstractModel
 
     /**
      * @param string|TypeEnum $type
-     * @param float $value
      */
     public function __construct($type, float $value)
     {
@@ -26,44 +27,30 @@ class Weight extends AbstractModel
         $this->setValue($value);
     }
 
-    /**
-     * @return TypeEnum
-     */
     public function getType(): TypeEnum
     {
-        if ($this->type == TypeEnum::POUND()) {
+        if ($this->type === TypeEnum::POUND()) {
             return TypeEnum::KILOGRAM();
         }
 
         return $this->type;
     }
 
-    /**
-     * @param TypeEnum $type 
-     * @return self
-     */
     public function setType(TypeEnum $type): self
     {
         $this->type = $type;
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getValue(): float
     {
-        if ($this->getType() == TypeEnum::POUND()) {
+        if ($this->getType() === TypeEnum::POUND()) {
             return $this->value * 0.453592;
         }
 
         return $this->value;
     }
 
-    /**
-     * @param float $value 
-     * @return self
-     */
     public function setValue(float $value): self
     {
         $this->value = $value;

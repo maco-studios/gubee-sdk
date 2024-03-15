@@ -8,5 +8,4 @@ use Gubee\SDK\Resource\AbstractResource;
 
 class ProductResource extends AbstractResource
 {
-
 }

@@ -23,8 +23,8 @@ use Psr\Log\NullLogger;
 class Client
 {
     public const USER_AGENT = 'gubee-sdk/' . self::VERSION;
-    public const VERSION = '1.0.0';
-    public const BASE_URI = 'https://api.gubee.com.br';
+    public const VERSION    = '1.0.0';
+    public const BASE_URI   = 'https://api.gubee.com.br';
 
     protected ServiceProviderInterface $serviceProvider;
     protected LoggerInterface $logger;
@@ -35,12 +35,11 @@ class Client
         ?LoggerInterface $logger = null,
         ?Builder $httpClientBuilder = null,
         int $retryCount = 3
-    )
-    {
-        $this->serviceProvider = $serviceProvider ?? $this->buildServiceProvider();
-        $this->logger = $logger ?? new NullLogger();
+    ) {
+        $this->serviceProvider   = $serviceProvider ?? $this->buildServiceProvider();
+        $this->logger            = $logger ?? new NullLogger();
         $this->httpClientBuilder = $httpClientBuilder ?? new Builder();
-        $history = new History($this->logger);
+        $history                 = new History($this->logger);
         $this->httpClientBuilder->addPlugin(
             new HistoryPlugin($history)
         );
@@ -74,8 +73,8 @@ class Client
         $this->httpClientBuilder->removePlugin(
             Authenticate::class
         )->addPlugin(
-                new Authenticate($token)
-            );
+            new Authenticate($token)
+        );
         return $this;
     }
 
@@ -98,8 +97,8 @@ class Client
         $this->httpClientBuilder->removePlugin(
             BaseUriPlugin::class
         )->addPlugin(
-                new BaseUriPlugin($uri)
-            );
+            new BaseUriPlugin($uri)
+        );
         return $this;
     }
 
@@ -131,9 +130,9 @@ class Client
     public function buildServiceProvider(): ServiceProviderInterface
     {
         $containerBuilder = new ContainerBuilder(
-                ServiceProvider::class
+            ServiceProvider::class
         );
-        $defs = include __DIR__ . '/config/di.php';
+        $defs             = include __DIR__ . '/config/di.php';
         $containerBuilder->addDefinitions(
             $defs
         );

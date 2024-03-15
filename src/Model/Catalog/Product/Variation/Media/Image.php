@@ -6,5 +6,4 @@ namespace Gubee\SDK\Model\Catalog\Product\Variation\Media;
 
 class Image extends AbstractMedia
 {
-
 }

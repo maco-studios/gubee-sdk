@@ -14,7 +14,7 @@ use Psr\Log\LoggerInterface;
 use function DI\create;
 use function DI\get;
 
-if (! defined('ROOT')) {
+if (!defined('ROOT')) {
     define('ROOT', dirname(__DIR__, 2));
 }
 
@@ -26,7 +26,7 @@ return [
                 new StreamHandler(
                     (function () {
                         $logDir = ROOT . '/var/log';
-                        if (! is_dir($logDir)) {
+                        if (!is_dir($logDir)) {
                             mkdir($logDir, 0777, true);
                         }
                         return $logDir . '/gubee.log';
@@ -38,7 +38,7 @@ return [
                 new MemoryUsageProcessor(),
             ]
         ),
-    Client::class          => create(Client::class)
+    Client::class => create(Client::class)
         ->constructor(
             null,
             get(LoggerInterface::class)

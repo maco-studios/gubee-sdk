@@ -4,15 +4,18 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog\Product;
 
-use Gubee\SDK\Model\Catalog\Product\Variation\Media\Image;
 use Gubee\SDK\Api\ServiceProviderInterface;
 use Gubee\SDK\Enum\Catalog\Product\StatusEnum;
 use Gubee\SDK\Model\AbstractModel;
 use Gubee\SDK\Model\Catalog\Product\Attribute\AttributeValue;
 use Gubee\SDK\Model\Catalog\Product\Attribute\Dimension;
 use Gubee\SDK\Model\Catalog\Product\Attribute\Dimension\UnitTime;
+use Gubee\SDK\Model\Catalog\Product\Variation\Media\Image;
 use Gubee\SDK\Model\Catalog\Product\Variation\Price;
 use Gubee\SDK\Model\Catalog\Product\Variation\Stock;
+
+use function is_array;
+use function is_string;
 
 class Variation extends AbstractModel
 {
@@ -24,12 +27,12 @@ class Variation extends AbstractModel
     protected string $name;
     protected string $sku;
     protected UnitTime $warrantyTime;
-    protected ?float $cost = null;
+    protected ?float $cost         = null;
     protected ?string $description = null;
-    protected ?string $ean = null;
-    protected ?bool $main = null;
+    protected ?string $ean         = null;
+    protected ?bool $main          = null;
     /** @var array<Price> */
-    protected ?array $prices = null;
+    protected ?array $prices      = null;
     protected ?StatusEnum $status = null;
     /** @var array<Stock> */
     protected ?array $stocks = null;
@@ -37,21 +40,11 @@ class Variation extends AbstractModel
     protected ?array $variantSpecification = null;
 
     /**
-     * @param string $skuId
-     * @param array $images
-     * @param Dimension $dimension
-     * @param UnitTime $handlingTime
-     * @param string $name
-     * @param string $sku
-     * @param UnitTime $warrantyTime
-     * @param float|null $cost
-     * @param string|null $description
-     * @param string|null $ean
-     * @param bool|null $main
-     * @param array<Price>|null $prices
+     * @param array<Image|array<mixed>> $images
+     * @param array<Price|array<mixed>>|null $prices
      * @param StatusEnum|string $status
-     * @param array<Stock>|null $stocks
-     * @param array<AttributeValue>|null $variantSpecification
+     * @param array<Stock|array<mixed>>|null $stocks
+     * @param array<AttributeValue|array<mixed>>|null $variantSpecification
      */
     public function __construct(
         ServiceProviderInterface $serviceProvider,
@@ -62,16 +55,15 @@ class Variation extends AbstractModel
         string $name,
         string $sku,
         UnitTime $warrantyTime,
-        float $cost = null,
-        string $description = null,
-        string $ean = null,
-        bool $main = false,
-        array $prices = null,
+        ?float $cost = null,
+        ?string $description = null,
+        ?string $ean = null,
+        ?bool $main = false,
+        ?array $prices = null,
         $status = null,
-        array $stocks = null,
-        array $variantSpecification = null
-    )
-    {
+        ?array $stocks = null,
+        ?array $variantSpecification = null
+    ) {
         $this->setSkuId($skuId);
 
         foreach ($images as $key => $image) {

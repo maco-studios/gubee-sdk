@@ -25,13 +25,13 @@ abstract class AbstractEnum implements Stringable, JsonSerializable
     protected function validate(string $value): void
     {
         $reflection = new ReflectionClass(static::class);
-        $constants = $reflection->getConstants();
-        if (!in_array($value, $constants)) {
+        $constants  = $reflection->getConstants();
+        if (! in_array($value, $constants)) {
             throw new InvalidArgumentException(
                 sprintf(
                     "Invalid value '%s' for enum %s",
                     $value,
-                        static::class
+                    static::class
                 )
             );
         }

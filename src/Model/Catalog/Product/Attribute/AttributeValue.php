@@ -8,33 +8,26 @@ use Gubee\SDK\Model\AbstractModel;
 
 class AttributeValue extends AbstractModel
 {
-
     protected string $attribute;
     /** @var array<mixed> */
     protected array $values;
 
+    /**
+     * @param array<mixed> $values
+     */
     public function __construct(
         string $attribute,
         array $values = []
-    )
-    {
+    ) {
         $this->attribute = $attribute;
-        $this->values = $values;
+        $this->values    = $values;
     }
 
-
-    /**
-     * @return string
-     */
     public function getAttribute(): string
     {
         return $this->attribute;
     }
 
-    /**
-     * @param string $attribute 
-     * @return self
-     */
     public function setAttribute(string $attribute): self
     {
         $this->attribute = $attribute;
@@ -42,8 +35,7 @@ class AttributeValue extends AbstractModel
     }
 
     /**
-     * 
-     * @return array
+     * @return array<mixed>
      */
     public function getValues(): array
     {
@@ -51,9 +43,7 @@ class AttributeValue extends AbstractModel
     }
 
     /**
-     * 
-     * @param array $values 
-     * @return self
+     * @param array<mixed> $values
      */
     public function setValues(array $values): self
     {

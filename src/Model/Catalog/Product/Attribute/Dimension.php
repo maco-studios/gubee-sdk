@@ -5,9 +5,10 @@ declare(strict_types=1);
 namespace Gubee\SDK\Model\Catalog\Product\Attribute;
 
 use Gubee\SDK\Api\ServiceProviderInterface;
-use Gubee\SDK\Library\ObjectManager\ServiceProvider;
 use Gubee\SDK\Model\Catalog\Product\Attribute\Dimension\Measure;
 use Gubee\SDK\Model\Catalog\Product\Attribute\Dimension\Weight;
+
+use function is_array;
 
 class Dimension
 {
@@ -28,8 +29,7 @@ class Dimension
         $height,
         $weight,
         $width
-    )
-    {
+    ) {
         if (is_array($depth)) {
             $depth = $serviceProvider->create(
                 Measure::class,
@@ -60,72 +60,44 @@ class Dimension
         $this->setWidth($width);
     }
 
-    /**
-     * @return Measure
-     */
     public function getDepth(): Measure
     {
         return $this->depth;
     }
 
-    /**
-     * @param Measure $depth 
-     * @return self
-     */
     public function setDepth(Measure $depth): self
     {
         $this->depth = $depth;
         return $this;
     }
 
-    /**
-     * @return Measure
-     */
     public function getHeight(): Measure
     {
         return $this->height;
     }
 
-    /**
-     * @param Measure $height 
-     * @return self
-     */
     public function setHeight(Measure $height): self
     {
         $this->height = $height;
         return $this;
     }
 
-    /**
-     * @return Weight
-     */
     public function getWeight(): Weight
     {
         return $this->weight;
     }
 
-    /**
-     * @param Weight $weight 
-     * @return self
-     */
     public function setWeight(Weight $weight): self
     {
         $this->weight = $weight;
         return $this;
     }
 
-    /**
-     * @return Measure
-     */
     public function getWidth(): Measure
     {
         return $this->width;
     }
 
-    /**
-     * @param Measure $width 
-     * @return self
-     */
     public function setWidth(Measure $width): self
     {
         $this->width = $width;
