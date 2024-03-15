@@ -7,12 +7,12 @@ namespace Gubee\SDK\Resource\Catalog\Product;
 use Gubee\SDK\Model\Catalog\Product\Attribute;
 use Gubee\SDK\Resource\AbstractResource;
 
+use function rawurlencode;
+
 class AttributeResource extends AbstractResource
 {
-    // POST
-    // /integration/attributes
-    // Create attribute
-    public function create(Attribute $attribute) {
+    public function create(Attribute $attribute): Attribute
+    {
         $response = $this->post(
             '/integration/attributes',
             $attribute->jsonSerialize()
@@ -25,10 +25,8 @@ class AttributeResource extends AbstractResource
             );
     }
 
-    // GET
-    // /integration/attributes/{externalId}
-    // Get attribute by externalId
-    public function loadByExternalId(string $externalId) {
+    public function loadByExternalId(string $externalId): Attribute
+    {
         $response = $this->get(
             '/integration/attributes/' . rawurlencode($externalId)
         );
@@ -40,10 +38,8 @@ class AttributeResource extends AbstractResource
             );
     }
 
-    // PUT
-    // /integration/attributes/{externalId}
-    // Update attribute
-    public function updateByExternalId(string $externalId, Attribute $attribute) {
+    public function updateByExternalId(string $externalId, Attribute $attribute): Attribute
+    {
         $response = $this->put(
             '/integration/attributes/' . rawurlencode($externalId),
             $attribute->jsonSerialize()
@@ -56,10 +52,14 @@ class AttributeResource extends AbstractResource
             );
     }
 
-    // POST
-    // /integration/attributes/bulk
-    // Bulk create attribute
-    public function bulkCreate(array $attributes) {
+    /**
+     * Bulk create a collection of attributes at once
+     *
+     * @param array<Attribute> $attributes
+     * @return array<Attribute>
+     */
+    public function bulkCreate(array $attributes): array
+    {
         $response = $this->post(
             '/integration/attributes/bulk',
             $attributes
@@ -76,10 +76,14 @@ class AttributeResource extends AbstractResource
         return $response;
     }
 
-    // PUT
-    // /integration/attributes/bulk
-    // Update attribute
-    public function bulkUpdate(array $attributes) {
+    /**
+     * Bulk update a collection of attributes at once
+     *
+     * @param array<Attribute> $attributes
+     * @return array<Attribute>
+     */
+    public function bulkUpdate(array $attributes): array
+    {
         $response = $this->put(
             '/integration/attributes/bulk',
             $attributes
@@ -96,10 +100,8 @@ class AttributeResource extends AbstractResource
         return $response;
     }
 
-    // GET
-    // /integration/attributes/byId/{id}
-    // Get attribute by gubee id
-    public function loadById(string $id) {
+    public function loadById(string $id): Attribute
+    {
         $response = $this->get(
             '/integration/attributes/byId/' . rawurlencode($id)
         );
@@ -111,10 +113,8 @@ class AttributeResource extends AbstractResource
             );
     }
 
-    // GET
-    // /integration/attributes/byName/{name}
-    // Get attribute by name
-    public function loadByName(string $name) {
+    public function loadByName(string $name): Attribute
+    {
         $response = $this->get(
             '/integration/attributes/byName/' . rawurlencode($name)
         );
@@ -126,10 +126,8 @@ class AttributeResource extends AbstractResource
             );
     }
 
-    // PUT
-    // /integration/attributes/byName/{name}
-    // Update attribute
-    public function updateByName(string $name, Attribute $attribute) {
+    public function updateByName(string $name, Attribute $attribute): Attribute
+    {
         $response = $this->put(
             '/integration/attributes/byName/' . rawurlencode($name),
             $attribute->jsonSerialize()

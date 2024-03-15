@@ -8,7 +8,6 @@ use finfo;
 use Gubee\SDK\Client;
 use Http\Discovery\Psr17FactoryDiscovery;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
-use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
@@ -53,18 +52,19 @@ abstract class AbstractResource
      * @param string $uri The URI to send the GET request to.
      * @param array<mixed, string> $params Optional parameters to include in the request.
      * @param array<mixed, string> $headers Optional headers to include in the request.
-     * @return ResponseInterface The response from the GET request.
+     * @return array<mixed, string> The response from the GET request.
      */
     protected function get(
         string $uri,
         array $params = [],
         array $headers = []
-    ): ResponseInterface {
-        return $this->client->getHttpClient()
+    ): array {
+        $response = $this->client->getHttpClient()
             ->get(
                 self::prepareUri($uri, $params),
                 $headers
             );
+        return json_decode((string) $response->getBody(), true);
     }
 
     /**
@@ -246,8 +246,8 @@ abstract class AbstractResource
     }
 
     /**
-     * @param  array   $files
-     * @param  array   $headers
+     * @param  array<mixed, string> $files
+     * @param  array<string, string> $headers
      * @return mixed
      */
     public function postForm(
@@ -551,10 +551,8 @@ abstract class AbstractResource
         return $handle;
     }
 
-	/**
-	 * @return Gubee\SDK\Client
-	 */
-	public function getClient(): Gubee\SDK\Client {
-		return $this->client;
-	}
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
 }

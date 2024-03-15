@@ -4,14 +4,47 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model;
 
+use Gubee\SDK\Enum\AbstractEnum;
+use InvalidArgumentException;
 use JsonSerializable;
 
 use function get_object_vars;
+use function is_a;
 
 class AbstractModel implements JsonSerializable
 {
-    public function jsonSerialize()
+    /**
+     * @return array<int|string, mixed>
+     */
+    public function jsonSerialize(): array
     {
-        return get_object_vars($this);
+        $values = get_object_vars($this);
+        $values = array_filter(
+            $values,
+            function ($value) {
+                return $value !== null;
+            }
+        );
+        return $values;
+    }
+
+    /**
+     * Validate if all elements inside a array is from a specific type
+     *
+     * @param array<int|string, mixed> $array The array to be validated
+     * @param string $type Can be a scalar or class name to be validated
+     * @throws InvalidArgumentException If the array contains elements of
+     * different types.
+     */
+    protected function validateArrayElements(array $array, string $type): bool
+    {
+        foreach ($array as $element) {
+            if (!is_a($element, $type)) {
+                throw new InvalidArgumentException(
+                    "The array contains elements of different types."
+                );
+            }
+        }
+        return true;
     }
 }

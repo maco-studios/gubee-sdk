@@ -19,12 +19,7 @@ class Token extends AbstractModel
 
     /**
      * Summary of __construct
-     * @param string $id
-     * @param string $login
-     * @param bool $revoked
-     * @param string $sellerId
-     * @param string $token
-     * @param string $tokenType
+     *
      * @param string|DateTimeInterface $validity
      */
     public function __construct(
@@ -42,9 +37,9 @@ class Token extends AbstractModel
         $this->sellerId  = $sellerId;
         $this->token     = $token;
         $this->tokenType = $tokenType;
-        if (!$validity instanceof DateTimeInterface) {
+        if (! $validity instanceof DateTimeInterface) {
             $this->validity = DateTime::createFromFormat(
-                'Y-m-d\TH:i:s.v', 
+                'Y-m-d\TH:i:s.v',
                 $validity
             );
         }
@@ -123,15 +118,15 @@ class Token extends AbstractModel
 
     /**
      * Set the validity of the token.
-     * 
+     *
      * @param string|DateTimeInterface $validity
      * @return Token
      */
     public function setValidity($validity): self
     {
-        if (!$validity instanceof DateTimeInterface) {
+        if (! $validity instanceof DateTimeInterface) {
             $validity = DateTime::createFromFormat(
-                'Y-m-d\TH:i:s.v', 
+                'Y-m-d\TH:i:s.v',
                 $validity
             );
         }
