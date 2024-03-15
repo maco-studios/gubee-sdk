@@ -39,11 +39,57 @@ class AbstractModel implements JsonSerializable
     protected function validateArrayElements(array $array, string $type): bool
     {
         foreach ($array as $element) {
-            if (! is_a($element, $type)) {
+
+            if ($type == 'string') {
+                if (!is_string($element)) {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            "The array contains elements of different types, expected '%s' got '%s'",
+                            $type,
+                            is_object($element) ? get_class($element) : gettype($element)
+                        )
+                    );
+                }
+            } else if ($type == 'int') {
+                if (!is_int($element)) {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            "The array contains elements of different types, expected '%s' got '%s'",
+                            $type,
+                            is_object($element) ? get_class($element) : gettype($element)
+                        )
+                    );
+                }
+            } elseif ($type == 'float') {
+                if (!is_float($element)) {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            "The array contains elements of different types, expected '%s' got '%s'",
+                            $type,
+                            is_object($element) ? get_class($element) : gettype($element)
+                        )
+                    );
+                }
+            } elseif ($type == 'bool') {
+                if (!is_bool($element)) {
+                    throw new InvalidArgumentException(
+                        sprintf(
+                            "The array contains elements of different types, expected '%s' got '%s'",
+                            $type,
+                            is_object($element) ? get_class($element) : gettype($element)
+                        )
+                    );
+                }
+            } else if (!$element instanceof $type) {
                 throw new InvalidArgumentException(
-                    "The array contains elements of different types."
+                    sprintf(
+                        "The array contains elements of different types, expected '%s' got '%s'",
+                        $type,
+                        is_object($element) ? get_class($element) : gettype($element)
+                    )
                 );
             }
+
         }
         return true;
     }

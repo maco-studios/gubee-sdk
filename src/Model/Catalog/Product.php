@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog;
 
+use DI\NotFoundException;
 use Gubee\SDK\Api\ServiceProviderInterface;
 use Gubee\SDK\Enum\Catalog\Product\Attribute\OriginEnum;
 use Gubee\SDK\Enum\Catalog\Product\StatusEnum;
@@ -15,7 +16,8 @@ use Gubee\SDK\Model\Catalog\Product\Attribute\Brand;
 use Gubee\SDK\Model\Catalog\Product\Variation;
 use Gubee\SDK\Model\Gubee\Account;
 
-use function array_values;
+use Gubee\SDK\Resource\Catalog\Product\Attribute\BrandResource;
+use Gubee\SDK\Resource\Catalog\ProductResource;
 use function is_array;
 use function is_string;
 
@@ -29,8 +31,8 @@ class Product extends AbstractModel
     protected StatusEnum $status;
     protected TypeEnum $type;
     protected ?string $hubeeId = null;
-    protected ?string $name    = null;
-    protected ?string $nbm     = null;
+    protected ?string $name = null;
+    protected ?string $nbm = null;
     /** @var array<Account>|null */
     protected ?array $accounts = null;
     /** @var array<Category>|null */
@@ -41,6 +43,8 @@ class Product extends AbstractModel
     protected ?array $variantAttributes = null;
     /** @var array<Variation>|null */
     protected ?array $variations = null;
+    protected BrandResource $brandResource;
+    protected ProductResource $productResource;
 
     /**
      * @param Brand|array<int|string, mixed> $brand
@@ -56,6 +60,8 @@ class Product extends AbstractModel
      */
     public function __construct(
         ServiceProviderInterface $serviceProvider,
+        ProductResource $productResource,
+        BrandResource $brandResource,
         string $id,
         $mainCategory,
         string $mainSku,
@@ -71,7 +77,10 @@ class Product extends AbstractModel
         ?array $specifications = null,
         ?array $variantAttributes = null,
         ?array $variations = null
-    ) {
+    )
+    {
+        $this->productResource = $productResource;
+        $this->brandResource = $brandResource;
         $this->setId($id)
             ->setMainCategory($mainCategory)
             ->setMainSku($mainSku);
@@ -162,6 +171,35 @@ class Product extends AbstractModel
         }
     }
 
+    public function load(string $id, string $field = 'externalId'): self
+    {
+        switch ($field) {
+            case 'externalId':
+                $product = $this->productResource->loadById($id);
+                break;
+            case 'skuId':
+                $product = $this->productResource->getBySku($id);
+                break;
+            default:
+                throw new NotFoundException(
+                    sprintf(
+                        'Field %s not found',
+                        $field
+                    )
+                );
+        }
+
+        return $product;
+    }
+
+    public function save()
+    {
+        return $this->productResource->update(
+            $this->getId(),
+            $this
+        );
+    }
+
     public function getBrand(): Brand
     {
         return $this->brand;
@@ -169,6 +207,15 @@ class Product extends AbstractModel
 
     public function setBrand(Brand $brand): self
     {
+        if (!$brand->getHubeeId()) {
+            try {
+                $brand = $this->brandResource->loadByName(
+                    $brand->getName()
+                );
+            } catch (\Throwable $e) {
+                $brand = $brand->save();
+            }
+        }
         $this->brand = $brand;
         return $this;
     }
@@ -373,17 +420,28 @@ class Product extends AbstractModel
 
             unset($values['categories'][$key]);
         }
-        $values['categories']   = array_values($values['categories']);
+        $values['categories'] = array_values($values['categories']);
         $values['mainCategory'] = $values['mainCategory']->getId();
-        if (isset($value['brand'])) { /** @phpstan-ignore-line */
+        if (isset($values['brand'])) {
             $values['brand'] = $values['brand']->getId();
         }
-        foreach ($values['specifications'] as $key => $specification) {
-            $values['specifications'][$key] = $specification->getAttribute();
+        // foreach ($values['specifications'] as $key => $specification) {
+        //     $values['specifications'][$key] = $specification->getAttribute();
+        // }
+        if (isset($values['variantAttributes'])) {
+            foreach ($values['variantAttributes'] as $key => $variantAttribute) {
+                $values['variantAttributes'][$key] = $variantAttribute->getAttribute();
+            }
         }
-        foreach ($values['variantAttributes'] as $key => $variantAttribute) {
-            $values['variantAttributes'][$key] = $variantAttribute->getAttribute();
+        if (isset($values['brandResource'])) {
+            unset($values['brandResource']);
         }
+        $values = array_filter(
+            $values,
+            function ($value) {
+                return $value !== null;
+            }
+        );
         return $values;
     }
 }

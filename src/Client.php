@@ -9,6 +9,7 @@ use Gubee\SDK\Api\ServiceProviderInterface;
 use Gubee\SDK\Library\HttpClient\Builder;
 use Gubee\SDK\Library\HttpClient\Plugin\Authenticate;
 use Gubee\SDK\Library\HttpClient\Plugin\Journal\History;
+use Gubee\SDK\Library\HttpClient\Plugin\Thrower;
 use Gubee\SDK\Library\ObjectManager\ServiceProvider;
 use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\BaseUriPlugin;
@@ -49,6 +50,10 @@ class Client
                     'retries' => $retryCount,
                 ]
             )
+        );
+
+        $this->httpClientBuilder->addPlugin(
+            new Thrower()
         );
         $this->httpClientBuilder->addPlugin(
             new HeaderDefaultsPlugin([

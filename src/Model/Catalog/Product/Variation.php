@@ -74,7 +74,7 @@ class Variation extends AbstractModel
                 );
             }
         }
-
+        $this->setImages($images);
         $this->setDimension($dimension);
         $this->setHandlingTime($handlingTime);
         $this->setName($name);

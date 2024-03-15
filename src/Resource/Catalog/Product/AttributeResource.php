@@ -58,7 +58,7 @@ class AttributeResource extends AbstractResource
      * @param array<Attribute> $attributes
      * @return array<Attribute>
      */
-    public function bulkCreate(array $attributes): array
+    public function bulkCreate(array $attributes): bool
     {
         $response = $this->post(
             '/integration/attributes/bulk',
@@ -73,7 +73,7 @@ class AttributeResource extends AbstractResource
                 );
         }
 
-        return $response;
+        return sizeof($response) > 0 ? true : false;
     }
 
     /**
@@ -82,22 +82,14 @@ class AttributeResource extends AbstractResource
      * @param array<Attribute> $attributes
      * @return array<Attribute>
      */
-    public function bulkUpdate(array $attributes): array
+    public function bulkUpdate(array $attributes): bool
     {
         $response = $this->put(
             '/integration/attributes/bulk',
             $attributes
         );
 
-        foreach ($response as $key => $value) {
-            $response[$key] = $this->getClient()->getServiceProvider()
-                ->create(
-                    Attribute::class,
-                    $value
-                );
-        }
-
-        return $response;
+        return sizeof($response) > 0 ? true : false;
     }
 
     public function loadById(string $id): Attribute

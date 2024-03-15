@@ -5,12 +5,14 @@ declare(strict_types=1);
 namespace Gubee\SDK\Model\Catalog\Product\Attribute;
 
 use Gubee\SDK\Api\ServiceProviderInterface;
+use Gubee\SDK\Library\ObjectManager\ServiceProvider;
+use Gubee\SDK\Model\AbstractModel;
 use Gubee\SDK\Model\Catalog\Product\Attribute\Dimension\Measure;
 use Gubee\SDK\Model\Catalog\Product\Attribute\Dimension\Weight;
 
 use function is_array;
 
-class Dimension
+class Dimension extends AbstractModel
 {
     protected Measure $depth;
     protected Measure $height;
@@ -29,7 +31,8 @@ class Dimension
         $height,
         $weight,
         $width
-    ) {
+    )
+    {
         if (is_array($depth)) {
             $depth = $serviceProvider->create(
                 Measure::class,

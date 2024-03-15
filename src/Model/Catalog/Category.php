@@ -4,27 +4,39 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog;
 
+use Gubee\SDK\Api\ServiceProviderInterface;
+use Gubee\SDK\Library\HttpClient\Exception\NotFoundException;
 use Gubee\SDK\Model\AbstractModel;
+use Gubee\SDK\Resource\Catalog\CategoryResource;
 
 class Category extends AbstractModel
 {
     protected string $id;
     protected string $name;
-    protected ?bool $active                 = null;
-    protected ?string $description          = null;
+    protected ?bool $active = null;
+    protected ?string $description = null;
     protected ?bool $enabledAutoIntegration = null;
-    protected ?string $hubeeId              = null;
-    protected ?Category $parent             = null;
+    protected ?string $hubeeId = null;
+    protected ?Category $parent = null;
+    protected CategoryResource $categoryResource;
+    protected ServiceProviderInterface $serviceProvider;
 
+    /**
+     * @var int|Category $parent
+     */
     public function __construct(
+        ServiceProviderInterface $serviceProvider,
+        CategoryResource $categoryResource,
         string $id,
         string $name,
         ?bool $active = null,
         ?string $description = null,
         ?bool $enabledAutoIntegration = null,
         ?string $hubeeId = null,
-        ?Category $parent = null
-    ) {
+        $parent = null
+    )
+    {
+        $this->categoryResource = $categoryResource;
         $this->setId($id);
         $this->setName($name);
         if ($active !== null) {
@@ -42,6 +54,21 @@ class Category extends AbstractModel
         if ($parent !== null) {
             $this->setParent($parent);
         }
+    }
+
+    public function save(): Category
+    {
+        try {
+            $this->categoryResource->loadByExternalId($this->getId());
+            return $this->categoryResource->updateByExternalId($this->getId(), $this);
+        } catch (NotFoundException $e) {
+            return $this->categoryResource->create($this);
+        }
+    }
+
+    public function load(string $id)
+    {
+        return $this->categoryResource->loadByExternalId($id);
     }
 
     public function getId(): string
@@ -115,8 +142,16 @@ class Category extends AbstractModel
         return $this->parent;
     }
 
-    public function setParent(Category $parent): self
+    public function setParent($parent): self
     {
+        if (is_int($parent)) {
+            $this->parent = $this->serviceProvider->create(
+                Category::class,
+                [
+                    'id' => $parent
+                ]
+            );
+        }
         $this->parent = $parent;
         return $this;
     }
