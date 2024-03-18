@@ -17,6 +17,7 @@ use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
 use Http\Client\Common\Plugin\HistoryPlugin;
 use Http\Client\Common\Plugin\RetryPlugin;
 use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
@@ -24,25 +25,27 @@ use Psr\Log\NullLogger;
 class Client
 {
     public const USER_AGENT = 'gubee-sdk/' . self::VERSION;
-    public const VERSION    = '1.0.0';
-    public const BASE_URI   = 'https://api.gubee.com.br';
+    public const VERSION = '1.0.0';
+    public const BASE_URI = 'https://api.gubee.com.br';
 
     protected ServiceProviderInterface $serviceProvider;
     protected LoggerInterface $logger;
     protected Builder $httpClientBuilder;
+    protected History $responseHistory;
 
     public function __construct(
         ?ServiceProviderInterface $serviceProvider = null,
         ?LoggerInterface $logger = null,
         ?Builder $httpClientBuilder = null,
         int $retryCount = 3
-    ) {
-        $this->serviceProvider   = $serviceProvider ?? $this->buildServiceProvider();
-        $this->logger            = $logger ?? new NullLogger();
+    )
+    {
+        $this->serviceProvider = $serviceProvider ?? $this->buildServiceProvider();
+        $this->logger = $logger ?? new NullLogger();
         $this->httpClientBuilder = $httpClientBuilder ?? new Builder();
-        $history                 = new History($this->logger);
+        $this->responseHistory = new History($this->logger);
         $this->httpClientBuilder->addPlugin(
-            new HistoryPlugin($history)
+            new HistoryPlugin($this->responseHistory)
         );
         $this->httpClientBuilder->addPlugin(
             new RetryPlugin(
@@ -78,8 +81,8 @@ class Client
         $this->httpClientBuilder->removePlugin(
             Authenticate::class
         )->addPlugin(
-            new Authenticate($token)
-        );
+                new Authenticate($token)
+            );
         return $this;
     }
 
@@ -102,8 +105,8 @@ class Client
         $this->httpClientBuilder->removePlugin(
             BaseUriPlugin::class
         )->addPlugin(
-            new BaseUriPlugin($uri)
-        );
+                new BaseUriPlugin($uri)
+            );
         return $this;
     }
 
@@ -135,9 +138,9 @@ class Client
     public function buildServiceProvider(): ServiceProviderInterface
     {
         $containerBuilder = new ContainerBuilder(
-            ServiceProvider::class
+                ServiceProvider::class
         );
-        $defs             = include __DIR__ . '/config/di.php';
+        $defs = include __DIR__ . '/config/di.php';
         $containerBuilder->addDefinitions(
             $defs
         );
@@ -145,5 +148,15 @@ class Client
         $result = $containerBuilder->build();
 
         return $result->get(ServiceProviderInterface::class);
+    }
+
+    /**
+     * Get the last response.
+     *
+     * @return ResponseInterface|null
+     */
+    public function getLastResponse(): ?ResponseInterface
+    {
+        return $this->responseHistory->getLastResponse();
     }
 }
