@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog\Product\Attribute;
 
+use Exception;
 use Gubee\SDK\Model\AbstractModel;
 use Gubee\SDK\Resource\Catalog\Product\Attribute\BrandResource;
+use InvalidArgumentException;
 
 class Brand extends AbstractModel
 {
     protected string $name;
     protected ?string $description = null;
-    protected ?string $hubeeId = null;
-    protected ?string $id = null;
+    protected ?string $hubeeId     = null;
+    protected ?string $id          = null;
     protected BrandResource $brandResource;
 
     public function __construct(
@@ -21,8 +23,7 @@ class Brand extends AbstractModel
         ?string $description = null,
         ?string $hubeeId = null,
         ?string $id = null
-    )
-    {
+    ) {
         $this->brandResource = $brandResource;
         $this->setName($name);
         if ($description) {
@@ -39,8 +40,7 @@ class Brand extends AbstractModel
     public function load(
         $id,
         $field = 'name'
-    ): Brand
-    {
+    ): Brand {
         switch ($field) {
             case 'name':
                 return $this->brandResource->loadByName($id);
@@ -49,7 +49,7 @@ class Brand extends AbstractModel
             case 'id':
                 return $this->brandResource->loadById($id);
             default:
-                throw new \InvalidArgumentException('Invalid field');
+                throw new InvalidArgumentException('Invalid field');
         }
     }
 
@@ -62,7 +62,7 @@ class Brand extends AbstractModel
         }
         try {
             $this->brandResource->loadByName($this->getName());
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $this->brandResource->create($this);
         }
         return $this->brandResource->updateByName($this);

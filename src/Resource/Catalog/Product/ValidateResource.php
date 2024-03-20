@@ -9,8 +9,7 @@ use Gubee\SDK\Resource\AbstractResource;
 
 class ValidateResource extends AbstractResource
 {
-
-    public function create(Product $product)
+    public function create(Product $product): array
     {
         return $this->post(
             '/integration/validations/product/create',
@@ -18,12 +17,11 @@ class ValidateResource extends AbstractResource
         );
     }
 
-    public function update(Product $product)
+    public function update(Product $product): array
     {
         return $this->post(
             '/integration/validations/product/update',
             $product->jsonSerialize()
         );
     }
-
 }

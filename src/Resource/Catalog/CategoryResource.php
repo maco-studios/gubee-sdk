@@ -7,9 +7,10 @@ namespace Gubee\SDK\Resource\Catalog;
 use Gubee\SDK\Model\Catalog\Category;
 use Gubee\SDK\Resource\AbstractResource;
 
+use function rawurlencode;
+
 class CategoryResource extends AbstractResource
 {
-
     // POST
     // ​/integration​/categories
     // Create category
@@ -26,7 +27,6 @@ class CategoryResource extends AbstractResource
                 $response
             );
     }
-
 
     // GET
     // ​/integration​/categories​/{externalId}
@@ -70,12 +70,7 @@ class CategoryResource extends AbstractResource
             '/integration/categories/bulk',
             $categories
         );
-
-        return $this->getClient()->getServiceProvider()
-            ->create(
-                Category::class,
-                $response
-            );
+        return true;
     }
 
     // PUT
@@ -88,11 +83,7 @@ class CategoryResource extends AbstractResource
             $categories
         );
 
-        return $this->getClient()->getServiceProvider()
-            ->create(
-                Category::class,
-                $response
-            );
+        return true;
     }
 
     // GET
@@ -110,6 +101,4 @@ class CategoryResource extends AbstractResource
                 $response
             );
     }
-
-
 }

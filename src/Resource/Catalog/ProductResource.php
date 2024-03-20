@@ -7,9 +7,10 @@ namespace Gubee\SDK\Resource\Catalog;
 use Gubee\SDK\Model\Catalog\Product;
 use Gubee\SDK\Resource\AbstractResource;
 
+use function rawurlencode;
+
 class ProductResource extends AbstractResource
 {
-
     // POST
     // /integration/products
     // Create product
@@ -178,6 +179,4 @@ class ProductResource extends AbstractResource
                 $response
             );
     }
-
-
 }

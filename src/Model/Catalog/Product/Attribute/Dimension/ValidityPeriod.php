@@ -8,6 +8,8 @@ use DateTime;
 use DateTimeInterface;
 use Gubee\SDK\Model\AbstractModel;
 
+use function is_string;
+
 class ValidityPeriod extends AbstractModel
 {
     protected DateTimeInterface $beginDt;
@@ -20,8 +22,7 @@ class ValidityPeriod extends AbstractModel
     public function __construct(
         $beginDt,
         $endDt
-    )
-    {
+    ) {
         if (is_string($beginDt)) {
             $beginDt = DateTime::createFromFormat(
                 'Y-m-d\TH:i:s.v',
@@ -38,36 +39,22 @@ class ValidityPeriod extends AbstractModel
         $this->setEndDt($endDt);
     }
 
-    /**
-     * @return DateTimeInterface
-     */
     public function getBeginDt(): DateTimeInterface
     {
         return $this->beginDt;
     }
 
-    /**
-     * @param DateTimeInterface $beginDt 
-     * @return self
-     */
     public function setBeginDt(DateTimeInterface $beginDt): self
     {
         $this->beginDt = $beginDt;
         return $this;
     }
 
-    /**
-     * @return DateTimeInterface
-     */
     public function getEndDt(): DateTimeInterface
     {
         return $this->endDt;
     }
 
-    /**
-     * @param DateTimeInterface $endDt 
-     * @return self
-     */
     public function setEndDt(DateTimeInterface $endDt): self
     {
         $this->endDt = $endDt;

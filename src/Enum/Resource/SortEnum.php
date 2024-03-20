@@ -8,7 +8,7 @@ use Gubee\SDK\Enum\AbstractEnum;
 
 class SortEnum extends AbstractEnum
 {
-    private const ASC = 'asc';
+    private const ASC  = 'asc';
     private const DESC = 'desc';
 
     public static function ASC(): self
@@ -30,5 +30,4 @@ class SortEnum extends AbstractEnum
     {
         return new self($value);
     }
-
 }

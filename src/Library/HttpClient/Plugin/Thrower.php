@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace Gubee\SDK\Library\HttpClient\Plugin;
 
 use Gubee\SDK\Library\HttpClient\Exception\BadGatewayException;
+use Gubee\SDK\Library\HttpClient\Exception\BadRequestException;
 use Gubee\SDK\Library\HttpClient\Exception\ConflictException;
 use Gubee\SDK\Library\HttpClient\Exception\ErrorException;
 use Gubee\SDK\Library\HttpClient\Exception\ExceptionInterface;
+use Gubee\SDK\Library\HttpClient\Exception\ForbiddenException;
 use Gubee\SDK\Library\HttpClient\Exception\GatewayTimeoutException;
 use Gubee\SDK\Library\HttpClient\Exception\InternalServerErrorException;
 use Gubee\SDK\Library\HttpClient\Exception\MethodNotAllowedException;
@@ -16,19 +18,30 @@ use Gubee\SDK\Library\HttpClient\Exception\NotFoundException;
 use Gubee\SDK\Library\HttpClient\Exception\NotImplementedException;
 use Gubee\SDK\Library\HttpClient\Exception\ServiceUnavailableException;
 use Gubee\SDK\Library\HttpClient\Exception\TooManyRequestsException;
+use Gubee\SDK\Library\HttpClient\Exception\UnauthorizedException;
 use Gubee\SDK\Library\HttpClient\Exception\UnprocessableEntityException;
 use Gubee\SDK\Library\HttpClient\Exception\UnsupportedMediaTypeException;
-use Http\Promise\Promise;
 use Http\Client\Common\Plugin;
+use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Gubee\SDK\Library\HttpClient\Exception\ForbiddenException;
-use Gubee\SDK\Library\HttpClient\Exception\BadRequestException;
-use Gubee\SDK\Library\HttpClient\Exception\UnauthorizedException;
+use Psr\Log\LoggerInterface;
+
+use function array_map;
+use function implode;
+use function json_decode;
+use function sprintf;
+
+use const PHP_EOL;
 
 class Thrower implements Plugin
 {
+    private $logger;
 
+    public function __construct(LoggerInterface $logger)
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Handle the request and return the response coming from the next callable.
@@ -39,12 +52,32 @@ class Thrower implements Plugin
             function (ResponseInterface $response) use (&$request): ResponseInterface {
                 $status = $response->getStatusCode();
                 if ($status >= 400 && $status < 600) {
-                    throw self::createException(
-                        $status,
-                        (string) $response->getBody(),
-                        $request,
-                        $response
-                    );
+                    try {
+                        throw self::createException(
+                            $status,
+                            (string) $response->getBody(),
+                            $request,
+                            $response
+                        );
+                    } catch (ExceptionInterface $exception) {
+                        $this->logger->error(
+                            $exception->getMessage(),
+                            [
+                                'request'  => [
+                                    'method'  => $request->getMethod(),
+                                    'headers' => $request->getHeaders(),
+                                    'body'    => (string) $request->getBody(),
+                                    'uri'     => (string) $request->getUri(),
+                                ],
+                                'response' => [
+                                    'status'  => $response->getStatusCode(),
+                                    'headers' => $response->getHeaders(),
+                                    'body'    => (string) $response->getBody(),
+                                ],
+                            ]
+                        );
+                        throw $exception;
+                    }
                 }
 
                 return $response;
@@ -57,39 +90,42 @@ class Thrower implements Plugin
         string $responseMessage,
         RequestInterface $request,
         ResponseInterface $response
-    ): ExceptionInterface
-    {
+    ): ExceptionInterface {
         $responseMessage = json_decode(
             (string) $responseMessage,
             true
         );
 
-        switch ($responseMessage['message']) {
-            case 'error.brand.notfound':
-                $responseMessage = $responseMessage['title'];
-                $statusCode = 404;
-                break;
-            case 'error.validation.text':
-                $responseMessage = sprintf(
-                    "Object validation failed:\n%s",
-                    implode(
-                        PHP_EOL,
-                        array_map(
-                            function ($error) {
-                                return sprintf(
-                                    "%s:%s: %s",
-                                    $error['objectName'],
-                                    $error['field'],
-                                    $error['message']
-                                );
-                            },
-                            $responseMessage['fieldErrors']
+        if (isset($responseMessage['message'])) {
+            switch ($responseMessage['message']) {
+                case 'error.brand.notfound':
+                    $responseMessage = $responseMessage['title'];
+                    $statusCode      = 404;
+                    break;
+                case 'error.validation.text':
+                    $responseMessage = sprintf(
+                        "Object validation failed:\n%s",
+                        implode(
+                            PHP_EOL,
+                            array_map(
+                                function ($error) {
+                                    return sprintf(
+                                        "%s:%s: %s",
+                                        $error['objectName'],
+                                        $error['field'],
+                                        $error['message']
+                                    );
+                                },
+                                $responseMessage['fieldErrors']
+                            )
                         )
-                    )
-                );
-                break;
-            default:
-                $responseMessage = $responseMessage['message'];
+                    );
+                    break;
+                default:
+                    $responseMessage = $responseMessage['message'];
+            }
+        } else {
+            $responseMessage = $responseMessage['title'];
         }
 
         switch ($statusCode) {

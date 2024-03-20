@@ -5,10 +5,23 @@ declare(strict_types=1);
 namespace Gubee\SDK\Resource;
 
 use Closure;
+use ErrorException;
+use Exception;
+use Generator;
 use Gubee\SDK\Client;
-use Gubee\SDK\Library\HttpClient\Exception\ErrorException;
 use Psr\Http\Message\ResponseInterface;
 use SebastianBergmann\ObjectEnumerator\InvalidArgumentException;
+
+use function array_map;
+use function array_merge;
+use function array_shift;
+use function explode;
+use function implode;
+use function is_array;
+use function iterator_to_array;
+use function json_decode;
+use function parse_url;
+use function sprintf;
 
 class ResultPager
 {
@@ -21,15 +34,11 @@ class ResultPager
 
     /**
      * The client to use for pagination.
-     *
-     * @var \Gubee\SDK\Client
      */
     private Client $client;
 
     /**
      * The number of entries to request per page.
-     *
-     * @var int
      */
     private int $perPage;
 
@@ -43,44 +52,37 @@ class ResultPager
     /**
      * Create a new result pager instance.
      *
-     * @param Client   $client
-     * @param int|null $perPage
-     *
      * @return void
      */
-    public function __construct(Client $client, int $perPage = null)
+    public function __construct(Client $client, ?int $perPage = null)
     {
         if (null !== $perPage && ($perPage < 1 || $perPage > 100)) {
             throw new InvalidArgumentException(
                 sprintf(
                     '%s::__construct(): Argument #2 ($perPage) must be between 1 and 100, or null',
-                        self::class
+                    self::class
                 )
             );
         }
 
-        $this->client = $client;
-        $this->perPage = $perPage ?? self::PER_PAGE;
+        $this->client     = $client;
+        $this->perPage    = $perPage ?? self::PER_PAGE;
         $this->pagination = [];
     }
 
     /**
      * Fetch a single result from an api call.
      *
-     * @param AbstractResource $api
-     * @param string      $method
      * @param array       $parameters
-     *
      * @throws \Http\Client\Exception
-     *
      * @return array
      */
     public function fetch(AbstractResource $api, string $method, array $parameters = []): array
     {
         $result = self::bindPerPage($api, $this->perPage)->$method(...$parameters);
 
-        if (!\is_array($result)) {
-            throw new \Exception('Pagination of this endpoint is not supported.');
+        if (! is_array($result)) {
+            throw new Exception('Pagination of this endpoint is not supported.');
         }
 
         $this->postFetch();
@@ -90,10 +92,7 @@ class ResultPager
 
     /**
      * Fetch a specific number of pages
-     * 
-     * @param AbstractResource $api
-     * @param string      $method
-     * @param int         $pages
+     *
      * @param array       $parameters
      */
     public function fetchPages(AbstractResource $api, string $method, int $pages, int $sizes = 50, array $parameters = []): array
@@ -104,7 +103,7 @@ class ResultPager
                 $results,
                 $this->fetch($api, $method, array_merge($parameters, [$i, $sizes]))
             );
-            if (!$this->hasNext()) {
+            if (! $this->hasNext()) {
                 break;
             }
         }
@@ -114,31 +113,22 @@ class ResultPager
     /**
      * Fetch all results from an api call.
      *
-     * @param AbstractResource $api
-     * @param string      $method
      * @param array       $parameters
-     *
      * @throws \Http\Client\Exception
-     *
      * @return array
      */
     public function fetchAll(AbstractResource $api, string $method, array $parameters = []): array
     {
-        return \iterator_to_array($this->fetchAllLazy($api, $method, $parameters));
+        return iterator_to_array($this->fetchAllLazy($api, $method, $parameters));
     }
 
     /**
      * Lazily fetch all results from an api call.
      *
-     * @param AbstractResource $api
-     * @param string      $method
      * @param array       $parameters
-     *
      * @throws \Http\Client\Exception
-     *
-     * @return \Generator
      */
-    public function fetchAllLazy(AbstractResource $api, string $method, array $parameters = []): \Generator
+    public function fetchAllLazy(AbstractResource $api, string $method, array $parameters = []): Generator
     {
         $parameters = array_merge(
             [
@@ -163,12 +153,9 @@ class ResultPager
 
     /**
      * Check to determine the availability of a next page.
-     *
-     * @return bool
      */
     public function hasNext(): bool
     {
-        print_r($this->pagination);
         return isset($this->pagination['next']);
     }
 
@@ -176,7 +163,6 @@ class ResultPager
      * Fetch the next page.
      *
      * @throws \Http\Client\Exception
-     *
      * @return array
      */
     public function fetchNext(): array
@@ -186,8 +172,6 @@ class ResultPager
 
     /**
      * Check to determine the availability of a previous page.
-     *
-     * @return bool
      */
     public function hasPrevious(): bool
     {
@@ -198,7 +182,6 @@ class ResultPager
      * Fetch the previous page.
      *
      * @throws \Http\Client\Exception
-     *
      * @return array
      */
     public function fetchPrevious(): array
@@ -210,7 +193,6 @@ class ResultPager
      * Fetch the first page.
      *
      * @throws \Http\Client\Exception
-     *
      * @return array
      */
     public function fetchFirst(): array
@@ -222,7 +204,6 @@ class ResultPager
      * Fetch the last page.
      *
      * @throws \Http\Client\Exception
-     *
      * @return array
      */
     public function fetchLast(): array
@@ -232,8 +213,6 @@ class ResultPager
 
     /**
      * Refresh the pagination property.
-     *
-     * @return void
      */
     private function postFetch(): void
     {
@@ -245,8 +224,6 @@ class ResultPager
     /**
      * Extract pagination URIs from Link header.
      *
-     * @param ResponseInterface $response
-     *
      * @return array<string,string>
      */
     public static function getPagination(ResponseInterface $response): array
@@ -256,8 +233,8 @@ class ResultPager
             true
         );
 
-        if (!isset($links['_links'])) {
-            throw new \ErrorException(
+        if (! isset($links['_links'])) {
+            throw new ErrorException(
                 'The response does not have a "links" key.'
             );
         }
@@ -267,24 +244,16 @@ class ResultPager
 
     /**
      * Get the value for a single header.
-     *
-     * @param ResponseInterface $response
-     * @param string            $name
-     *
-     * @return string|null
      */
     private static function getHeader(ResponseInterface $response, string $name): ?string
     {
         $headers = $response->getHeader($name);
 
-        return \array_shift($headers);
+        return array_shift($headers);
     }
 
     /**
-     * @param string $key
-     *
      * @throws \Http\Client\Exception
-     *
      * @return array
      */
     private function get(string $key): array
@@ -295,7 +264,7 @@ class ResultPager
         }
 
         // url decode $pagination['href']
-        $href = parse_url($pagination['href']);
+        $href  = parse_url($pagination['href']);
         $query = explode('&', $href['query']);
         $query = array_map(function ($item) {
             return explode('=', $item);
@@ -307,21 +276,21 @@ class ResultPager
                 $sort = true;
             }
         }
-        if (!$sort) {
+        if (! $sort) {
             $query[] = ['sort', 'asc'];
         }
         // convert back to a url
-        $query = array_map(function ($item) {
+        $query              = array_map(function ($item) {
             return implode('=', $item);
         }, $query);
-        $query = implode('&', $query);
+        $query              = implode('&', $query);
         $pagination['href'] = $href['scheme'] . '://' . $href['host'] . $href['path'] . '?' . $query;
-        $result = $this->client->getHttpClient()->get($pagination['href']);
+        $result             = $this->client->getHttpClient()->get($pagination['href']);
 
         $content = json_decode((string) $result->getBody(), true);
 
-        if (!\is_array($content)) {
-            throw new \Exception(
+        if (! is_array($content)) {
+            throw new Exception(
                 'Pagination of this endpoint is not supported.'
             );
         }
@@ -331,12 +300,6 @@ class ResultPager
         return $content;
     }
 
-    /**
-     * @param AbstractResource $api
-     * @param int                     $perPage
-     *
-     * @return AbstractResource
-     */
     private static function bindPerPage(AbstractResource $api, int $perPage): AbstractResource
     {
         /** @var Closure(AbstractResource): AbstractResource */

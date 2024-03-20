@@ -9,15 +9,17 @@ use Gubee\SDK\Library\HttpClient\Exception\NotFoundException;
 use Gubee\SDK\Model\AbstractModel;
 use Gubee\SDK\Resource\Catalog\CategoryResource;
 
+use function is_int;
+
 class Category extends AbstractModel
 {
     protected string $id;
     protected string $name;
-    protected ?bool $active = null;
-    protected ?string $description = null;
+    protected ?bool $active                 = null;
+    protected ?string $description          = null;
     protected ?bool $enabledAutoIntegration = null;
-    protected ?string $hubeeId = null;
-    protected ?Category $parent = null;
+    protected ?string $hubeeId              = null;
+    protected ?Category $parent             = null;
     protected CategoryResource $categoryResource;
     protected ServiceProviderInterface $serviceProvider;
 
@@ -28,17 +30,19 @@ class Category extends AbstractModel
         ServiceProviderInterface $serviceProvider,
         CategoryResource $categoryResource,
         string $id,
-        string $name,
+        ?string $name = null,
         ?bool $active = null,
         ?string $description = null,
         ?bool $enabledAutoIntegration = null,
         ?string $hubeeId = null,
         $parent = null
-    )
-    {
+    ) {
+        $this->serviceProvider  = $serviceProvider;
         $this->categoryResource = $categoryResource;
         $this->setId($id);
-        $this->setName($name);
+        if ($name) {
+            $this->setName($name);
+        }
         if ($active !== null) {
             $this->setActive($active);
         }
@@ -145,14 +149,36 @@ class Category extends AbstractModel
     public function setParent($parent): self
     {
         if (is_int($parent)) {
-            $this->parent = $this->serviceProvider->create(
-                Category::class,
+            $parent = $this->serviceProvider->create(
+                self::class,
                 [
-                    'id' => $parent
+                    'serviceProvider'  => $this->serviceProvider,
+                    'categoryResource' => $this->categoryResource,
+                    'id'               => $parent,
                 ]
             );
         }
         $this->parent = $parent;
         return $this;
+    }
+
+    /**
+     * @return array<int|string, mixed>
+     */
+    public function jsonSerialize(): array
+    {
+        $values = parent::jsonSerialize();
+        if (isset($values['parent'])) {
+            $values['parent'] = $values['parent']->getId();
+        }
+
+        if (isset($values['serviceProvider'])) {
+            unset($values['serviceProvider']);
+        }
+        if (isset($values['categoryResource'])) {
+            unset($values['categoryResource']);
+        }
+
+        return $values;
     }
 }

@@ -1,11 +1,13 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Gubee\SDK\Resource\Sales\Order\Queue;
 
 use Gubee\SDK\Enum\Resource\SortEnum;
 use Gubee\SDK\Resource\AbstractResource;
+
+use function rawurlencode;
 
 class NotificationResource extends AbstractResource
 {
@@ -16,7 +18,7 @@ class NotificationResource extends AbstractResource
      * @param int $size The number of orders per page.
      * @return array The canceled orders.
      */
-    public function getCanceledOrders(int $page = 0, int $size = 50, SortEnum $sort = null): array
+    public function getCanceledOrders(int $page = 0, int $size = 50, ?SortEnum $sort = null): array
     {
         return $this->get(
             '/integration/orders/queue/canceled',
@@ -49,7 +51,7 @@ class NotificationResource extends AbstractResource
      * @param int $size The number of orders per page.
      * @return array The created orders.
      */
-    public function getCreatedOrders(int $page = 0, int $size = 50, SortEnum $sort = null): array
+    public function getCreatedOrders(int $page = 0, int $size = 50, ?SortEnum $sort = null): array
     {
         return $this->get(
             '/integration/orders/queue/created',
@@ -82,7 +84,7 @@ class NotificationResource extends AbstractResource
      * @param int $size The number of orders per page.
      * @return array The delivered orders.
      */
-    public function getDeliveredOrders(int $page = 0, int $size = 50, SortEnum $sort = null): array
+    public function getDeliveredOrders(int $page = 0, int $size = 50, ?SortEnum $sort = null): array
     {
         return $this->get(
             '/integration/orders/queue/delivered',
@@ -115,7 +117,7 @@ class NotificationResource extends AbstractResource
      * @param int $size The number of orders per page.
      * @return array The invoiced orders.
      */
-    public function getInvoicedOrders(int $page = 0, int $size = 50, SortEnum $sort = null): array
+    public function getInvoicedOrders(int $page = 0, int $size = 50, ?SortEnum $sort = null): array
     {
         return $this->get(
             '/integration/orders/queue/invoiced',
@@ -148,7 +150,7 @@ class NotificationResource extends AbstractResource
      * @param int $size The number of orders per page.
      * @return array The paid orders.
      */
-    public function getPaidOrders(int $page = 0, int $size = 50, SortEnum $sort = null): array
+    public function getPaidOrders(int $page = 0, int $size = 50, ?SortEnum $sort = null): array
     {
         return $this->get(
             '/integration/orders/queue/paid',
@@ -181,7 +183,7 @@ class NotificationResource extends AbstractResource
      * @param int $size The number of orders per page.
      * @return array The payed orders.
      */
-    public function getPayedOrders(int $page = 0, int $size = 50, SortEnum $sort = null): array
+    public function getPayedOrders(int $page = 0, int $size = 50, ?SortEnum $sort = null): array
     {
         return $this->get(
             '/integration/orders/queue/payed',
@@ -214,7 +216,7 @@ class NotificationResource extends AbstractResource
      * @param int $size The number of orders per page.
      * @return array The rejected orders.
      */
-    public function getRejectedOrders(int $page = 0, int $size = 50, SortEnum $sort = null): array
+    public function getRejectedOrders(int $page = 0, int $size = 50, ?SortEnum $sort = null): array
     {
         return $this->get(
             '/integration/orders/queue/rejected',
@@ -247,7 +249,7 @@ class NotificationResource extends AbstractResource
      * @param int $size The number of orders per page.
      * @return array The shipped orders.
      */
-    public function getShippedOrders(int $page = 0, int $size = 50, SortEnum $sort = null): array
+    public function getShippedOrders(int $page = 0, int $size = 50, ?SortEnum $sort = null): array
     {
         return $this->get(
             '/integration/orders/queue/shipped',
@@ -272,5 +274,4 @@ class NotificationResource extends AbstractResource
             "/integration/orders/queue/shipped/" . rawurlencode($orderId)
         );
     }
-
 }

@@ -16,8 +16,7 @@ class History implements Journal
     protected LoggerInterface $logger;
     public function __construct(
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->logger = $logger;
     }
 
@@ -33,21 +32,21 @@ class History implements Journal
         $this->logger->info(
             'Request: ' . $request->getUri(),
             [
-                'uri' => (string) $request->getUri(),
-                'method' => $request->getMethod(),
+                'uri'     => (string) $request->getUri(),
+                'method'  => $request->getMethod(),
                 'headers' => $request->getHeaders(),
-                'body' => (string) $request->getBody(),
+                'body'    => (string) $request->getBody(),
             ]
         );
         $this->logger->info(
             'Response: ' . $response->getStatusCode(),
             [
-                'status' => $response->getStatusCode(),
+                'status'  => $response->getStatusCode(),
                 'headers' => $response->getHeaders(),
-                'body' => (string) $response->getBody(),
-                'reason' => $response->getReasonPhrase(),
-                'uri' => (string) $request->getUri(),
-                'method' => $request->getMethod(),
+                'body'    => (string) $response->getBody(),
+                'reason'  => $response->getReasonPhrase(),
+                'uri'     => (string) $request->getUri(),
+                'method'  => $request->getMethod(),
             ]
         );
     }
@@ -63,26 +62,23 @@ class History implements Journal
         $this->logger->error(
             'Request: ' . $request->getUri(),
             [
-                'uri' => (string) $request->getUri(),
-                'method' => $request->getMethod(),
+                'uri'     => (string) $request->getUri(),
+                'method'  => $request->getMethod(),
                 'headers' => $request->getHeaders(),
-                'body' => (string) $request->getBody(),
+                'body'    => (string) $request->getBody(),
             ]
         );
         $this->logger->error(
             'Exception: ' . $exception->getMessage(),
             [
-                'uri' => (string) $request->getUri(),
-                'method' => $request->getMethod(),
+                'uri'     => (string) $request->getUri(),
+                'method'  => $request->getMethod(),
                 'headers' => $request->getHeaders(),
-                'body' => (string) $request->getBody(),
+                'body'    => (string) $request->getBody(),
             ]
         );
     }
 
-    /**
-     * @return ResponseInterface
-     */
     public function getLastResponse(): ResponseInterface
     {
         return $this->lastResponse;

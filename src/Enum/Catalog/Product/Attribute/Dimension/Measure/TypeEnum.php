@@ -9,7 +9,7 @@ use Gubee\SDK\Enum\AbstractEnum;
 class TypeEnum extends AbstractEnum
 {
     private const CENTIMETER = 'CENTIMETER';
-    private const METER = 'METER';
+    private const METER      = 'METER';
     private const MILLIMETER = 'MILLIMETER';
 
     public static function CENTIMETER(): self

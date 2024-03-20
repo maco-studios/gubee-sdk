@@ -58,8 +58,7 @@ abstract class AbstractResource
         string $uri,
         array $params = [],
         array $headers = []
-    ): array
-    {
+    ): array {
         $response = $this->client->getHttpClient()
             ->get(
                 self::prepareUri($uri, $params),
@@ -85,11 +84,10 @@ abstract class AbstractResource
         array $headers = [],
         array $files = [],
         array $uriParams = []
-    )
-    {
+    ) {
         if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
-            $body = self::prepareMultipartBody($builder);
+            $body    = self::prepareMultipartBody($builder);
             $headers = self::addMultipartContentType($headers, $builder);
         } else {
             $body = self::prepareJsonBody($params);
@@ -126,11 +124,10 @@ abstract class AbstractResource
         array $params = [],
         array $headers = [],
         array $files = []
-    )
-    {
+    ) {
         if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
-            $body = self::prepareMultipartBody($builder);
+            $body    = self::prepareMultipartBody($builder);
             $headers = self::addMultipartContentType($headers, $builder);
         } else {
             $body = self::prepareJsonBody($params);
@@ -169,14 +166,13 @@ abstract class AbstractResource
         array $params = [],
         array $headers = [],
         array $files = []
-    )
-    {
+    ) {
         if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder(
                 $params,
                 $files
             );
-            $body = self::prepareMultipartBody(
+            $body    = self::prepareMultipartBody(
                 $builder
             );
             $headers = self::addMultipartContentType(
@@ -220,8 +216,7 @@ abstract class AbstractResource
     private static function addMultipartContentType(
         array $headers,
         MultipartStreamBuilder $builder
-    ): array
-    {
+    ): array {
         $contentType = sprintf(
             '%s; boundary=%s',
             'applcation/octet-stream',
@@ -246,8 +241,7 @@ abstract class AbstractResource
      */
     private static function prepareMultipartBody(
         MultipartStreamBuilder $builder
-    ): StreamInterface
-    {
+    ): StreamInterface {
         return $builder->build();
     }
 
@@ -261,8 +255,7 @@ abstract class AbstractResource
         string $params,
         array $files = [],
         array $headers = []
-    )
-    {
+    ) {
         $request = Psr17FactoryDiscovery::findRequestFactory()->createRequest(
             'POST',
             self::prepareUri($uri)
@@ -297,8 +290,7 @@ abstract class AbstractResource
         string $uri,
         array $params = [],
         array $headers = []
-    )
-    {
+    ) {
         $body = self::prepareJsonBody($params);
 
         if (null !== $body) {
@@ -370,7 +362,7 @@ abstract class AbstractResource
      */
     private static function encode($query, $prefix): string
     {
-        if (!is_array($query)) {
+        if (! is_array($query)) {
             return self::rawurlencode(
                 $prefix
             ) . '=' . self::rawurlencode($query);
@@ -417,7 +409,7 @@ abstract class AbstractResource
      */
     private static function isList(array $query): bool
     {
-        if (0 === count($query) || !isset($query[0])) {
+        if (0 === count($query) || ! isset($query[0])) {
             return false;
         }
 
@@ -483,8 +475,7 @@ abstract class AbstractResource
     private function createMultipartStreamBuilder(
         array $params = [],
         array $files = []
-    ): MultipartStreamBuilder
-    {
+    ): MultipartStreamBuilder {
         $builder = new MultipartStreamBuilder(
             $this->client->getStreamFactory()
         );
@@ -495,7 +486,7 @@ abstract class AbstractResource
 
         foreach ($files as $name => $file) {
             $builder->addResource($name, self::tryFopen($file, 'r'), [
-                'headers' => [
+                'headers'  => [
                     'Content-Type' => self::guessFileContentType($file),
                 ],
                 'filename' => basename($file),
@@ -513,12 +504,12 @@ abstract class AbstractResource
      */
     private static function guessFileContentType(string $file): string
     {
-        if (!class_exists(finfo::class, false)) {
+        if (! class_exists(finfo::class, false)) {
             return 'application/octet-stream';
         }
 
         $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $type = $finfo->file($file);
+        $type  = $finfo->file($file);
 
         return false !== $type ? $type : 'application/octet-stream';
     }

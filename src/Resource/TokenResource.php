@@ -12,7 +12,12 @@ class TokenResource extends AbstractResource
     {
         $response = $this->postForm(
             '/integration/tokens/revalidate/apitoken',
-            $token
+            $token,
+            [],
+            [
+                'Content-Type' => 'application/json',
+                'Accept'       => 'application/hal+json',
+            ]
         );
 
         return $this->client->getServiceProvider()->create(

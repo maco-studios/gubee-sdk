@@ -6,6 +6,11 @@ namespace Gubee\SDK\Resource\Catalog\Product\Attribute;
 
 use Gubee\SDK\Model\Catalog\Product\Attribute\Brand;
 use Gubee\SDK\Resource\AbstractResource;
+use InvalidArgumentException;
+
+use function array_merge;
+use function rawurlencode;
+use function sprintf;
 
 class BrandResource extends AbstractResource
 {
@@ -21,7 +26,7 @@ class BrandResource extends AbstractResource
                 array_merge(
                     $response,
                     [
-                        'brandResource' => $this
+                        'brandResource' => $this,
                     ]
                 )
             );
@@ -38,23 +43,20 @@ class BrandResource extends AbstractResource
                 array_merge(
                     $response,
                     [
-                        'brandResource' => $this
+                        'brandResource' => $this,
                     ]
                 )
             );
     }
 
-
-
-
-    public function updateByExternalId(Brand $brand, string $externalId = null): Brand
+    public function updateByExternalId(Brand $brand, ?string $externalId = null): Brand
     {
         if ($externalId === null) {
             $externalId = $brand->getId();
         }
 
-        if (!$externalId) {
-            throw new \InvalidArgumentException(
+        if (! $externalId) {
+            throw new InvalidArgumentException(
                 sprintf(
                     "External id is required to update brand"
                 )
@@ -72,14 +74,11 @@ class BrandResource extends AbstractResource
                 array_merge(
                     $response,
                     [
-                        'brandResource' => $this
+                        'brandResource' => $this,
                     ]
                 )
             );
     }
-
-
-
 
     public function loadById(string $id): Brand
     {
@@ -92,14 +91,11 @@ class BrandResource extends AbstractResource
                 array_merge(
                     $response,
                     [
-                        'brandResource' => $this
+                        'brandResource' => $this,
                     ]
                 )
             );
     }
-
-
-
 
     public function loadByName(string $name): Brand
     {
@@ -113,14 +109,11 @@ class BrandResource extends AbstractResource
                 array_merge(
                     $response,
                     [
-                        'brandResource' => $this
+                        'brandResource' => $this,
                     ]
                 )
             );
     }
-
-
-
 
     public function loadByNameForm(string $name)
     {
@@ -134,23 +127,20 @@ class BrandResource extends AbstractResource
                 array_merge(
                     $response,
                     [
-                        'brandResource' => $this
+                        'brandResource' => $this,
                     ]
                 )
             );
     }
 
-
-
-
-    public function updateByName(Brand $brand, string $name = null): Brand
+    public function updateByName(Brand $brand, ?string $name = null): Brand
     {
         if ($name === null) {
             $name = $brand->getName();
         }
 
-        if (!$name) {
-            throw new \InvalidArgumentException(
+        if (! $name) {
+            throw new InvalidArgumentException(
                 sprintf(
                     "Name is required to update brand"
                 )
@@ -168,23 +158,20 @@ class BrandResource extends AbstractResource
                 array_merge(
                     $response,
                     [
-                        'brandResource' => $this
+                        'brandResource' => $this,
                     ]
                 )
             );
     }
 
-
-
-
-    public function updateByNameV2(Brand $brand, string $name = null): Brand
+    public function updateByNameV2(Brand $brand, ?string $name = null): Brand
     {
         if ($name === null) {
             $name = $brand->getName();
         }
 
-        if (!$name) {
-            throw new \InvalidArgumentException(
+        if (! $name) {
+            throw new InvalidArgumentException(
                 sprintf(
                     "Name is required to update brand"
                 )
@@ -202,11 +189,9 @@ class BrandResource extends AbstractResource
                 array_merge(
                     $response,
                     [
-                        'brandResource' => $this
+                        'brandResource' => $this,
                     ]
                 )
             );
     }
-
-
 }

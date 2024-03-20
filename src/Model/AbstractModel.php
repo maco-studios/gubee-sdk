@@ -8,8 +8,15 @@ use InvalidArgumentException;
 use JsonSerializable;
 
 use function array_filter;
+use function get_class;
 use function get_object_vars;
-use function is_a;
+use function gettype;
+use function is_bool;
+use function is_float;
+use function is_int;
+use function is_object;
+use function is_string;
+use function sprintf;
 
 class AbstractModel implements JsonSerializable
 {
@@ -39,9 +46,8 @@ class AbstractModel implements JsonSerializable
     protected function validateArrayElements(array $array, string $type): bool
     {
         foreach ($array as $element) {
-
             if ($type == 'string') {
-                if (!is_string($element)) {
+                if (! is_string($element)) {
                     throw new InvalidArgumentException(
                         sprintf(
                             "The array contains elements of different types, expected '%s' got '%s'",
@@ -50,8 +56,8 @@ class AbstractModel implements JsonSerializable
                         )
                     );
                 }
-            } else if ($type == 'int') {
-                if (!is_int($element)) {
+            } elseif ($type == 'int') {
+                if (! is_int($element)) {
                     throw new InvalidArgumentException(
                         sprintf(
                             "The array contains elements of different types, expected '%s' got '%s'",
@@ -61,7 +67,7 @@ class AbstractModel implements JsonSerializable
                     );
                 }
             } elseif ($type == 'float') {
-                if (!is_float($element)) {
+                if (! is_float($element)) {
                     throw new InvalidArgumentException(
                         sprintf(
                             "The array contains elements of different types, expected '%s' got '%s'",
@@ -71,7 +77,7 @@ class AbstractModel implements JsonSerializable
                     );
                 }
             } elseif ($type == 'bool') {
-                if (!is_bool($element)) {
+                if (! is_bool($element)) {
                     throw new InvalidArgumentException(
                         sprintf(
                             "The array contains elements of different types, expected '%s' got '%s'",
@@ -80,7 +86,7 @@ class AbstractModel implements JsonSerializable
                         )
                     );
                 }
-            } else if (!$element instanceof $type) {
+            } elseif (! $element instanceof $type) {
                 throw new InvalidArgumentException(
                     sprintf(
                         "The array contains elements of different types, expected '%s' got '%s'",
@@ -89,7 +95,6 @@ class AbstractModel implements JsonSerializable
                     )
                 );
             }
-
         }
         return true;
     }

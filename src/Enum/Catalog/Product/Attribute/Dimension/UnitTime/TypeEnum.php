@@ -8,7 +8,7 @@ use Gubee\SDK\Enum\AbstractEnum;
 
 class TypeEnum extends AbstractEnum
 {
-    private const DAYS = 'DAYS';
+    private const DAYS  = 'DAYS';
     private const HOURS = 'HOURS';
     private const MONTH = 'MONTH';
 
@@ -16,10 +16,12 @@ class TypeEnum extends AbstractEnum
     {
         return new self(self::DAYS);
     }
+
     public static function HOURS(): self
     {
         return new self(self::HOURS);
     }
+
     public static function MONTH(): self
     {
         return new self(self::MONTH);
@@ -34,5 +36,4 @@ class TypeEnum extends AbstractEnum
     {
         return new self($value);
     }
-
 }

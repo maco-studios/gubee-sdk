@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Gubee\SDK\Model\Catalog;
 
@@ -15,11 +15,9 @@ use Gubee\SDK\Model\Catalog\Product\Attribute\AttributeValue;
 use Gubee\SDK\Model\Catalog\Product\Attribute\Brand;
 use Gubee\SDK\Model\Catalog\Product\Variation;
 use Gubee\SDK\Model\Gubee\Account;
-
-use Gubee\SDK\Resource\Catalog\Product\Attribute\BrandResource;
 use Gubee\SDK\Resource\Catalog\ProductResource;
-use function is_array;
-use function is_string;
+use Gubee\SDK\Resource\Catalog\Product\Attribute\BrandResource;
+use Throwable;
 
 class Product extends AbstractModel
 {
@@ -77,8 +75,7 @@ class Product extends AbstractModel
         ?array $specifications = null,
         ?array $variantAttributes = null,
         ?array $variations = null
-    )
-    {
+    ) {
         $this->productResource = $productResource;
         $this->brandResource = $brandResource;
         $this->setId($id)
@@ -192,7 +189,7 @@ class Product extends AbstractModel
         return $product;
     }
 
-    public function save()
+    public function save(): self
     {
         return $this->productResource->update(
             $this->getId(),
@@ -212,7 +209,7 @@ class Product extends AbstractModel
                 $brand = $this->brandResource->loadByName(
                     $brand->getName()
                 );
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $brand = $brand->save();
             }
         }

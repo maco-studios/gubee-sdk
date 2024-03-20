@@ -10,6 +10,9 @@ use Gubee\SDK\Model\AbstractModel;
 use Gubee\SDK\Model\Catalog\Product\Attribute\Dimension\ValidityPeriod;
 use Gubee\SDK\Resource\Catalog\Product\Variation\PriceResource;
 
+use function is_array;
+use function is_string;
+
 class Price extends AbstractModel
 {
     protected TypeEnum $type;
@@ -27,8 +30,7 @@ class Price extends AbstractModel
         $type,
         float $value,
         $validityPeriod = null
-    )
-    {
+    ) {
         if (is_string($type)) {
             $type = TypeEnum::fromValue($type);
         }
@@ -54,54 +56,33 @@ class Price extends AbstractModel
         );
     }
 
-    /**
-     * @return TypeEnum
-     */
     public function getType(): TypeEnum
     {
         return $this->type;
     }
 
-    /**
-     * @param TypeEnum $type 
-     * @return self
-     */
     public function setType(TypeEnum $type): self
     {
         $this->type = $type;
         return $this;
     }
 
-    /**
-     * @return float
-     */
     public function getValue(): float
     {
         return $this->value;
     }
 
-    /**
-     * @param float $value 
-     * @return self
-     */
     public function setValue(float $value): self
     {
         $this->value = $value;
         return $this;
     }
 
-    /**
-     * @return ValidityPeriod
-     */
     public function getValidityPeriod(): ValidityPeriod
     {
         return $this->validityPeriod;
     }
 
-    /**
-     * @param ValidityPeriod $validityPeriod 
-     * @return self
-     */
     public function setValidityPeriod(ValidityPeriod $validityPeriod): self
     {
         $this->validityPeriod = $validityPeriod;

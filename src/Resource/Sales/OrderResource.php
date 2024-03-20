@@ -1,11 +1,15 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Gubee\SDK\Resource\Sales;
 
+use DateTime;
 use DateTimeInterface;
+use DateTimeZone;
 use Gubee\SDK\Resource\AbstractResource;
+
+use function rawurlencode;
 
 class OrderResource extends AbstractResource
 {
@@ -22,12 +26,12 @@ class OrderResource extends AbstractResource
     // PUT
     // /integration/orders/cancel/{orderId}
     // Update order to cancel
-    public function cancelOrder(string $orderId, DateTimeInterface $cancelDt = null)
+    public function cancelOrder(string $orderId, ?DateTimeInterface $cancelDt = null)
     {
         if ($cancelDt == null) {
-            $cancelDt = new \DateTime(
+            $cancelDt = new DateTime(
                 'now',
-                new \DateTimeZone('UTC')
+                new DateTimeZone('UTC')
             );
         }
 
@@ -56,9 +60,9 @@ class OrderResource extends AbstractResource
     public function updateDelivered(string $orderId, string $shipmentCode, DateTimeInterface $deliveredDt)
     {
         if ($deliveredDt == null) {
-            $deliveredDt = new \DateTime(
+            $deliveredDt = new DateTime(
                 'now',
-                new \DateTimeZone('UTC')
+                new DateTimeZone('UTC')
             );
         }
 
@@ -111,5 +115,4 @@ class OrderResource extends AbstractResource
             $shipment
         );
     }
-
 }

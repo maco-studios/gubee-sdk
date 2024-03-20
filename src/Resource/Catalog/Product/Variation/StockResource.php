@@ -7,9 +7,10 @@ namespace Gubee\SDK\Resource\Catalog\Product\Variation;
 use Gubee\SDK\Model\Catalog\Product\Variation\Stock;
 use Gubee\SDK\Resource\AbstractResource;
 
+use function rawurlencode;
+
 class StockResource extends AbstractResource
 {
-
     public function load(string $itemId, string $warehouseId): Stock
     {
         $response = $this->get(
@@ -30,10 +31,10 @@ class StockResource extends AbstractResource
         );
 
         return $this->getClient()->getServiceProvider()
-            ->create(
-                Stock::class,
-                $response
-            );
+        ->create(
+            Stock::class,
+            $response
+        );
     }
 
     public function updateStock(string $productId, string $skuId, Stock $stock): Stock
@@ -44,11 +45,12 @@ class StockResource extends AbstractResource
         );
 
         return $this->getClient()->getServiceProvider()
-            ->create(
-                Stock::class,
-                $response
-            );
+        ->create(
+            Stock::class,
+            $response
+        );
     }
+
     public function getAllStockByPlatform(string $platform, string $itemId): Stock
     {
         $response = $this->get(
@@ -56,11 +58,12 @@ class StockResource extends AbstractResource
         );
 
         return $this->getClient()->getServiceProvider()
-            ->create(
-                Stock::class,
-                $response
-            );
+        ->create(
+            Stock::class,
+            $response
+        );
     }
+
     public function getStockById(string $id): Stock
     {
         $response = $this->get(
@@ -68,11 +71,12 @@ class StockResource extends AbstractResource
         );
 
         return $this->getClient()->getServiceProvider()
-            ->create(
-                Stock::class,
-                $response
-            );
+        ->create(
+            Stock::class,
+            $response
+        );
     }
+
     public function getStockByIdAndPlatform(string $id, string $platform): Stock
     {
         $response = $this->get(
@@ -80,10 +84,9 @@ class StockResource extends AbstractResource
         );
 
         return $this->getClient()->getServiceProvider()
-            ->create(
-                Stock::class,
-                $response
-            );
+        ->create(
+            Stock::class,
+            $response
+        );
     }
-
 }

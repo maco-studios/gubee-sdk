@@ -8,6 +8,7 @@ use Gubee\SDK\Model\Catalog\Product\Attribute;
 use Gubee\SDK\Resource\AbstractResource;
 
 use function rawurlencode;
+use function sizeof;
 
 class AttributeResource extends AbstractResource
 {

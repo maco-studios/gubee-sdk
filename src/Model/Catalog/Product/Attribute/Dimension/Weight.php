@@ -60,7 +60,7 @@ class Weight extends AbstractModel
     public function jsonSerialize(): array
     {
         return [
-            'type' => $this->getType()->__toString(),
+            'type'  => $this->getType()->__toString(),
             'value' => $this->getValue(),
         ];
     }

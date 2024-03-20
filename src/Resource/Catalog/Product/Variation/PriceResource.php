@@ -7,6 +7,8 @@ namespace Gubee\SDK\Resource\Catalog\Product\Variation;
 use Gubee\SDK\Model\Catalog\Product\Variation\Price;
 use Gubee\SDK\Resource\AbstractResource;
 
+use function rawurlencode;
+
 class PriceResource extends AbstractResource
 {
     // GET
@@ -24,7 +26,6 @@ class PriceResource extends AbstractResource
                 $response
             );
     }
-
 
     // PUT
     // /integration/prices/{productId}/{skuId}
