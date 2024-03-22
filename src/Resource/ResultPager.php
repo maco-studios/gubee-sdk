@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Gubee\SDK\Resource;
 
@@ -12,19 +12,7 @@ use Gubee\SDK\Client;
 use Psr\Http\Message\ResponseInterface;
 use SebastianBergmann\ObjectEnumerator\InvalidArgumentException;
 
-use function array_map;
-use function array_merge;
-use function array_shift;
-use function explode;
-use function implode;
-use function is_array;
-use function iterator_to_array;
-use function json_decode;
-use function parse_url;
-use function sprintf;
-
-class ResultPager
-{
+class ResultPager {
     /**
      * The default number of entries to request per page.
      *
@@ -54,8 +42,7 @@ class ResultPager
      *
      * @return void
      */
-    public function __construct(Client $client, ?int $perPage = null)
-    {
+    public function __construct(Client $client, ?int $perPage = null) {
         if (null !== $perPage && ($perPage < 1 || $perPage > 100)) {
             throw new InvalidArgumentException(
                 sprintf(
@@ -65,8 +52,8 @@ class ResultPager
             );
         }
 
-        $this->client     = $client;
-        $this->perPage    = $perPage ?? self::PER_PAGE;
+        $this->client = $client;
+        $this->perPage = $perPage ?? self::PER_PAGE;
         $this->pagination = [];
     }
 
@@ -77,11 +64,10 @@ class ResultPager
      * @throws \Http\Client\Exception
      * @return array
      */
-    public function fetch(AbstractResource $api, string $method, array $parameters = []): array
-    {
+    public function fetch(AbstractResource $api, string $method, array $parameters = []): array {
         $result = self::bindPerPage($api, $this->perPage)->$method(...$parameters);
 
-        if (! is_array($result)) {
+        if (!is_array($result)) {
             throw new Exception('Pagination of this endpoint is not supported.');
         }
 
@@ -95,19 +81,35 @@ class ResultPager
      *
      * @param array       $parameters
      */
-    public function fetchPages(AbstractResource $api, string $method, int $pages, int $sizes = 50, array $parameters = []): array
-    {
+    public function fetchPages(AbstractResource $api, string $method, int $pages, int $sizes = 50, array $parameters = []): array {
         $results = [];
         for ($i = 0; $i < $pages; $i++) {
             $results = array_merge(
                 $results,
                 $this->fetch($api, $method, array_merge($parameters, [$i, $sizes]))
             );
-            if (! $this->hasNext()) {
+            if (!$this->hasNext()) {
                 break;
             }
         }
         return $results;
+    }
+
+    /**
+     * Fetch all results from an api call and execute a callback for each result.
+     *
+     * @param AbstractResource $api
+     * @param string $method
+     * @param array $parameters
+     * @param callable $callback
+     * @return array
+     * @throws \Http\Client\Exception
+     */
+    public function fetchAllWithCallback(AbstractResource $api, string $method, callable $callback, array $parameters = []): void {
+        $callback($this->fetch($api, $method, $parameters));
+        while ($this->hasNext()) {
+            $callback($this->fetch($api, $method, $parameters));
+        }
     }
 
     /**
@@ -117,8 +119,7 @@ class ResultPager
      * @throws \Http\Client\Exception
      * @return array
      */
-    public function fetchAll(AbstractResource $api, string $method, array $parameters = []): array
-    {
+    public function fetchAll(AbstractResource $api, string $method, array $parameters = []): array {
         return iterator_to_array($this->fetchAllLazy($api, $method, $parameters));
     }
 
@@ -128,16 +129,7 @@ class ResultPager
      * @param array       $parameters
      * @throws \Http\Client\Exception
      */
-    public function fetchAllLazy(AbstractResource $api, string $method, array $parameters = []): Generator
-    {
-        $parameters = array_merge(
-            [
-                0,
-                50,
-            ],
-            $parameters
-        );
-
+    public function fetchAllLazy(AbstractResource $api, string $method, array $parameters = []): Generator {
         /** @var mixed $value */
         foreach ($this->fetch($api, $method, $parameters) as $value) {
             yield $value;
@@ -154,8 +146,7 @@ class ResultPager
     /**
      * Check to determine the availability of a next page.
      */
-    public function hasNext(): bool
-    {
+    public function hasNext(): bool {
         return isset($this->pagination['next']);
     }
 
@@ -165,16 +156,14 @@ class ResultPager
      * @throws \Http\Client\Exception
      * @return array
      */
-    public function fetchNext(): array
-    {
+    public function fetchNext(): array {
         return $this->get('next');
     }
 
     /**
      * Check to determine the availability of a previous page.
      */
-    public function hasPrevious(): bool
-    {
+    public function hasPrevious(): bool {
         return isset($this->pagination['prev']);
     }
 
@@ -184,8 +173,7 @@ class ResultPager
      * @throws \Http\Client\Exception
      * @return array
      */
-    public function fetchPrevious(): array
-    {
+    public function fetchPrevious(): array {
         return $this->get('prev');
     }
 
@@ -195,8 +183,7 @@ class ResultPager
      * @throws \Http\Client\Exception
      * @return array
      */
-    public function fetchFirst(): array
-    {
+    public function fetchFirst(): array {
         return $this->get('first');
     }
 
@@ -206,16 +193,14 @@ class ResultPager
      * @throws \Http\Client\Exception
      * @return array
      */
-    public function fetchLast(): array
-    {
+    public function fetchLast(): array {
         return $this->get('last');
     }
 
     /**
      * Refresh the pagination property.
      */
-    private function postFetch(): void
-    {
+    private function postFetch(): void {
         $response = $this->client->getLastResponse();
 
         $this->pagination = null === $response ? [] : self::getPagination($response);
@@ -226,14 +211,13 @@ class ResultPager
      *
      * @return array<string,string>
      */
-    public static function getPagination(ResponseInterface $response): array
-    {
+    public static function getPagination(ResponseInterface $response): array {
         $links = json_decode(
             (string) $response->getBody(),
             true
         );
 
-        if (! isset($links['_links'])) {
+        if (!isset($links['_links'])) {
             throw new ErrorException(
                 'The response does not have a "links" key.'
             );
@@ -245,8 +229,7 @@ class ResultPager
     /**
      * Get the value for a single header.
      */
-    private static function getHeader(ResponseInterface $response, string $name): ?string
-    {
+    private static function getHeader(ResponseInterface $response, string $name): ?string {
         $headers = $response->getHeader($name);
 
         return array_shift($headers);
@@ -256,15 +239,14 @@ class ResultPager
      * @throws \Http\Client\Exception
      * @return array
      */
-    private function get(string $key): array
-    {
+    private function get(string $key): array {
         $pagination = $this->pagination[$key] ?? null;
         if (null === $pagination) {
             return [];
         }
 
         // url decode $pagination['href']
-        $href  = parse_url($pagination['href']);
+        $href = parse_url($pagination['href']);
         $query = explode('&', $href['query']);
         $query = array_map(function ($item) {
             return explode('=', $item);
@@ -276,20 +258,20 @@ class ResultPager
                 $sort = true;
             }
         }
-        if (! $sort) {
+        if (!$sort) {
             $query[] = ['sort', 'asc'];
         }
         // convert back to a url
-        $query              = array_map(function ($item) {
+        $query = array_map(function ($item) {
             return implode('=', $item);
         }, $query);
-        $query              = implode('&', $query);
+        $query = implode('&', $query);
         $pagination['href'] = $href['scheme'] . '://' . $href['host'] . $href['path'] . '?' . $query;
-        $result             = $this->client->getHttpClient()->get($pagination['href']);
+        $result = $this->client->getHttpClient()->get($pagination['href']);
 
         $content = json_decode((string) $result->getBody(), true);
 
-        if (! is_array($content)) {
+        if (!is_array($content)) {
             throw new Exception(
                 'Pagination of this endpoint is not supported.'
             );
@@ -300,8 +282,7 @@ class ResultPager
         return $content;
     }
 
-    private static function bindPerPage(AbstractResource $api, int $perPage): AbstractResource
-    {
+    private static function bindPerPage(AbstractResource $api, int $perPage): AbstractResource {
         /** @var Closure(AbstractResource): AbstractResource */
         $closure = Closure::bind(static function (AbstractResource $api) use ($perPage): AbstractResource {
             $clone = clone $api;

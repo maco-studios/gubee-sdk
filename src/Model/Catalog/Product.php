@@ -19,8 +19,7 @@ use Gubee\SDK\Resource\Catalog\ProductResource;
 use Gubee\SDK\Resource\Catalog\Product\Attribute\BrandResource;
 use Throwable;
 
-class Product extends AbstractModel
-{
+class Product extends AbstractModel {
     protected Brand $brand;
     protected string $id;
     protected Category $mainCategory;
@@ -168,42 +167,46 @@ class Product extends AbstractModel
         }
     }
 
-    public function load(string $id, string $field = 'externalId'): self
-    {
+    public function load(string $id, string $field = 'externalId'): self {
         switch ($field) {
-            case 'externalId':
-                $product = $this->productResource->loadById($id);
-                break;
-            case 'skuId':
-                $product = $this->productResource->getBySku($id);
-                break;
-            default:
-                throw new NotFoundException(
-                    sprintf(
-                        'Field %s not found',
-                        $field
-                    )
-                );
+        case 'externalId':
+            $product = $this->productResource->loadById($id);
+            break;
+        case 'skuId':
+            $product = $this->productResource->getBySku($id);
+            break;
+        default:
+            throw new NotFoundException(
+                sprintf(
+                    'Field %s not found',
+                    $field
+                )
+            );
         }
 
         return $product;
     }
 
-    public function save(): self
-    {
-        return $this->productResource->update(
-            $this->getId(),
-            $this
-        );
+    public function save() {
+        try {
+            $this->productResource->update(
+                $this->getId(),
+                $this
+            );
+        } catch (\Gubee\SDK\Library\HttpClient\Exception\NotFoundException $e) {
+            return $this->productResource->create($this);
+        } catch (\Throwable $e) {
+            throw $e;
+        }
+
+        return $this;
     }
 
-    public function getBrand(): Brand
-    {
+    public function getBrand(): Brand {
         return $this->brand;
     }
 
-    public function setBrand(Brand $brand): self
-    {
+    public function setBrand(Brand $brand): self {
         if (!$brand->getHubeeId()) {
             try {
                 $brand = $this->brandResource->loadByName(
@@ -217,101 +220,83 @@ class Product extends AbstractModel
         return $this;
     }
 
-    public function getId(): string
-    {
+    public function getId(): string {
         return $this->id;
     }
 
-    public function setId(string $id): self
-    {
+    public function setId(string $id): self {
         $this->id = $id;
         return $this;
     }
 
-    public function getMainCategory(): Category
-    {
+    public function getMainCategory(): Category {
         return $this->mainCategory;
     }
 
-    public function setMainCategory(Category $mainCategory): self
-    {
+    public function setMainCategory(Category $mainCategory): self {
         $this->mainCategory = $mainCategory;
         return $this;
     }
 
-    public function getMainSku(): string
-    {
+    public function getMainSku(): string {
         return $this->mainSku;
     }
 
-    public function setMainSku(string $mainSku): self
-    {
+    public function setMainSku(string $mainSku): self {
         $this->mainSku = $mainSku;
         return $this;
     }
 
-    public function getOrigin(): OriginEnum
-    {
+    public function getOrigin(): OriginEnum {
         return $this->origin;
     }
 
-    public function setOrigin(OriginEnum $origin): self
-    {
+    public function setOrigin(OriginEnum $origin): self {
         $this->origin = $origin;
         return $this;
     }
 
-    public function getStatus(): StatusEnum
-    {
+    public function getStatus(): StatusEnum {
         return $this->status;
     }
 
-    public function setStatus(StatusEnum $status): self
-    {
+    public function setStatus(StatusEnum $status): self {
         $this->status = $status;
         return $this;
     }
 
-    public function getType(): TypeEnum
-    {
+    public function getType(): TypeEnum {
         return $this->type;
     }
 
-    public function setType(TypeEnum $type): self
-    {
+    public function setType(TypeEnum $type): self {
         $this->type = $type;
         return $this;
     }
 
-    public function getHubeeId(): ?string
-    {
+    public function getHubeeId(): ?string {
         return $this->hubeeId;
     }
 
-    public function setHubeeId(?string $hubeeId): self
-    {
+    public function setHubeeId(?string $hubeeId): self {
         $this->hubeeId = $hubeeId;
         return $this;
     }
 
-    public function getName(): ?string
-    {
+    public function getName(): ?string {
         return $this->name;
     }
 
-    public function setName(?string $name): self
-    {
+    public function setName(?string $name): self {
         $this->name = $name;
         return $this;
     }
 
-    public function getNbm(): ?string
-    {
+    public function getNbm(): ?string {
         return $this->nbm;
     }
 
-    public function setNbm(?string $nbm): self
-    {
+    public function setNbm(?string $nbm): self {
         $this->nbm = $nbm;
         return $this;
     }
@@ -319,16 +304,14 @@ class Product extends AbstractModel
     /**
      * @return array<Account>
      */
-    public function getAccounts(): ?array
-    {
+    public function getAccounts(): ?array {
         return $this->accounts;
     }
 
     /**
      * @param array<Account> $accounts
      */
-    public function setAccounts(array $accounts): self
-    {
+    public function setAccounts(array $accounts): self {
         $this->validateArrayElements(
             $accounts,
             Account::class
@@ -340,16 +323,14 @@ class Product extends AbstractModel
     /**
      * @return array<Category>
      */
-    public function getCategories(): ?array
-    {
+    public function getCategories(): ?array {
         return $this->categories;
     }
 
     /**
      * @param array<Category> $categories
      */
-    public function setCategories(array $categories): self
-    {
+    public function setCategories(array $categories): self {
         $this->validateArrayElements($categories, Category::class);
         $this->categories = $categories;
         return $this;
@@ -358,16 +339,14 @@ class Product extends AbstractModel
     /**
      * @return array<AttributeValue>
      */
-    public function getSpecifications(): ?array
-    {
+    public function getSpecifications(): ?array {
         return $this->specifications;
     }
 
     /**
      * @param  array<AttributeValue> $specifications
      */
-    public function setSpecifications(array $specifications): self
-    {
+    public function setSpecifications(array $specifications): self {
         $this->validateArrayElements($specifications, AttributeValue::class);
         $this->specifications = $specifications;
         return $this;
@@ -376,16 +355,14 @@ class Product extends AbstractModel
     /**
      * @return  array<AttributeValue>
      */
-    public function getVariantAttributes(): ?array
-    {
+    public function getVariantAttributes(): ?array {
         return $this->variantAttributes;
     }
 
     /**
      * @param  array<AttributeValue> $variantAttributes
      */
-    public function setVariantAttributes(array $variantAttributes): self
-    {
+    public function setVariantAttributes(array $variantAttributes): self {
         $this->validateArrayElements($variantAttributes, AttributeValue::class);
         $this->variantAttributes = $variantAttributes;
         return $this;
@@ -394,23 +371,20 @@ class Product extends AbstractModel
     /**
      * @return array<Variation>
      */
-    public function getVariations(): ?array
-    {
+    public function getVariations(): ?array {
         return $this->variations;
     }
 
     /**
      * @param array<Variation> $variations
      */
-    public function setVariations(?array $variations): self
-    {
+    public function setVariations(?array $variations): self {
         $this->validateArrayElements($variations, Variation::class);
         $this->variations = $variations;
         return $this;
     }
 
-    public function jsonSerialize(): array
-    {
+    public function jsonSerialize(): array {
         $values = parent::jsonSerialize();
         foreach ($values['categories'] as $key => $category) {
             $values['categories'][] = $category->getId();
@@ -429,6 +403,8 @@ class Product extends AbstractModel
             foreach ($values['variantAttributes'] as $key => $variantAttribute) {
                 $values['variantAttributes'][$key] = $variantAttribute->getAttribute();
             }
+
+            $values['variantAttributes'] = array_values($values['variantAttributes']);
         }
         if (isset($values['brandResource'])) {
             unset($values['brandResource']);

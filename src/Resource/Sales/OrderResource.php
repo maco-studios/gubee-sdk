@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Gubee\SDK\Resource\Sales;
 
@@ -8,8 +8,6 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Gubee\SDK\Resource\AbstractResource;
-
-use function rawurlencode;
 
 class OrderResource extends AbstractResource
 {
@@ -83,7 +81,11 @@ class OrderResource extends AbstractResource
     ) {
         return $this->put(
             "/integration/orders/invoiced/" . rawurlencode($orderId),
-            $invoice
+            $invoice,
+            [
+                'Content-Type' => 'application/hal+json',
+                'Accept' => 'application/hal+json',
+            ]
         );
     }
 
