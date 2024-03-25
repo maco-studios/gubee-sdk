@@ -1,0 +1,30 @@
+{
+    "name": "gubee/sdk",
+    "type": "library",
+    "description": "Gubee SDK, designed to facilitate the integration between your application and the Gubee API, providing a simplified interface to interact with the various endpoints available within the Gubee platform.",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "license": "Mozilla Public License 2.0",
+    "require": {
+        "php": "^7.4"
+    },
+    "authors": [
+        {
+            "name": "Marcos 'Marcão' Aurelio",
+            "email": "macosaures+gubee+sdk@gmail.com",
+            "homepage": "https://maco-studios.com.br",
+            "role": "developer"
+        },
+        {
+            "name": "Gubee",
+            "email": "contato@gubee.com.br",
+            "homepage": "https://gubee.com.br",
+            "role": "sponsor"
+        }
+    ],
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "preferred-install": "dist"
+    }
+}
