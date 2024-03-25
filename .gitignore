@@ -1,1 +1,10 @@
 /vendor/
+
+# PHPCS
+/phpcs.xml
+/.phpcs-cache
+
+# PHPUNIT
+/phpunit.xml
+/.phpunit.cache
+/.phpunit.result.cache

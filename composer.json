@@ -25,6 +25,35 @@
     "config": {
         "sort-packages": true,
         "optimize-autoloader": true,
-        "preferred-install": "dist"
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "require-dev": {
+        "captainhook/captainhook": "^5.18",
+        "laminas/laminas-coding-standard": "^2.5",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^9.6",
+        "squizlabs/php_codesniffer": "^3.9"
+    },
+    "scripts": {
+        "cs": [
+            "@cs:check",
+            "@cs:stan"
+        ],
+        "cs:check": "phpcs",
+        "cs:stan": "phpstan analyse",
+        "post-install-cmd": [
+            "@captain:install"
+        ],
+        "post-update-cmd": [
+            "@captain:install"
+        ],
+        "captain:install": "vendor/bin/captainhook install -f",
+        "test": [
+            "@test:unit"
+        ],
+        "test:unit": "phpunit --testsuite=Unit"
     }
 }
