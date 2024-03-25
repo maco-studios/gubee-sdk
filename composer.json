@@ -16,6 +16,16 @@
         "psr/http-factory": "^1.0",
         "symfony/http-client": "^5.4"
     },
+    "autoload": {
+        "psr-4": {
+            "Gubee\\SDK\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gubee\\SDK\\Tests\\": "test/"
+        }
+    },
     "authors": [
         {
             "name": "Marcos 'Marcão' Aurelio",
