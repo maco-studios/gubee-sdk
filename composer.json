@@ -63,6 +63,7 @@
             "@cs:check",
             "@cs:stan"
         ],
+        "cs:fix": "phpcbf",
         "cs:check": "phpcs",
         "cs:stan": "phpstan analyse",
         "post-install-cmd": [
