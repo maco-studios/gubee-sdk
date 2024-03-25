@@ -2,4 +2,11 @@
 
 declare(strict_types=1);
 
-return [];
+use Psr\Log\LoggerInterface;
+use Psr\Log\NullLogger;
+
+use function DI\autowire;
+
+return [
+    LoggerInterface::class => autowire(NullLogger::class),
+];

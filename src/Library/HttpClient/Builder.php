@@ -88,17 +88,17 @@ class Builder
         return $this->plugins;
     }
 
-    public function getRequestFactoryInterface(): RequestFactoryInterface
+    public function getRequestFactory(): RequestFactoryInterface
     {
         return $this->requestFactoryInterface;
     }
 
-    public function getStreamFactoryInterface(): StreamFactoryInterface
+    public function getStreamFactory(): StreamFactoryInterface
     {
         return $this->streamFactoryInterface;
     }
 
-    public function getUriFactoryInterface(): UriFactoryInterface
+    public function getUriFactory(): UriFactoryInterface
     {
         return $this->uriFactoryInterface;
     }
