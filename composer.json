@@ -7,11 +7,14 @@
     "license": "Mozilla Public License 2.0",
     "require": {
         "php": "^7.4|^8.0|^8.1",
+        "php-di/php-di": "^6.4",
         "php-http/client-common": "^2.7",
         "php-http/discovery": "^1.19",
+        "psr/container-implementation": "*",
         "psr/http-client": "^1.0",
         "psr/http-client-implementation": "*",
-        "psr/http-factory": "^1.0"
+        "psr/http-factory": "^1.0",
+        "symfony/http-client": "^5.4"
     },
     "authors": [
         {
