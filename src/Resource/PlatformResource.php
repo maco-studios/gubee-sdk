@@ -10,4 +10,10 @@ class PlatformResource extends AbstractResource {
             '/integration/platforms/blacklist/created'
         );
     }
+
+    public function configuration() {
+        return $this->get(
+            '/integration/platforms/configuration'
+        );
+    }
 }

@@ -28,7 +28,10 @@ class StockResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Stock::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
@@ -47,7 +50,10 @@ class StockResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Stock::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
@@ -59,7 +65,10 @@ class StockResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Stock::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
@@ -71,7 +80,10 @@ class StockResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Stock::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 }

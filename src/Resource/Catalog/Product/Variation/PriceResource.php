@@ -1,21 +1,17 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Gubee\SDK\Resource\Catalog\Product\Variation;
 
 use Gubee\SDK\Model\Catalog\Product\Variation\Price;
 use Gubee\SDK\Resource\AbstractResource;
 
-use function rawurlencode;
-
-class PriceResource extends AbstractResource
-{
+class PriceResource extends AbstractResource {
     // GET
     // /integration/prices/{platform}/{itemId}
     // Get prices of itemId -> (skuId for product, adId for ad)
-    public function getPricesByPlatform(string $platform, string $itemId): array
-    {
+    public function getPricesByPlatform(string $platform, string $itemId): array {
         $response = $this->get(
             '/integration/prices/' . rawurlencode($platform) . '/' . rawurlencode($itemId)
         );
@@ -23,32 +19,27 @@ class PriceResource extends AbstractResource
         return $this->getClient()->getServiceProvider()
             ->create(
                 Price::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
     // PUT
     // /integration/prices/{productId}/{skuId}
     // Update price of skuId product
-    public function updatePriceBySkuId(string $productId, string $skuId, Price $price): Price
-    {
-        $response = $this->put(
+    public function updatePriceBySkuId(string $productId, string $skuId, Price $price): void {
+        $this->put(
             '/integration/prices/' . rawurlencode($productId) . '/' . rawurlencode($skuId),
             $price->jsonSerialize()
         );
-
-        return $this->getClient()->getServiceProvider()
-            ->create(
-                Price::class,
-                $response
-            );
     }
 
     // POST
-// /integration/prices/byItemId/{itemId}
-// Get price of itemId -> (skuId for product, adId for ad)
-    public function getPriceByItemId(string $itemId): Price
-    {
+    // /integration/prices/byItemId/{itemId}
+    // Get price of itemId -> (skuId for product, adId for ad)
+    public function getPriceByItemId(string $itemId): Price {
         $response = $this->post(
             '/integration/prices/byItemId/' . rawurlencode($itemId)
         );
@@ -56,15 +47,17 @@ class PriceResource extends AbstractResource
         return $this->getClient()->getServiceProvider()
             ->create(
                 Price::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
     // POST
-// /integration/prices/byItemIds
-// List prices of itemIds -> (skuId for product, adId for ad)
-    public function getPricesByItemIds(array $itemIds): array
-    {
+    // /integration/prices/byItemIds
+    // List prices of itemIds -> (skuId for product, adId for ad)
+    public function getPricesByItemIds(array $itemIds): array {
         $response = $this->post(
             '/integration/prices/byItemIds',
             $itemIds
@@ -73,15 +66,17 @@ class PriceResource extends AbstractResource
         return $this->getClient()->getServiceProvider()
             ->create(
                 Price::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
     // PUT
-// /integration/prices/list/{productId}/{skuId}
-// Update prices of skuId product
-    public function updatePricesBySkuId(string $productId, string $skuId, array $prices): array
-    {
+    // /integration/prices/list/{productId}/{skuId}
+    // Update prices of skuId product
+    public function updatePricesBySkuId(string $productId, string $skuId, array $prices): array {
         $response = $this->put(
             '/integration/prices/list/' . rawurlencode($productId) . '/' . rawurlencode($skuId),
             $prices
@@ -90,15 +85,17 @@ class PriceResource extends AbstractResource
         return $this->getClient()->getServiceProvider()
             ->create(
                 Price::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
     // PUT
     // /integration/prices/platforms/{itemId}
     // Update prices by platform
-    public function updatePricesByPlatform(string $itemId, array $prices): array
-    {
+    public function updatePricesByPlatform(string $itemId, array $prices): array {
         $response = $this->put(
             '/integration/prices/platforms/' . rawurlencode($itemId),
             $prices
@@ -107,7 +104,10 @@ class PriceResource extends AbstractResource
         return $this->getClient()->getServiceProvider()
             ->create(
                 Price::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 }

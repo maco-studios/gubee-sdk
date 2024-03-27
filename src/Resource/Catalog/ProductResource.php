@@ -20,7 +20,12 @@ class ProductResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Product::class,
-                $response
+                array_merge(
+                    [
+                        $this,
+                    ],
+                    $response
+                )
             );
     }
 
@@ -35,14 +40,17 @@ class ProductResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Product::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
     // PUT
     // /integration/products/{productId}
     // Update product
-    public function update(string $id, Product $product): void{
+    public function update(string $id, Product $product): void {
         $this->put(
             '/integration/products/' . rawurlencode($id),
             $product->jsonSerialize()
@@ -70,7 +78,10 @@ class ProductResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Product::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
@@ -85,7 +96,10 @@ class ProductResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Product::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
@@ -101,7 +115,10 @@ class ProductResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Product::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
@@ -157,7 +174,10 @@ class ProductResource extends AbstractResource {
         return $this->getClient()->getServiceProvider()
             ->create(
                 Product::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 }
