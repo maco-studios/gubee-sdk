@@ -13,10 +13,14 @@ class StockResource extends AbstractResource {
             '/integration/stocks/' . rawurlencode($itemId) . '/' . rawurlencode($warehouseId)
         );
 
+
         return $this->getClient()->getServiceProvider()
             ->create(
                 Stock::class,
-                $response
+                array_merge(
+                    [$this],
+                    $response
+                )
             );
     }
 
