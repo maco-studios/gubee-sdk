@@ -136,7 +136,10 @@ class ProductResource extends AbstractResource {
             $products[] = $this->getClient()->getServiceProvider()
                 ->create(
                     Product::class,
-                    $productData
+                    array_merge(
+                        [$this],
+                        $productData
+                    )
                 );
         }
 
@@ -156,7 +159,10 @@ class ProductResource extends AbstractResource {
             $products[] = $this->getClient()->getServiceProvider()
                 ->create(
                     Product::class,
-                    $productData
+                    array_merge(
+                        [$this],
+                        $productData
+                    )
                 );
         }
 
