@@ -16,17 +16,6 @@ class ProductResource extends AbstractResource {
             '/integration/products',
             $product->jsonSerialize()
         );
-
-        return $this->getClient()->getServiceProvider()
-            ->create(
-                Product::class,
-                array_merge(
-                    [
-                        $this,
-                    ],
-                    $response
-                )
-            );
     }
 
     // GET
