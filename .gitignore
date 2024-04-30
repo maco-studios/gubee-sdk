@@ -1,0 +1,21 @@
+# Editor
+/.fleet
+/.idea
+/.vscode
+
+# PHPUnit
+/.phpunit.cache
+phpunit.xml
+.phpunit.result.cache
+.phpcs-cache
+/var/
+
+# Composer
+/vendor
+auth.json
+
+# Nodejs
+/node_modules
+
+# envoirement
+.env

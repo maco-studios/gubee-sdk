@@ -1,0 +1,63 @@
+{
+    "name": "gubee/sdk",
+    "description": "Gubee SDK Client for PHP",
+    "type": "library",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "authors": [
+        {
+            "name": "Marcos 'Marcão' Aurelio",
+            "email": "macosaures+git@gmail.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Gubee\\SDK\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gubee\\SDK\\Test\\": "tests/"
+        }
+    },
+    "homepage": "https://github.com/maco-studios/gubee-sdk",
+    "support": {
+        "issues": "https://github.com/maco-studios/gubee-sdk/issues",
+        "source": "https://github.com/maco-studios/gubee-sdk"
+    },
+    "scripts": {
+        "cs:check": "phpcs",
+        "cs:fix": "phpcbf",
+        "cs": [
+            "@cs:check",
+            "@cs:fix"
+        ],
+        "test:unit": "phpunit --testsuite=Unit",
+        "test:integration": "phpunit --testsuite=Integration",
+        "test:contract": "phpunit --testsuite=Contract",
+        "test": [
+            "@test:unit",
+            "@test:integration",
+            "@test:contract"
+        ],
+        "captain:install": " if [ -f vendor/bin/captainhook ]; then vendor/bin/captainhook install -f; fi",
+        "post-install-cmd": [
+            "@captain:install"
+        ],
+        "post-update-cmd": [
+            "@captain:install"
+        ]
+    },
+    "config": {
+        "sort-packages": true,
+        "optimize-autoloader": true,
+        "preferred-install": "dist"
+    },
+    "require-dev": {
+        "captainhook/captainhook": "^5.18",
+        "laminas/laminas-coding-standard": "^2.5",
+        "phpstan/phpstan": "^1.10",
+        "phpunit/phpunit": "^9.6"
+    }
+}

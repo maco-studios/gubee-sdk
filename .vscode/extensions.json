@@ -1,0 +1,13 @@
+{
+    "recommendations": [
+        "devsense.phptools-vscode",
+        "sanderronde.phpstan-vscode",
+        "devsense.composer-php-vscode",
+        "editorconfig.editorconfig",
+        "mehedidracula.php-namespace-resolver",
+        "xdebug.php-debug",
+        "ikappas.phpcs",
+        "shevaua.phpcs",
+        "kokororin.vscode-phpfmt"
+    ]
+}

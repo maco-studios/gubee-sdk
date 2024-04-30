@@ -1,0 +1,8 @@
+{
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "phpstan.binPath": "vendor/bin/phpstan",
+  "phpstan.configFile": "phpstan.php",
+  "phpcs.executablePath": "vendor/bin/phpcs",
+  "phpcs.standard": "phpcs.xml.dist"
+}
