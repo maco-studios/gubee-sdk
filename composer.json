@@ -23,13 +23,16 @@
         "psr/log": "^1.1"
     },
     "autoload": {
+        "files": [
+            "src/bootstrap.php"
+        ],
         "psr-4": {
             "Gubee\\SDK\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Gubee\\SDK\\Tests\\": "test/"
+            "Gubee\\SDK\\Tests\\": "tests/"
         }
     },
     "config": {

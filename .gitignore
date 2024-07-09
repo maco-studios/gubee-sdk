@@ -2,6 +2,7 @@
 /.fleet
 /.idea
 /.vscode
+/.env
 
 # PHPUnit
 /.phpunit.cache
