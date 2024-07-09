@@ -1,6 +1,6 @@
 <?php
 
-declare (strict_types = 1);
+declare(strict_types=1);
 
 namespace Gubee\SDK;
 
@@ -23,7 +23,8 @@ use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 
-class Client {
+class Client
+{
     public const USER_AGENT = 'gubee-sdk/' . self::VERSION;
     public const VERSION = '1.0.0';
     public const BASE_URI = 'https://api.gubee.com.br';
@@ -34,12 +35,10 @@ class Client {
     protected History $responseHistory;
 
     public function __construct(
-        ?ServiceProviderInterface $serviceProvider = null,
         ?LoggerInterface $logger = null,
         ?Builder $httpClientBuilder = null,
         int $retryCount = 3
     ) {
-        $this->serviceProvider = $serviceProvider ?? $this->buildServiceProvider();
         $this->logger = $logger ?? new NullLogger();
         $this->httpClientBuilder = $httpClientBuilder ?? new Builder();
         $this->responseHistory = new History($this->logger);
@@ -64,7 +63,8 @@ class Client {
         $this->setUrl(self::BASE_URI);
     }
 
-    private function shouldRetry(RequestInterface $request, \Throwable $exception): bool {
+    private function shouldRetry(RequestInterface $request, \Throwable $exception): bool
+    {
         /**
          * The list of HTTP status codes that should trigger a retry.
          *
@@ -89,83 +89,75 @@ class Client {
         return false;
     }
 
-    public function attribute(): Resource\Catalog\Product\AttributeResource {
+    public function attribute(): Resource\Catalog\Product\AttributeResource
+    {
         return new Resource\Catalog\Product\AttributeResource($this);
     }
 
-    public function token(): Resource\TokenResource {
+    public function token(): Resource\TokenResource
+    {
         return new Resource\TokenResource($this);
     }
 
-    public function authenticate(string $token): self {
+    public function authenticate(string $token): self
+    {
         $this->httpClientBuilder->removePlugin(
             Authenticate::class
         )->addPlugin(
-            new Authenticate($token)
-        );
+                new Authenticate($token)
+            );
         return $this;
     }
 
     /**
      * Get the HTTP client.
      */
-    public function getHttpClient(): HttpMethodsClientInterface {
+    public function getHttpClient(): HttpMethodsClientInterface
+    {
         return $this->httpClientBuilder->getClient();
     }
 
     /**
      * Set the base URL for the client.
      */
-    public function setUrl(string $url): self {
+    public function setUrl(string $url): self
+    {
         $uri = $this->httpClientBuilder->getUriFactory()
             ->createUri($url);
 
         $this->httpClientBuilder->removePlugin(
             BaseUriPlugin::class
         )->addPlugin(
-            new BaseUriPlugin($uri)
-        );
+                new BaseUriPlugin($uri)
+            );
         return $this;
     }
 
-    public function getServiceProvider(): ServiceProviderInterface {
-        return $this->serviceProvider;
-    }
-
-    public function getLogger(): LoggerInterface {
+    public function getLogger(): LoggerInterface
+    {
         return $this->logger;
     }
 
-    public function getHttpClientBuilder(): Builder {
+    public function getHttpClientBuilder(): Builder
+    {
         return $this->httpClientBuilder;
     }
 
-    public function getStreamFactory(): StreamFactoryInterface {
+    public function getStreamFactory(): StreamFactoryInterface
+    {
         return $this->httpClientBuilder->getStreamFactory();
     }
 
-    public function getRequestFactory(): RequestFactoryInterface {
+    public function getRequestFactory(): RequestFactoryInterface
+    {
         return $this->httpClientBuilder->getRequestFactory();
-    }
-
-    public function buildServiceProvider(): ServiceProviderInterface {
-        $containerBuilder = new ContainerBuilder(
-            ServiceProvider::class
-        );
-        $defs = include __DIR__ . '/config/di.php';
-        $containerBuilder->addDefinitions(
-            $defs
-        );
-        $containerBuilder->useAutowiring(true);
-        $result = $containerBuilder->build();
-
-        return $result->get(ServiceProviderInterface::class);
     }
 
     /**
      * Get the last response.
      */
-    public function getLastResponse(): ?ResponseInterface {
+    public function getLastResponse(): ?ResponseInterface
+    {
         return $this->responseHistory->getLastResponse();
     }
 }
