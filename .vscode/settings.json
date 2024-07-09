@@ -1,0 +1,13 @@
+{
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
+        "composer.json": "composer.lock",
+        "phpcs.xml": "phpcs.xml.dist,phpstan.neon",
+        "phpcs.xml.dist": "phpcs.xml,phpstan.neon",
+        "phpunit.xml": "phpunit.xml.dist",
+        "phpunit.xml.dist": "phpunit.xml",
+        ".gitignore": ".env*,.tool-versions",
+        "README.md": "*.md"
+    }
+}
