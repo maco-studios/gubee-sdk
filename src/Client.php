@@ -29,7 +29,6 @@ class Client
     public const VERSION = '1.0.0';
     public const BASE_URI = 'https://api.gubee.com.br';
 
-    protected ServiceProviderInterface $serviceProvider;
     protected LoggerInterface $logger;
     protected Builder $httpClientBuilder;
     protected History $responseHistory;
@@ -87,16 +86,6 @@ class Client
             );
         }
         return false;
-    }
-
-    public function attribute(): Resource\Catalog\Product\AttributeResource
-    {
-        return new Resource\Catalog\Product\AttributeResource($this);
-    }
-
-    public function token(): Resource\TokenResource
-    {
-        return new Resource\TokenResource($this);
     }
 
     public function authenticate(string $token): self
