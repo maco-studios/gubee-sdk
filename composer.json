@@ -68,6 +68,7 @@
             "@test:integration"
         ],
         "test:integration": "phpunit --testsuite=Integration",
+        "test:contract": "phpunit --testsuite=Contract",
         "test:unit": "phpunit --testsuite=Unit",
         "test:coverage": "phpunit --coverage-html=var/test/coverage"
     }

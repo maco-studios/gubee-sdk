@@ -11,6 +11,7 @@ use Gubee\SDK\Library\HttpClient\Plugin\Authenticate;
 use Gubee\SDK\Library\HttpClient\Plugin\Journal\History;
 use Gubee\SDK\Library\HttpClient\Plugin\Thrower;
 use Gubee\SDK\Library\ObjectManager\ServiceProvider;
+use Gubee\SDK\Resource\TokenResource;
 use Http\Client\Common\HttpMethodsClientInterface;
 use Http\Client\Common\Plugin\BaseUriPlugin;
 use Http\Client\Common\Plugin\HeaderDefaultsPlugin;
@@ -60,6 +61,11 @@ class Client
             ])
         );
         $this->setUrl(self::BASE_URI);
+    }
+
+    public function token(): TokenResource
+    {
+        return new TokenResource($this);
     }
 
     private function shouldRetry(RequestInterface $request, \Throwable $exception): bool
