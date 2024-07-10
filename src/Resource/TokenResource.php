@@ -10,6 +10,7 @@ use Gubee\SDK\Library\HttpClient\Exception\BadRequestException;
 use Gubee\SDK\Library\HttpClient\Exception\ForbiddenException;
 use Gubee\SDK\Library\HttpClient\Exception\NotFoundException;
 use Gubee\SDK\Library\HttpClient\Exception\UnauthorizedException;
+use Http\Message\MultipartStream\MultipartStreamBuilder;
 
 class TokenResource extends AbstractResource
 {
@@ -29,16 +30,13 @@ class TokenResource extends AbstractResource
      */
     public function revalidate(string $token): Token
     {
-        $response = $this->post(
-            '/integration/tokens/revalidate/apitoken',
-            [
-                'token' => $token
-            ],
-            [
-                ResponseMediator::CONTENT_TYPE_HEADER => 'multipart/form-data'
-            ]
+
+        $response = $this->client->getHttpClient()->post(
+            '/api/integration/tokens/revalidate/apitoken',
+            [],
+            $this->client->getStreamFactory()->createStream($token)
         );
 
-        return Token::fromJson($response);
+        return Token::fromJson(ResponseMediator::getContent($response));
     }
 }

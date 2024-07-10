@@ -27,14 +27,7 @@ abstract class AbstractResource
      *
      * @var Client
      */
-    private $client;
-
-    /**
-     * The per page parameter.
-     *
-     * @var int|null
-     */
-    private $perPage;
+    protected Client $client;
 
     /**
      * Create a new API instance.
@@ -64,10 +57,6 @@ abstract class AbstractResource
         array $params = [],
         array $headers = []
     ): ResponseInterface {
-        if (null !== $this->perPage && !isset($params['per_page'])) {
-            $params['per_page'] = $this->perPage;
-        }
-
         return $this->client->getHttpClient()->get(
             self::prepareUri($uri, $params),
             $headers
@@ -107,7 +96,7 @@ abstract class AbstractResource
             $body = self::prepareJsonBody($params);
 
             if (null !== $body) {
-                // $headers = self::addJsonContentType($headers);
+                $headers = self::addJsonContentType($headers);
             }
         }
 

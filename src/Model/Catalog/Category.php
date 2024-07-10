@@ -33,10 +33,10 @@ class Category extends AbstractModel
      * @param string $parent
      */
     public function __construct(
-        bool $active,
-        string $description,
+        string $id,
         string $name,
-        string $id = null,
+        string $description,
+        bool $active = true,
         bool $enabledAutoIntegration = false,
         string $parent = null,
         string $hubeeId = null
@@ -190,10 +190,10 @@ class Category extends AbstractModel
     public static function fromJson(array $data): self
     {
         return new self(
-            (bool) $data['active'],
-            $data['description'],
+            $data['id'],
             $data['name'],
-            isset($data['id']) ? $data['id'] : null,
+            $data['description'],
+            (bool) $data['active'],
             isset($data['enabledAutoIntegration']) ? (bool) $data['enabledAutoIntegration'] : false,
             isset($data['parent']) ? $data['parent'] : null,
             isset($data['hubeeId']) ? $data['hubeeId'] : null

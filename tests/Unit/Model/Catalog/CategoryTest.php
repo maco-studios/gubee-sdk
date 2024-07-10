@@ -18,10 +18,10 @@ class CategoryTest extends TestCase
     public function testGetterSetters()
     {
         $category = new Category(
-            true,
-            'description',
-            'name',
             'id',
+            'name',
+            'description',
+            true,
             true,
             'parent',
             'hubeeId'

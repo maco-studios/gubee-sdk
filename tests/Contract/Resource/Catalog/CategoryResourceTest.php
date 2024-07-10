@@ -88,7 +88,10 @@ class CategoryResourceTest extends AbstractResource
 
         $request = $this->createRequest(
             '/api/integration/categories/' . rawurlencode($externalId),
-            'GET'
+            'GET',
+            [
+                'Authorization' => 'Bearer abc123'
+            ]
         );
         $response = $this->createResponse(
             200,
@@ -109,12 +112,8 @@ class CategoryResourceTest extends AbstractResource
             JSON, true)
         );
 
-        $request = new ConsumerRequest();
         $service = new Client();
-
-        $request
-            ->setMethod('GET')
-            ->setPath('/api/integration/categories/' . rawurlencode($externalId));
+        $service->authenticate('abc123');
         $config = new MockServerEnvConfig();
         $builder = new InteractionBuilder($config);
 
