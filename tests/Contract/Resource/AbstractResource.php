@@ -58,10 +58,13 @@ abstract class AbstractResource extends TestCase
         array $body = []
     ): ProviderResponse {
         $response = new ProviderResponse();
-        $response
-            ->setStatus($status)
-            ->setHeaders($headers)
-            ->setBody($body);
+        if (!empty($headers)) {
+            $response->setHeaders($headers);
+        }
+        if (!empty($body)) {
+            $response->setBody($body);
+        }
+        $response->setStatus($status);
         return $response;
     }
 }
