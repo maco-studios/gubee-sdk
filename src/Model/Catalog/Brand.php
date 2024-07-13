@@ -18,10 +18,10 @@ class Brand extends AbstractModel
     protected string $name;
 
     /**
-     * @param string $description
-     * @param string $hubeeId
      * @param string $id
      * @param string $name
+     * @param string $description
+     * @param ?string $hubeeId
      */
     public function __construct(
         string $id,

@@ -18,44 +18,75 @@ class TokenResourceTest extends AbstractResource
 {
     public function testRevalidateToken(): void
     {
+        $payload = [
+            "id" => "string",
+            "login" => "string",
+            "revoked" => true,
+            "sellerId" => "string",
+            "token" => "string",
+            "tokenType" => "ADMIN",
+            "validity" => "2024-03-12T15:43:38+00:00",
+        ];
+
         $request = $this->createRequest(
             '/api/integration/tokens/revalidate/apitoken',
-            'POST'
+            'POST',
+            false
         );
+
         $response = $this->createResponse(
             200,
             ['Content-Type' => 'application/json'],
-            [
-                "id" => "string",
-                "login" => "string",
-                "revoked" => true,
-                "sellerId" => "string",
-                "token" => "string",
-                "tokenType" => "ADMIN",
-                "validity" => "2024-03-12T15:43:38.036Z",
-            ]
+            $payload
         );
 
-        $request = new ConsumerRequest();
-        $tokenString = 'a6as1d61as65d1a65sd165a1s6d51a65sd1a';
-        $service = new Client();
+        $interaction = $this->createInteraction(
+            'Revalidate token',
+            $request,
+            $response
+        );
 
-        $request
-            ->setMethod('POST')
-            ->setPath('/api/integration/tokens/revalidate/apitoken');
-        $config = new MockServerEnvConfig();
-        $builder = new InteractionBuilder($config);
+        $token = $this->client->token()->revalidate('apitoken');
 
-        $builder
-            ->uponReceiving('A valid token')
-            ->with($request)
-            ->willRespondWith($response);
+        $this->assertEquals(
+            $payload['id'],
+            $token->getId(),
+            'Token id does not match'
+        );
+        $this->assertEquals(
+            $payload['login'],
+            $token->getLogin(),
+            'Token login does not match'
+        );
+        $this->assertEquals(
+            $payload['revoked'],
+            $token->getRevoked(),
+            'Token revoked does not match'
+        );
+        $this->assertEquals(
+            $payload['sellerId'],
+            $token->getSellerId(),
+            'Token sellerId does not match'
+        );
 
-        $service->setUrl((string) $config->getBaseUri()->withPath(''));
+        $this->assertEquals(
+            $payload['token'],
+            $token->getToken(),
+            'Token token does not match'
+        );
 
-        $result = $service->token()->revalidate($tokenString);
-        $this->assertInstanceOf(Token::class, $result);
-        $builder->verify();
+        $this->assertEquals(
+            $payload['tokenType'],
+            (string) $token->getTokenType()->getValue(),
+            'Token tokenType does not match'
+        );
+        $this->assertEquals(
+            $payload['validity'],
+            $token->getValidity()->format(\DateTimeInterface::ATOM),
+            'Token validity does not match'
+        );
+
+        $interaction->verify();
     }
 
 }

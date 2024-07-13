@@ -3,12 +3,16 @@
     "explorer.fileNesting.patterns": {
         "package.json": "package-lock.json, yarn.lock, pnpm-lock.yaml, bun.lockb",
         "composer.json": "composer.lock",
-        "phpcs.xml": "phpcs.xml.dist,phpstan.neon",
-        "phpcs.xml.dist": "phpcs.xml,phpstan.neon",
-        "phpunit.xml": "phpunit.xml.dist",
-        "phpunit.xml.dist": "phpunit.xml",
+        "phpcs.xml": "phpcs.xml.dist,phpstan.neon,.phpcs*",
+        "phpcs.xml.dist": "phpcs.xml,phpstan.neon,.phpcs*",
         ".gitignore": ".env*,.tool-versions",
-        "README.md": "*.md"
+        "phpunit.xml.dist": ".phpunit.*, phpunit.xml",
+        "README.md": "*.md",
+        "phpunit.xml": ".phpunit.*, phpunit.*"
+    },
+    "files.associations": {
+        "*.xml.dist": "xml",
+        "*.neon": "yaml"
     },
     "php.version": "8.3"
 }

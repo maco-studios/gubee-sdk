@@ -99,7 +99,7 @@ abstract class AbstractResource
     ) {
         if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
-            $body    = self::prepareMultipartBody($builder);
+            $body = self::prepareMultipartBody($builder);
             $headers = self::addMultipartContentType($headers, $builder);
         } else {
             $body = self::prepareJsonBody($params);
@@ -124,7 +124,7 @@ abstract class AbstractResource
     {
         if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
-            $body    = self::prepareMultipartBody($builder);
+            $body = self::prepareMultipartBody($builder);
             $headers = self::addMultipartContentType($headers, $builder);
         } else {
             $body = self::prepareJsonBody($params);
@@ -149,7 +149,7 @@ abstract class AbstractResource
     {
         if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
-            $body    = self::prepareMultipartBody($builder);
+            $body = self::prepareMultipartBody($builder);
             $headers = self::addMultipartContentType($headers, $builder);
         } else {
             $body = self::prepareJsonBody($params);
@@ -176,7 +176,7 @@ abstract class AbstractResource
         array $uriParams = []
     ) {
         $resource = self::tryFopen($file, 'r');
-        $body     = $this->client->getStreamFactory()->createStreamFromResource($resource);
+        $body = $this->client->getStreamFactory()->createStreamFromResource($resource);
 
         if ($body->isReadable()) {
             $headers = array_merge(
@@ -256,7 +256,7 @@ abstract class AbstractResource
 
         foreach ($files as $name => $file) {
             $builder->addResource($name, self::tryFopen($file, 'r'), [
-                'headers'  => [
+                'headers' => [
                     ResponseMediator::CONTENT_TYPE_HEADER => self::guessFileContentType($file),
                 ],
                 'filename' => basename($file),
@@ -315,7 +315,8 @@ abstract class AbstractResource
     {
         return array_merge(
             [
-                ResponseMediator::CONTENT_TYPE_HEADER => ResponseMediator::JSON_CONTENT_TYPE,
+                ResponseMediator::CONTENT_TYPE_HEADER =>
+                    ResponseMediator::JSON_CONTENT_TYPE[0]
             ],
             $headers
         );
@@ -362,12 +363,12 @@ abstract class AbstractResource
      */
     private static function guessFileContentType(string $file): string
     {
-        if (! class_exists(finfo::class, false)) {
+        if (!class_exists(finfo::class, false)) {
             return ResponseMediator::STREAM_CONTENT_TYPE;
         }
 
         $finfo = new finfo(FILEINFO_MIME_TYPE);
-        $type  = $finfo->file($file);
+        $type = $finfo->file($file);
 
         return false !== $type ? $type : ResponseMediator::STREAM_CONTENT_TYPE;
     }
