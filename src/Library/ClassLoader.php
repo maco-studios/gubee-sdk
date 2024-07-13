@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Library;
 
+use function dirname;
+
+use const PHP_MAJOR_VERSION;
+
 class ClassLoader extends \Composer\Autoload\ClassLoader
 {
     /**
@@ -28,5 +32,4 @@ class ClassLoader extends \Composer\Autoload\ClassLoader
         }
         parent::__construct($vendorDir);
     }
-
 }

@@ -7,6 +7,20 @@ namespace Gubee\SDK\Library\HttpClient;
 use Psr\Http\Message\ResponseInterface;
 use RuntimeException;
 
+use function array_shift;
+use function array_unique;
+use function count;
+use function explode;
+use function implode;
+use function in_array;
+use function is_array;
+use function is_int;
+use function is_string;
+use function json_decode;
+use function preg_match;
+use function sprintf;
+use function trim;
+
 class ResponseMediator
 {
     /**
@@ -44,8 +58,6 @@ class ResponseMediator
     /**
      * Return the response body as a string or JSON array if content type is JSON.
      *
-     * @param ResponseInterface $response
-     *
      * @return array|string
      */
     public static function getContent(ResponseInterface $response)
@@ -53,9 +65,9 @@ class ResponseMediator
         $body = (string) $response->getBody();
 
         if (
-            !\in_array($body, ['', 'null', 'true', 'false'], true)
+            ! in_array($body, ['', 'null', 'true', 'false'], true)
             &&
-            \in_array(
+            in_array(
                 $response->getHeaderLine(self::CONTENT_TYPE_HEADER),
                 self::JSON_CONTENT_TYPE
             )
@@ -69,8 +81,6 @@ class ResponseMediator
     /**
      * Extract pagination URIs from Link header.
      *
-     * @param ResponseInterface $response
-     *
      * @return array<string,string>
      */
     public static function getPagination(ResponseInterface $response): array
@@ -82,11 +92,10 @@ class ResponseMediator
         }
 
         $pagination = [];
-        foreach (\explode(',', $header) as $link) {
-            \preg_match('/<(.*)>; rel="(.*)"/i', \trim($link, ','), $match);
+        foreach (explode(',', $header) as $link) {
+            preg_match('/<(.*)>; rel="(.*)"/i', trim($link, ','), $match);
 
-            /** @var string[] $match */
-            if (3 === \count($match)) {
+            if (3 === count($match)) {
                 $pagination[$match[2]] = $match[1];
             }
         }
@@ -96,25 +105,16 @@ class ResponseMediator
 
     /**
      * Get the value for a single header.
-     *
-     * @param ResponseInterface $response
-     * @param string            $name
-     *
-     * @return string|null
      */
     private static function getHeader(ResponseInterface $response, string $name): ?string
     {
         $headers = $response->getHeader($name);
 
-        return \array_shift($headers);
+        return array_shift($headers);
     }
 
     /**
      * Get the error message from the response if present.
-     *
-     * @param ResponseInterface $response
-     *
-     * @return string|null
      */
     public static function getErrorMessage(ResponseInterface $response): ?string
     {
@@ -124,18 +124,18 @@ class ResponseMediator
             return null;
         }
 
-        if (!\is_array($content)) {
+        if (! is_array($content)) {
             return null;
         }
 
         if (isset($content['message'])) {
             $message = $content['message'];
 
-            if (\is_string($message)) {
+            if (is_string($message)) {
                 return $message;
             }
 
-            if (\is_array($message)) {
+            if (is_array($message)) {
                 return self::getMessageAsString($content['message']);
             }
         }
@@ -143,7 +143,7 @@ class ResponseMediator
         if (isset($content['error_description'])) {
             $error = $content['error_description'];
 
-            if (\is_string($error)) {
+            if (is_string($error)) {
                 return $error;
             }
         }
@@ -151,7 +151,7 @@ class ResponseMediator
         if (isset($content['error'])) {
             $error = $content['error'];
 
-            if (\is_string($error)) {
+            if (is_string($error)) {
                 return $error;
             }
         }
@@ -161,8 +161,6 @@ class ResponseMediator
 
     /**
      * @param array $message
-     *
-     * @return string
      */
     private static function getMessageAsString(array $message): string
     {
@@ -170,18 +168,18 @@ class ResponseMediator
         $errors = [];
 
         foreach ($message as $field => $messages) {
-            if (\is_array($messages)) {
-                $messages = \array_unique($messages);
+            if (is_array($messages)) {
+                $messages = array_unique($messages);
                 foreach ($messages as $error) {
-                    $errors[] = \sprintf($format, $field, $error);
+                    $errors[] = sprintf($format, $field, $error);
                 }
-            } elseif (\is_int($field)) {
+            } elseif (is_int($field)) {
                 $errors[] = $messages;
             } else {
-                $errors[] = \sprintf($format, $field, $messages);
+                $errors[] = sprintf($format, $field, $messages);
             }
         }
 
-        return \implode(', ', $errors);
+        return implode(', ', $errors);
     }
 }

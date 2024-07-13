@@ -64,9 +64,10 @@
         ],
         "cs:check": "phpcs",
         "cs:fix": "phpcbf",
-        "cs:stan": "vendor/bin/phpstan analyse src test --level=6",
+        "cs:stan": "vendor/bin/phpstan analyse -c phpstan.neon",
         "test": [
             "@test:unit",
+            "@test:contract",
             "@test:integration"
         ],
         "test:integration": "phpunit --testsuite=Integration",

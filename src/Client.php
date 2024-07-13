@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace Gubee\SDK;
 
-use DI\ContainerBuilder;
-use Gubee\SDK\Api\ServiceProviderInterface;
 use Gubee\SDK\Library\HttpClient\Builder;
 use Gubee\SDK\Library\HttpClient\Plugin\Authenticate;
 use Gubee\SDK\Library\HttpClient\Plugin\Journal\History;
 use Gubee\SDK\Library\HttpClient\Plugin\Thrower;
-use Gubee\SDK\Library\ObjectManager\ServiceProvider;
+use Gubee\SDK\Resource\Catalog\BrandResource;
 use Gubee\SDK\Resource\Catalog\CategoryResource;
 use Gubee\SDK\Resource\TokenResource;
 use Http\Client\Common\HttpMethodsClientInterface;
@@ -24,6 +22,9 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
+use Throwable;
+
+use function in_array;
 
 class Client
 {
@@ -49,7 +50,9 @@ class Client
         $this->httpClientBuilder->addPlugin(
             new RetryPlugin([
                 'retries' => $retryCount,
-                'exception_decider' => fn(RequestInterface $request, \Throwable $exception) => $this->shouldRetry($request, $exception),
+                'exception_decider' => function (RequestInterface $request, Throwable $exception) {
+                    $this->shouldRetry($request, $exception);
+                },
             ])
         );
 
@@ -74,7 +77,12 @@ class Client
         return new CategoryResource($this);
     }
 
-    private function shouldRetry(RequestInterface $request, \Throwable $exception): bool
+    public function brand(): BrandResource
+    {
+        return new BrandResource($this);
+    }
+
+    private function shouldRetry(RequestInterface $request, Throwable $exception): bool
     {
         /**
          * The list of HTTP status codes that should trigger a retry.
@@ -87,7 +95,7 @@ class Client
          * - 444: No Response
          * - 449: Retry With
          *
-         * @var array
+         * @var array<int>
          */
         $tryAgain = [429, 422, 410, 408, 444, 449];
         if ($exception instanceof ClientExceptionInterface) {

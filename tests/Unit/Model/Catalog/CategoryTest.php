@@ -9,13 +9,12 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Test class for Category
- * 
+ *
  * @covers \Gubee\SDK\Model\Catalog\Category
  */
 class CategoryTest extends TestCase
 {
-
-    public function testGetterSetters()
+    public function testGetterSetters(): void
     {
         $category = new Category(
             'id',
@@ -43,28 +42,53 @@ class CategoryTest extends TestCase
         $this->assertEquals('new hubeeId', $category->getHubeeId(), 'Failed to set hubee ID');
     }
 
-    public function testFromJson()
+    public function testFromJson(): void
     {
         $array = [
-            'active' => true,
-            'description' => 'description',
-            'name' => 'name',
-            'id' => 'id',
+            'active'                 => true,
+            'description'            => 'description',
+            'name'                   => 'name',
+            'id'                     => 'id',
             'enabledAutoIntegration' => true,
-            'parent' => 'parent',
-            'hubeeId' => 'hubeeId'
+            'parent'                 => 'parent',
+            'hubeeId'                => 'hubeeId',
         ];
 
-
         $category = Category::fromJson($array);
-        $this->assertEquals($array['active'], $category->getActive(), 'Failed to assert active');
-        $this->assertEquals($array['description'], $category->getDescription(), 'Failed to assert description');
-        $this->assertEquals($array['name'], $category->getName(), 'Failed to assert name');
-        $this->assertEquals($array['id'], $category->getId(), 'Failed to assert ID');
-        $this->assertEquals($array['enabledAutoIntegration'], $category->getEnabledAutoIntegration(), 'Failed to assert enabled auto integration');
-        $this->assertEquals($array['parent'], $category->getParent(), 'Failed to assert parent');
-        $this->assertEquals($array['hubeeId'], $category->getHubeeId(), 'Failed to assert hubee ID');
+        $this->assertEquals(
+            $array['active'],
+            $category->getActive(),
+            'Failed to assert active'
+        );
+        $this->assertEquals(
+            $array['description'],
+            $category->getDescription(),
+            'Failed to assert description'
+        );
+        $this->assertEquals(
+            $array['name'],
+            $category->getName(),
+            'Failed to assert name'
+        );
+        $this->assertEquals(
+            $array['id'],
+            $category->getId(),
+            'Failed to assert ID'
+        );
+        $this->assertEquals(
+            $array['enabledAutoIntegration'],
+            $category->getEnabledAutoIntegration(),
+            'Failed to assert enabled auto integration'
+        );
+        $this->assertEquals(
+            $array['parent'],
+            $category->getParent(),
+            'Failed to assert parent'
+        );
+        $this->assertEquals(
+            $array['hubeeId'],
+            $category->getHubeeId(),
+            'Failed to assert hubee ID'
+        );
     }
-
-
 }

@@ -1,5 +1,7 @@
 <?php
-use Gubee\SDK\Enum\Token\TokenTypeEnum;
+
+declare(strict_types=1);
+
 use Gubee\SDK\Library\ClassLoader;
 
 $loader = new ClassLoader();

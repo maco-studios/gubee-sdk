@@ -9,5 +9,6 @@
         "phpunit.xml.dist": "phpunit.xml",
         ".gitignore": ".env*,.tool-versions",
         "README.md": "*.md"
-    }
+    },
+    "php.version": "8.3"
 }

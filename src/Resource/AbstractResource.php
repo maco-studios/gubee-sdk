@@ -4,13 +4,30 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Resource;
 
+use finfo;
 use Gubee\SDK\Client;
 use Gubee\SDK\Library\HttpClient\QueryStringBuilder;
 use Gubee\SDK\Library\HttpClient\ResponseMediator;
+use Http\Client\Exception;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 use RuntimeException;
+
+use function array_filter;
+use function array_merge;
+use function basename;
+use function class_exists;
+use function count;
+use function fopen;
+use function func_get_args;
+use function json_encode;
+use function rawurlencode;
+use function restore_error_handler;
+use function set_error_handler;
+use function sprintf;
+
+use const FILEINFO_MIME_TYPE;
 
 abstract class AbstractResource
 {
@@ -21,18 +38,13 @@ abstract class AbstractResource
      */
     private const URI_PREFIX = '/api';
 
-
     /**
      * The client instance.
-     *
-     * @var Client
      */
     protected Client $client;
 
     /**
      * Create a new API instance.
-     *
-     * @param Client $client
      *
      * @return void
      */
@@ -44,13 +56,9 @@ abstract class AbstractResource
     /**
      * Send a GET request with query params and return the raw response.
      *
-     * @param string               $uri
      * @param array                $params
      * @param array<string,string> $headers
-     *
-     * @throws \Http\Client\Exception
-     *
-     * @return \Psr\Http\Message\ResponseInterface
+     * @throws Exception
      */
     protected function getAsResponse(
         string $uri,
@@ -64,10 +72,8 @@ abstract class AbstractResource
     }
 
     /**
-     * @param string               $uri
      * @param array<string,mixed>  $params
      * @param array<string,string> $headers
-     *
      * @return mixed
      */
     protected function get(string $uri, array $params = [], array $headers = [])
@@ -78,19 +84,22 @@ abstract class AbstractResource
     }
 
     /**
-     * @param string               $uri
      * @param array<string,mixed>  $params
      * @param array<string,string> $headers
      * @param array<string,string> $files
      * @param array<string,mixed>  $uriParams
-     *
      * @return mixed
      */
-    protected function post(string $uri, array $params = [], array $headers = [], array $files = [], array $uriParams = [])
-    {
-        if (0 < \count($files)) {
+    protected function post(
+        string $uri,
+        array $params = [],
+        array $headers = [],
+        array $files = [],
+        array $uriParams = []
+    ) {
+        if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
-            $body = self::prepareMultipartBody($builder);
+            $body    = self::prepareMultipartBody($builder);
             $headers = self::addMultipartContentType($headers, $builder);
         } else {
             $body = self::prepareJsonBody($params);
@@ -106,18 +115,16 @@ abstract class AbstractResource
     }
 
     /**
-     * @param string               $uri
      * @param array<string,mixed>  $params
      * @param array<string,string> $headers
      * @param array<string,string> $files
-     *
      * @return mixed
      */
     protected function put(string $uri, array $params = [], array $headers = [], array $files = [])
     {
-        if (0 < \count($files)) {
+        if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
-            $body = self::prepareMultipartBody($builder);
+            $body    = self::prepareMultipartBody($builder);
             $headers = self::addMultipartContentType($headers, $builder);
         } else {
             $body = self::prepareJsonBody($params);
@@ -133,18 +140,16 @@ abstract class AbstractResource
     }
 
     /**
-     * @param string               $uri
      * @param array<string,mixed>  $params
      * @param array<string,string> $headers
      * @param array<string,string> $files
-     *
      * @return mixed
      */
     protected function patch(string $uri, array $params = [], array $headers = [], array $files = [])
     {
-        if (0 < \count($files)) {
+        if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
-            $body = self::prepareMultipartBody($builder);
+            $body    = self::prepareMultipartBody($builder);
             $headers = self::addMultipartContentType($headers, $builder);
         } else {
             $body = self::prepareJsonBody($params);
@@ -160,20 +165,26 @@ abstract class AbstractResource
     }
 
     /**
-     * @param string               $uri
-     * @param string               $file
      * @param array<string,string> $headers
      * @param array<string,mixed>  $uriParams
-     *
      * @return mixed
      */
-    protected function putFile(string $uri, string $file, array $headers = [], array $uriParams = [])
-    {
+    protected function putFile(
+        string $uri,
+        string $file,
+        array $headers = [],
+        array $uriParams = []
+    ) {
         $resource = self::tryFopen($file, 'r');
-        $body = $this->client->getStreamFactory()->createStreamFromResource($resource);
+        $body     = $this->client->getStreamFactory()->createStreamFromResource($resource);
 
         if ($body->isReadable()) {
-            $headers = \array_merge([ResponseMediator::CONTENT_TYPE_HEADER => self::guessFileContentType($file)], $headers);
+            $headers = array_merge(
+                [
+                    ResponseMediator::CONTENT_TYPE_HEADER => self::guessFileContentType($file),
+                ],
+                $headers
+            );
         }
 
         $response = $this->client->getHttpClient()->put(self::prepareUri($uri, $uriParams), $headers, $body);
@@ -182,10 +193,8 @@ abstract class AbstractResource
     }
 
     /**
-     * @param string               $uri
      * @param array<string,mixed>  $params
      * @param array<string,string> $headers
-     *
      * @return mixed
      */
     protected function delete(string $uri, array $params = [], array $headers = [])
@@ -203,41 +212,32 @@ abstract class AbstractResource
 
     /**
      * @param int|string $uri
-     *
-     * @return string
      */
     protected static function encodePath($uri): string
     {
-        return \rawurlencode((string) $uri);
+        return rawurlencode((string) $uri);
     }
 
     /**
      * @param int|string $id
-     * @param string     $uri
-     *
-     * @return string
      */
     protected function getProjectPath($id, string $uri): string
     {
         return 'projects/' . self::encodePath($id) . '/' . $uri;
     }
 
-
     /**
      * Prepare the request URI.
      *
-     * @param string $uri
      * @param array  $query
-     *
-     * @return string
      */
     private static function prepareUri(string $uri, array $query = []): string
     {
-        $query = \array_filter($query, function ($value): bool {
+        $query = array_filter($query, function ($value): bool {
             return null !== $value;
         });
 
-        return \sprintf('%s%s%s', self::URI_PREFIX, $uri, QueryStringBuilder::build($query));
+        return sprintf('%s%s%s', self::URI_PREFIX, $uri, QueryStringBuilder::build($query));
     }
 
     /**
@@ -245,8 +245,6 @@ abstract class AbstractResource
      *
      * @param array<string,mixed>  $params
      * @param array<string,string> $files
-     *
-     * @return MultipartStreamBuilder
      */
     private function createMultipartStreamBuilder(array $params = [], array $files = []): MultipartStreamBuilder
     {
@@ -258,10 +256,10 @@ abstract class AbstractResource
 
         foreach ($files as $name => $file) {
             $builder->addResource($name, self::tryFopen($file, 'r'), [
-                'headers' => [
+                'headers'  => [
                     ResponseMediator::CONTENT_TYPE_HEADER => self::guessFileContentType($file),
                 ],
-                'filename' => \basename($file),
+                'filename' => basename($file),
             ]);
         }
 
@@ -270,10 +268,6 @@ abstract class AbstractResource
 
     /**
      * Prepare the request multipart body.
-     *
-     * @param MultipartStreamBuilder $builder
-     *
-     * @return StreamInterface
      */
     private static function prepareMultipartBody(MultipartStreamBuilder $builder): StreamInterface
     {
@@ -284,31 +278,27 @@ abstract class AbstractResource
      * Add the multipart content type to the headers if one is not already present.
      *
      * @param array<string,string>   $headers
-     * @param MultipartStreamBuilder $builder
-     *
      * @return array<string,string>
      */
     private static function addMultipartContentType(array $headers, MultipartStreamBuilder $builder): array
     {
-        $contentType = \sprintf('%s; boundary=%s', ResponseMediator::MULTIPART_CONTENT_TYPE, $builder->getBoundary());
+        $contentType = sprintf('%s; boundary=%s', ResponseMediator::MULTIPART_CONTENT_TYPE, $builder->getBoundary());
 
-        return \array_merge([ResponseMediator::CONTENT_TYPE_HEADER => $contentType], $headers);
+        return array_merge([ResponseMediator::CONTENT_TYPE_HEADER => $contentType], $headers);
     }
 
     /**
      * Prepare the request JSON body.
      *
      * @param array<string,mixed> $params
-     *
-     * @return string|null
      */
     private static function prepareJsonBody(array $params): ?string
     {
-        $params = \array_filter($params, function ($value): bool {
+        $params = array_filter($params, function ($value): bool {
             return null !== $value;
         });
 
-        if (0 === \count($params)) {
+        if (0 === count($params)) {
             return null;
         }
 
@@ -319,12 +309,16 @@ abstract class AbstractResource
      * Add the JSON content type to the headers if one is not already present.
      *
      * @param array<string,string> $headers
-     *
      * @return array<string,string>
      */
     private static function addJsonContentType(array $headers): array
     {
-        return \array_merge([ResponseMediator::CONTENT_TYPE_HEADER => ResponseMediator::JSON_CONTENT_TYPE], $headers);
+        return array_merge(
+            [
+                ResponseMediator::CONTENT_TYPE_HEADER => ResponseMediator::JSON_CONTENT_TYPE,
+            ],
+            $headers
+        );
     }
 
     /**
@@ -333,55 +327,47 @@ abstract class AbstractResource
      * When fopen fails, PHP normally raises a warning. This function adds an
      * error handler that checks for errors and throws an exception instead.
      *
+     * @see https://github.com/guzzle/psr7/blob/1.6.1/src/functions.php#L287-L320
+     *
      * @param string $filename File to open
      * @param string $mode     Mode used to open the file
-     *
-     * @throws RuntimeException if the file cannot be opened
-     *
+     * @throws RuntimeException If the file cannot be opened.
      * @return resource
-     *
-     * @see https://github.com/guzzle/psr7/blob/1.6.1/src/functions.php#L287-L320
      */
     private static function tryFopen(string $filename, string $mode)
     {
         $ex = null;
-        \set_error_handler(function () use ($filename, $mode, &$ex): void {
+        set_error_handler(function () use ($filename, $mode, &$ex): void {
             $ex = new RuntimeException(
-                \sprintf(
+                sprintf(
                     'Unable to open %s using mode %s: %s',
                     $filename,
                     $mode,
-                    \func_get_args()[1]
+                    func_get_args()[1]
                 )
             );
         });
 
-        $handle = \fopen($filename, $mode);
-        \restore_error_handler();
+        $handle = fopen($filename, $mode);
+        restore_error_handler();
 
         if (null !== $ex) {
             throw $ex;
         }
-
-        /** @var resource */
         return $handle;
     }
 
     /**
      * Guess the content type of the file if possible.
-     *
-     * @param string $file
-     *
-     * @return string
      */
     private static function guessFileContentType(string $file): string
     {
-        if (!\class_exists(\finfo::class, false)) {
+        if (! class_exists(finfo::class, false)) {
             return ResponseMediator::STREAM_CONTENT_TYPE;
         }
 
-        $finfo = new \finfo(\FILEINFO_MIME_TYPE);
-        $type = $finfo->file($file);
+        $finfo = new finfo(FILEINFO_MIME_TYPE);
+        $type  = $finfo->file($file);
 
         return false !== $type ? $type : ResponseMediator::STREAM_CONTENT_TYPE;
     }

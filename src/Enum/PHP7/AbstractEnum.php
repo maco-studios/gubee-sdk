@@ -4,7 +4,15 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Enum;
 
-abstract class AbstractEnum implements \Stringable, \JsonSerializable
+use InvalidArgumentException;
+use JsonSerializable;
+use ReflectionClass;
+use Stringable;
+
+use function in_array;
+use function sprintf;
+
+abstract class AbstractEnum implements Stringable, JsonSerializable
 {
     protected string $value;
 
@@ -29,25 +37,17 @@ abstract class AbstractEnum implements \Stringable, \JsonSerializable
         return $this->value;
     }
 
-
-    /**
-     * @return string
-     */
     public function getValue(): string
     {
         return $this->value;
     }
 
-    /**
-     * @param string $value 
-     * @return self
-     */
     public function setValue(string $value): self
     {
-        $reflection = new \ReflectionClass($this);
-        $constants = $reflection->getConstants();
-        if (!in_array($value, $constants, true)) {
-            throw new \InvalidArgumentException(
+        $reflection = new ReflectionClass($this);
+        $constants  = $reflection->getConstants();
+        if (! in_array($value, $constants, true)) {
+            throw new InvalidArgumentException(
                 sprintf(
                     'The value "%s" is not part of the enum %s',
                     $value,

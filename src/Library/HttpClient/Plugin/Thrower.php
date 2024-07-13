@@ -21,15 +21,25 @@ use Gubee\SDK\Library\HttpClient\Exception\TooManyRequestsException;
 use Gubee\SDK\Library\HttpClient\Exception\UnauthorizedException;
 use Gubee\SDK\Library\HttpClient\Exception\UnprocessableEntityException;
 use Gubee\SDK\Library\HttpClient\Exception\UnsupportedMediaTypeException;
+use Gubee\SDK\Library\HttpClient\ResponseMediator;
 use Http\Client\Common\Plugin;
 use Http\Promise\Promise;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
+use function array_map;
+use function implode;
+use function json_decode;
+use function json_encode;
+use function sprintf;
+
+use const JSON_PRETTY_PRINT;
+use const PHP_EOL;
+
 class Thrower implements Plugin
 {
-    private $logger;
+    protected LoggerInterface $logger;
 
     public function __construct(LoggerInterface $logger)
     {
@@ -44,8 +54,8 @@ class Thrower implements Plugin
         return $next($request)->then(
             function (ResponseInterface $response) use (&$request): ResponseInterface {
                 $status = $response->getStatusCode();
+                print_r(ResponseMediator::getContent($response));
                 if ($status >= 400 && $status < 600) {
-
                     try {
                         throw self::createException(
                             $status,

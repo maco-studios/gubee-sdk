@@ -4,31 +4,42 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Tests\Integration;
 
+use Exception;
 use Gubee\SDK\Client;
+use Gubee\SDK\Model\Token;
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+
+use function getenv;
+use function is_dir;
+use function mkdir;
+use function sprintf;
 
 class AbstractIntegration extends TestCase
 {
-
     protected Client $client;
 
     protected LoggerInterface $logger;
-    protected \Psr\Cache\CacheItemPoolInterface $cache;
+    protected CacheItemPoolInterface $cache;
 
-    public function __construct(?string $name = null, array $data = [], $dataName = '')
-    {
+    /**
+     * @param array<mixed, mixed> $data
+     * @param string $dataName
+     */
+    public function __construct(
+        ?string $name = null,
+        array $data = [],
+        $dataName = ''
+    ) {
         parent::__construct($name, $data, $dataName);
-        $this->logger = new \Monolog\Logger(
+        $this->logger = new Logger(
             'integration-tests',
             [
-                new \Monolog\Handler\StreamHandler('php://stdout')
-            ],
-            [
-                new \Monolog\Processor\UidProcessor(),
-                new \Monolog\Processor\MemoryUsageProcessor(),
-                new \Monolog\Processor\MemoryPeakUsageProcessor(),
-                new \Monolog\Processor\ProcessIdProcessor(),
+                new StreamHandler('php://stdout'),
             ]
         );
         if (
@@ -43,40 +54,45 @@ class AbstractIntegration extends TestCase
             );
         }
 
-        $this->cache = new \Symfony\Component\Cache\Adapter\FilesystemAdapter(
+        $this->cache = new FilesystemAdapter(
             'gubee-sdk-tests',
             0,
             __DIR__ . '/../../var/cache'
         );
     }
 
+    /**
+     * @return void
+     */
     public function revalidate()
     {
         $tokenCache = $this->cache->getItem('token');
         if ($tokenCache->isHit()) {
             $token = $tokenCache->get();
             $this->assertInstanceOf(
-                \Gubee\SDK\Model\Token::class,
+                Token::class,
                 $token
             );
             $this->getClient()->authenticate($token->getToken());
-            return $this->assertTrue(true);
+            $this->assertTrue(true);
+            return;
         }
         try {
             $token = $this->client->token()->revalidate(
-                getenv('API_TOKEN')
+                getenv('API_TOKEN') // @phpstan-ignore argument.type
             );
             $tokenCache->set($token);
             $this->cache->save($tokenCache);
-            return $this->assertInstanceOf(
-                \Gubee\SDK\Model\Token::class,
+            $this->assertInstanceOf(
+                Token::class,
                 $token,
                 sprintf(
                     "Token is not an instance of %s",
-                    \Gubee\SDK\Model\Token::class
+                    Token::class
                 )
             );
-        } catch (\Exception $e) {
+            $this->getClient()->authenticate($token->getToken());
+        } catch (Exception $e) {
             $this->fail(
                 sprintf(
                     "Failed to revalidate token: %s",
@@ -93,22 +109,15 @@ class AbstractIntegration extends TestCase
         );
         $this->revalidate();
         if (!getenv('API_TOKEN')) {
-            throw new \Exception('API_TOKEN not found');
+            throw new Exception('API_TOKEN not found');
         }
     }
 
-    /**
-     * @return Client
-     */
     public function getClient(): Client
     {
         return $this->client;
     }
 
-    /**
-     * @param Client $client 
-     * @return self
-     */
     public function setClient(Client $client): self
     {
         $this->client = $client;

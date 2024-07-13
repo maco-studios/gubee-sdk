@@ -7,6 +7,10 @@ namespace Gubee\SDK\Resource\Catalog;
 use Gubee\SDK\Model\Catalog\Category;
 use Gubee\SDK\Resource\AbstractResource;
 
+use function array_map;
+use function rawurlencode;
+use function sprintf;
+
 class CategoryResource extends AbstractResource
 {
     /**

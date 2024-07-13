@@ -19,10 +19,12 @@ class TokenTypeEnum extends AbstractEnum
     {
         return new static(self::ADMIN);
     }
+
     public static function API(): self
     {
         return new static(self::ADMIN);
     }
+
     public static function USER(): self
     {
         return new static(self::ADMIN);
