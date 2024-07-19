@@ -54,7 +54,6 @@ class Thrower implements Plugin
         return $next($request)->then(
             function (ResponseInterface $response) use (&$request): ResponseInterface {
                 $status = $response->getStatusCode();
-                print_r(ResponseMediator::getContent($response));
                 if ($status >= 400 && $status < 600) {
                     try {
                         throw self::createException(
