@@ -16,14 +16,14 @@ class CategoryResourceTest extends AbstractIntegration
     {
         $faker = Factory::create();
 
-        $payload  = [
-            'id'          => $faker->uuid,
-            'name'        => sprintf(
+        $payload = [
+            'id' => $faker->uuid,
+            'name' => sprintf(
                 "Category %s",
                 $faker->name
             ),
             'description' => $faker->text,
-            'active'      => true,
+            'active' => true,
         ];
         $category = new Category(
             $payload['id'],
@@ -62,16 +62,16 @@ class CategoryResourceTest extends AbstractIntegration
     public function testParentCategory(
         Category $parentCategory
     ) {
-        $faker   = Factory::create();
+        $faker = Factory::create();
         $payload = [
-            'id'          => $faker->uuid,
-            'name'        => sprintf(
+            'id' => $faker->uuid,
+            'name' => sprintf(
                 "Category %s",
                 $faker->name
             ),
             'description' => $faker->text,
-            'active'      => true,
-            'parent'      => $parentCategory->getId(),
+            'active' => true,
+            'parent' => $parentCategory->getId(),
         ];
 
         $category = new Category(
@@ -119,14 +119,14 @@ class CategoryResourceTest extends AbstractIntegration
     public function testUpdateCategoryByExternalId(
         Category $category
     ): Category {
-        $faker   = Factory::create();
+        $faker = Factory::create();
         $payload = [
-            'name'        => sprintf(
+            'name' => sprintf(
                 "Category %s",
                 $faker->name
             ),
             'description' => $faker->text,
-            'active'      => false,
+            'active' => false,
         ];
         $category->setName($payload['name']);
         $category->setDescription($payload['description']);
@@ -189,5 +189,108 @@ class CategoryResourceTest extends AbstractIntegration
             $response->getId()
         );
         return $response;
+    }
+
+    /**
+     * Create category
+     */
+    public function testCreateCategoryBulk(): array
+    {
+        $faker = Factory::create();
+        for ($i = 0; $i < 5; $i++) {
+            $payload[] = [
+                'name' => sprintf(
+                    "Category %s",
+                    $faker->name
+                ),
+                'description' => $faker->text,
+                'active' => false,
+            ];
+        }
+
+        $categories = [];
+        foreach ($payload as $item) {
+            $category = new Category(
+                $faker->uuid,
+                $item['name'],
+                $item['description'],
+                $item['active']
+            );
+            $categories[] = $category;
+        }
+
+        $response = $this->client->category()->createBulk($categories);
+        $this->assertIsArray($response);
+        $this->assertCount(5, $response);
+        foreach ($response as $key => $item) {
+            $this->assertInstanceOf(
+                Category::class,
+                $item
+            );
+            $this->assertEquals(
+                $categories[$key]->getName(),
+                $item->getName()
+            );
+            $this->assertEquals(
+                $categories[$key]->getDescription(),
+                $item->getDescription()
+            );
+            $this->assertEquals(
+                $categories[$key]->getActive(),
+                $item->getActive()
+            );
+            $this->assertEquals(
+                $categories[$key]->getId(),
+                $item->getId()
+            );
+        }
+
+        return $response;
+    }
+
+    /**
+     * @depends testCreateCategoryBulk
+     * @param array $categories
+     * @return void
+     */
+    public function testUpdateBulk(array $categories)
+    {
+        $faker = Factory::create();
+        $originalData = [];
+        foreach ($categories as $category) {
+            $originalData[] = $category->jsonSerialize();
+            $category->setName(
+                sprintf(
+                    "Category %s",
+                    $faker->name
+                )
+            );
+        }
+
+        $response = $this->client->category()->updateBulk($categories);
+        $this->assertIsArray($response);
+        $this->assertCount(5, $response);
+        foreach ($response as $key => $item) {
+            $this->assertInstanceOf(
+                Category::class,
+                $item
+            );
+            $this->assertNotEquals(
+                $originalData[$key]['name'],
+                $item->getName()
+            );
+            $this->assertEquals(
+                $categories[$key]->getDescription(),
+                $item->getDescription()
+            );
+            $this->assertEquals(
+                $categories[$key]->getActive(),
+                $item->getActive()
+            );
+            $this->assertEquals(
+                $categories[$key]->getId(),
+                $item->getId()
+            );
+        }
     }
 }

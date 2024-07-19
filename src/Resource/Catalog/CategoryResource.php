@@ -80,7 +80,7 @@ class CategoryResource extends AbstractResource
 
         return array_map(
             function (array $category) {
-                return Category::fromJson($category);
+                return $this->getById($category['hubeeId']);
             },
             $response
         );
@@ -103,7 +103,7 @@ class CategoryResource extends AbstractResource
 
         return array_map(
             function (array $category) {
-                return Category::fromJson($category);
+                return $this->getById($category['hubeeId']);
             },
             $response
         );
