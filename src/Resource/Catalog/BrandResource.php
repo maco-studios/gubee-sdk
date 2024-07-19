@@ -141,7 +141,9 @@ class BrandResource extends AbstractResource
             $brand->jsonSerialize()
         );
 
-        return Brand::fromJson($response);
+        return $this->getById(
+            $response['hubeeId']
+        );
     }
 
 }

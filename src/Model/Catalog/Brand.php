@@ -26,12 +26,14 @@ class Brand extends AbstractModel
     public function __construct(
         string $id,
         string $name,
-        string $description,
+        string $description = null,
         string $hubeeId = null
     ) {
-        $this->description = $description;
         $this->id = $id;
         $this->name = $name;
+        if ($description) {
+            $this->description = $description;
+        }
         if ($hubeeId !== null) {
             $this->hubeeId = $hubeeId;
         }
