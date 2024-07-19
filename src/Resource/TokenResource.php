@@ -36,10 +36,9 @@ class TokenResource extends AbstractResource
             $this->client->getStreamFactory()->createStream($token)
         );
 
-        $content = ResponseMediator::getContent($response);
 
         return Token::fromJson(
-            is_array($content) ? $content : []
+            ResponseMediator::getContent($response)
         );
     }
 }
