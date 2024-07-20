@@ -120,7 +120,7 @@ abstract class AbstractResource
      * @param array<string,string> $files
      * @return mixed
      */
-    protected function put(string $uri, array $params = [], array $headers = [], array $files = [])
+    protected function put(string $uri, array $params = [], array $headers = [], array $files = [], $query = [])
     {
         if (0 < count($files)) {
             $builder = $this->createMultipartStreamBuilder($params, $files);
@@ -133,8 +133,11 @@ abstract class AbstractResource
                 $headers = self::addJsonContentType($headers);
             }
         }
-
-        $response = $this->client->getHttpClient()->put(self::prepareUri($uri), $headers, $body ?? '');
+        $response = $this->client->getHttpClient()->put(
+            self::prepareUri($uri, $query),
+            $headers,
+            $body ?? ''
+        );
 
         return ResponseMediator::getContent($response);
     }
@@ -231,13 +234,16 @@ abstract class AbstractResource
      *
      * @param array  $query
      */
-    private static function prepareUri(string $uri, array $query = []): string
+    protected static function prepareUri(string $uri, array $query = []): string
     {
         $query = array_filter($query, function ($value): bool {
             return null !== $value;
         });
 
-        return sprintf('%s%s%s', self::URI_PREFIX, $uri, QueryStringBuilder::build($query));
+        return rtrim(
+            sprintf('%s%s%s', self::URI_PREFIX, $uri, QueryStringBuilder::build($query)),
+            "?"
+        );
     }
 
     /**
