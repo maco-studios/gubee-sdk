@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Resource\Catalog;
 
+use Gubee\SDK\Library\HttpClient\ResponseMediator;
 use Gubee\SDK\Model\Catalog\Brand;
 use Gubee\SDK\Resource\AbstractResource;
 
@@ -81,14 +82,13 @@ class BrandResource extends AbstractResource
      */
     public function getByName(string $name): Brand
     {
-        $response = $this->get(
-            "/integration/brands/byName",
-            [
-                'name' => $name
-            ]
+        $response = $this->client->getHttpClient()->post(
+            "/api/integration/brands/byName",
+            [],
+            $this->client->getStreamFactory()->createStream($name)
         );
 
-        return Brand::fromJson($response);
+        return Brand::fromJson(ResponseMediator::getContent($response));
     }
 
     /**
@@ -98,14 +98,15 @@ class BrandResource extends AbstractResource
      */
     public function getByNameV2(string $name): Brand
     {
-        $response = $this->post(
-            "/integration/brands/byName",
-            [
-                'name' => $name
-            ]
+        $response = $this->client->getHttpClient()->post(
+            self::prepareUri(
+                "/integration/brands/byName"
+            ),
+            [],
+            $this->client->getStreamFactory()->createStream($name)
         );
 
-        return Brand::fromJson($response);
+        return Brand::fromJson(ResponseMediator::getContent($response));
     }
 
     /**
@@ -117,11 +118,14 @@ class BrandResource extends AbstractResource
     {
         $response = $this->put(
             "/integration/brands/byName",
+            $brand->jsonSerialize(),
+            [],
+            [],
             [
                 'name' => $name
             ],
-            $brand->jsonSerialize()
         );
+
 
         return Brand::fromJson($response);
     }
@@ -131,13 +135,10 @@ class BrandResource extends AbstractResource
      * /integration/brands/v2/byName
      * Update brand by name
      */
-    public function updateByNameV2(string $name, Brand $brand): Brand
+    public function updateByNameV2(Brand $brand): Brand
     {
         $response = $this->put(
             "/integration/brands/v2/byName",
-            [
-                'name' => $name
-            ],
             $brand->jsonSerialize()
         );
 

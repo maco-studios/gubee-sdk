@@ -125,9 +125,6 @@ class BrandResourceTest extends AbstractIntegration
     public function testGetByNameV2(
         Brand $brand
     ): Brand {
-        $this->markTestSkipped(
-            "This test is skipped because the API does not support this operation."
-        );
         $brandResponse = $this->getClient()->brand()->getByNameV2($brand->getName());
         $this->assertInstanceOf(Brand::class, $brandResponse);
         $this->assertEquals($brand->getId(), $brandResponse->getId());
@@ -146,15 +143,13 @@ class BrandResourceTest extends AbstractIntegration
     public function testUpdateByName(
         Brand $brand
     ): Brand {
-        $this->markTestSkipped(
-            "This test is skipped because the API does not support this operation."
-        );
         $faker = \Faker\Factory::create();
+        $name = $brand->getName();
         $brandOriginal = clone $brand;
         $brand->setName($faker->name);
         $brand->setDescription($faker->text);
 
-        $brandResponse = $this->getClient()->brand()->updateByName($brandOriginal->getName(), $brand);
+        $brandResponse = $this->getClient()->brand()->updateByName($name, $brand);
 
         $this->assertInstanceOf(Brand::class, $brandResponse);
         $this->assertNotEquals(
@@ -185,21 +180,16 @@ class BrandResourceTest extends AbstractIntegration
     public function testUpdateByNameV2(
         Brand $brand
     ): Brand {
-        $this->markTestSkipped(
-            "This test is skipped because the API does not support this operation."
-        );
 
         $faker = \Faker\Factory::create();
-        $brandName = $brand->getName();
-        $brand->setName($faker->name);
+        $originalDescription = $brand->getDescription();
         $brand->setDescription($faker->text);
-
-        $brandResponse = $this->getClient()->brand()->updateByNameV2($brandName, $brand);
+        $brandResponse = $this->getClient()->brand()->updateByNameV2($brand);
 
         $this->assertInstanceOf(Brand::class, $brandResponse);
         $this->assertNotEquals(
-            $brandName,
-            $brandResponse->getName()
+            $originalDescription,
+            $brandResponse->getDescription()
         );
         return $brandResponse;
     }

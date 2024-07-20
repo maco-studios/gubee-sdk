@@ -284,13 +284,8 @@ class BrandResourceTest extends AbstractResource
 
         $request = $this->createRequest(
             '/api/integration/brands/byName',
-            'GET',
-            true,
-            [],
-            [],
-            [
-                'name' => $name
-            ]
+            'POST',
+            true
         );
 
         $response = $this->createResponse(
@@ -348,11 +343,7 @@ class BrandResourceTest extends AbstractResource
         $request = $this->createRequest(
             '/api/integration/brands/byName',
             'POST',
-            true,
-            ['name' => $name],
-            [
-                'Content-Type' => 'application/json'
-            ]
+            true
         );
 
         $response = $this->createResponse(
@@ -410,11 +401,10 @@ class BrandResourceTest extends AbstractResource
             '/api/integration/brands/byName',
             'PUT',
             true,
+            [],
+            [],
             [
                 'name' => $name
-            ],
-            [
-                'Content-Type' => 'application/json'
             ]
         );
 
@@ -480,9 +470,7 @@ class BrandResourceTest extends AbstractResource
             '/api/integration/brands/v2/byName',
             'PUT',
             true,
-            [
-                'name' => $name
-            ],
+            [],
             [
                 'Content-Type' => 'application/json'
             ]
@@ -499,6 +487,23 @@ class BrandResourceTest extends AbstractResource
             $request,
             $response
         );
+        $requestGetById = $this->createRequest(
+            '/api/integration/brands/byId/' . $payload['id'],
+            'GET',
+            true
+        );
+        $responseGetById = $this->createResponse(
+            200,
+            ['Content-Type' => 'application/json'],
+            $payload
+        );
+
+        $interactionGetById = $this->createInteraction(
+            'Get brand by id',
+            $requestGetById,
+            $responseGetById
+        );
+
 
         $brand = new Brand(
             'string',
@@ -507,7 +512,7 @@ class BrandResourceTest extends AbstractResource
             'string'
         );
 
-        $brand = $this->client->brand()->updateByNameV2($name, $brand);
+        $brand = $this->client->brand()->updateByNameV2($brand);
 
         $this->assertEquals(
             $payload['description'],
@@ -534,6 +539,7 @@ class BrandResourceTest extends AbstractResource
         );
 
         $interaction->verify();
+        $interactionGetById->verify();
 
     }
 
