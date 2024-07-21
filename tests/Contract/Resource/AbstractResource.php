@@ -131,12 +131,30 @@ abstract class AbstractResource extends TestCase
     }
 
     /**
-     * @param MockServerConfig $config 
+     * @param MockServerConfig $config
      * @return self
      */
     public function setConfig(MockServerConfig $config): self
     {
         $this->config = $config;
+        return $this;
+    }
+
+    /**
+     * @return Client
+     */
+    public function getClient(): Client
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param Client $client
+     * @return self
+     */
+    public function setClient(Client $client): self
+    {
+        $this->client = $client;
         return $this;
     }
 }
