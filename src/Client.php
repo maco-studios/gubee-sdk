@@ -8,6 +8,7 @@ use Gubee\SDK\Library\HttpClient\Builder;
 use Gubee\SDK\Library\HttpClient\Plugin\Authenticate;
 use Gubee\SDK\Library\HttpClient\Plugin\Journal\History;
 use Gubee\SDK\Library\HttpClient\Plugin\Thrower;
+use Gubee\SDK\Resource\Catalog\AttributeResource;
 use Gubee\SDK\Resource\Catalog\BrandResource;
 use Gubee\SDK\Resource\Catalog\CategoryResource;
 use Gubee\SDK\Resource\TokenResource;
@@ -70,6 +71,11 @@ class Client
     public function token(): TokenResource
     {
         return new TokenResource($this);
+    }
+
+    public function attribute(): AttributeResource
+    {
+        return new AttributeResource($this);
     }
 
     public function category(): CategoryResource
