@@ -8,7 +8,7 @@ use Gubee\SDK\Library\HttpClient\Builder;
 use Gubee\SDK\Library\HttpClient\Plugin\Authenticate;
 use Gubee\SDK\Library\HttpClient\Plugin\Journal\History;
 use Gubee\SDK\Library\HttpClient\Plugin\Thrower;
-use Gubee\SDK\Resource\Catalog\AttributeResource;
+use Gubee\SDK\Resource\Catalog\Product\AttributeResource;
 use Gubee\SDK\Resource\Catalog\BrandResource;
 use Gubee\SDK\Resource\Catalog\CategoryResource;
 use Gubee\SDK\Resource\TokenResource;

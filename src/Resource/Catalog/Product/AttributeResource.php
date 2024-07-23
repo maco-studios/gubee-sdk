@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Gubee\SDK\Resource\Catalog;
+namespace Gubee\SDK\Resource\Catalog\Product;
 
 use Gubee\SDK\Model\Catalog\Product\Attribute;
 use Gubee\SDK\Resource\AbstractResource;

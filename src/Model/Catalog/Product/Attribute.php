@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Gubee\SDK\Model\Catalog\Product;
 
+use Gubee\SDK\Enum\Catalog\Product\Attribute\AttrTypeEnum;
 use Gubee\SDK\Model\AbstractModel;
 
 class Attribute extends AbstractModel
 {
-    /** @var string */
-    protected string $attrType;
+    /** @var AttrTypeEnum */
+    protected AttrTypeEnum $attrType;
     /** @var string */
     protected string $hubeeId;
     /** @var string */
@@ -36,29 +37,31 @@ class Attribute extends AbstractModel
      * @param bool $variant
      */
     public function __construct(
-        string $attrType,
-        string $hubeeId,
+        AttrTypeEnum $attrType,
         string $id,
         string $label,
         string $name,
         array $options,
         bool $required = false,
-        bool $variant = false
+        bool $variant = false,
+        string $hubeeId = null,
     ) {
         $this->attrType = $attrType;
-        $this->hubeeId = $hubeeId;
         $this->id = $id;
         $this->label = $label;
         $this->name = $name;
         $this->options = $options;
         $this->required = $required;
         $this->variant = $variant;
+        if ($hubeeId) {
+            $this->hubeeId = $hubeeId;
+        }
     }
 
     /**
      * @return string
      */
-    public function getAttrType(): string
+    public function getAttrType(): AttrTypeEnum
     {
         return $this->attrType;
     }
@@ -120,10 +123,10 @@ class Attribute extends AbstractModel
     }
 
     /**
-     * @param string $attrType
+     * @param AttrTypeEnum $attrType
      * @return self
      */
-    public function setAttrType(string $attrType): self
+    public function setAttrType(AttrTypeEnum $attrType): self
     {
         $this->attrType = $attrType;
         return $this;
@@ -206,14 +209,14 @@ class Attribute extends AbstractModel
     public static function fromJson(array $data): self
     {
         return new self(
-            $data['attrType'],
-            $data['hubeeId'],
+            AttrTypeEnum::fromValue($data['attrType']),
             $data['id'],
             $data['label'],
             $data['name'],
             $data['options'],
             $data['required'],
-            $data['variant']
+            $data['variant'],
+            isset($data['hubeeId']) ? $data['hubeeId'] : null
         );
     }
 }
