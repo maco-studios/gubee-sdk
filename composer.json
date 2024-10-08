@@ -1,0 +1,43 @@
+{
+    "name": "maco-studios/gubee-sdk",
+    "description": "Gubee SDK for PHP",
+    "license": "Mozilla Public License 2.0",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Gubee\\SDK\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Marcos 'Marcão' Aurelio",
+            "email": "macosaures+work@noreply.github.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require-dev": {
+        "ergebnis/license": "^2.5",
+        "squizlabs/php_codesniffer": "^3.10",
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "ergebnis/composer-normalize": "^2.44"
+    },
+    "scripts": {
+      "cs": [
+        "@cs:fix",
+        "@cs:composer-normalize"
+      ],
+      "cs:fix": "php-cs-fixer fix --config=.php-cs-fixer.php --verbose",
+      "cs:composer-normalize": "composer normalize --dry-run"
+    },
+    "config": {
+        "allow-plugins": {
+            "ergebnis/composer-normalize": true
+        }
+    },
+    "extra": {
+    "composer-normalize": {
+      "indent-size": 4,
+      "indent-style": "space"
+    }
+  }
+}
