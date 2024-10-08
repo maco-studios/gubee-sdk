@@ -2,10 +2,16 @@
     "name": "maco-studios/gubee-sdk",
     "description": "Gubee SDK for PHP",
     "license": "Mozilla Public License 2.0",
+    "minimum-stability": "stable",
     "type": "library",
     "autoload": {
         "psr-4": {
             "Gubee\\SDK\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gubee\\SDK\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -14,30 +20,32 @@
             "email": "macosaures+work@noreply.github.com"
         }
     ],
-    "minimum-stability": "stable",
     "require-dev": {
         "ergebnis/license": "^2.5",
         "squizlabs/php_codesniffer": "^3.10",
         "friendsofphp/php-cs-fixer": "^3.64",
-        "ergebnis/composer-normalize": "^2.44"
+        "ergebnis/composer-normalize": "^2.44",
+        "phpunit/phpunit": "^11.4",
+        "laminas/laminas-coding-standard": "*"
     },
     "scripts": {
-      "cs": [
-        "@cs:fix",
-        "@cs:composer-normalize"
-      ],
-      "cs:fix": "php-cs-fixer fix --config=.php-cs-fixer.php --verbose",
-      "cs:composer-normalize": "composer normalize --dry-run"
+        "cs": [
+            "@cs:fix",
+            "@cs:composer-normalize"
+        ],
+        "cs:fix": "php-cs-fixer fix --config=.php-cs-fixer.php --verbose",
+        "cs:composer-normalize": "composer normalize --dry-run"
     },
     "config": {
         "allow-plugins": {
-            "ergebnis/composer-normalize": true
+            "ergebnis/composer-normalize": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "extra": {
-    "composer-normalize": {
-      "indent-size": 4,
-      "indent-style": "space"
+        "composer-normalize": {
+            "indent-size": 4,
+            "indent-style": "space"
+        }
     }
-  }
 }

@@ -6,13 +6,13 @@ use Ergebnis\License;
 use PhpCsFixer\Config;
 use PhpCsFixer\Finder;
 
-$license = License\Type\MIT::text(
+$license = License\Type\MIT::markdown(
     __DIR__ . '/LICENSE',
     License\Range::since(
         License\Year::fromString('2024'),
         new DateTimeZone('UTC')
     ),
-    License\Holder::fromString('MACO Studios'),
+    License\Holder::fromString('MACO Studios & Gubee'),
     License\Url::fromString('https://github.com/maco-studios/gubee-sdk')
 );
 
