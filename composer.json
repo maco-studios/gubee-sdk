@@ -1,9 +1,42 @@
 {
     "name": "maco-studios/gubee-sdk",
+    "type": "library",
     "description": "Gubee SDK for PHP",
     "license": "Mozilla Public License 2.0",
-    "minimum-stability": "stable",
-    "type": "library",
+    "authors": [
+        {
+            "name": "Marcos 'Marcão' Aurelio",
+            "email": "macosaures+work@noreply.github.com"
+        }
+    ],
+    "require": {
+        "php-http/cache-plugin": "^2.0",
+        "php-http/client-common": "^2.7",
+        "psr/http-client": "^1.0",
+        "psr/http-factory": "^1.1"
+    },
+    "require-dev": {
+        "ergebnis/composer-normalize": "^2.15",
+        "ergebnis/license": "^2.5",
+        "friendsofphp/php-cs-fixer": "^3.64",
+        "laminas/laminas-coding-standard": "^2.5",
+        "nyholm/psr7": "^1.8",
+        "php-http/curl-client": "^2.3",
+        "phpunit/phpunit": "^9.6",
+        "squizlabs/php_codesniffer": "^3.10"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true
+        }
+    },
+    "extra": {
+        "composer-normalize": {
+            "indent-size": 4,
+            "indent-style": "space"
+        }
+    },
     "autoload": {
         "psr-4": {
             "Gubee\\SDK\\": "src/"
@@ -14,38 +47,29 @@
             "Gubee\\SDK\\Tests\\": "tests/"
         }
     },
-    "authors": [
-        {
-            "name": "Marcos 'Marcão' Aurelio",
-            "email": "macosaures+work@noreply.github.com"
-        }
-    ],
-    "require-dev": {
-        "ergebnis/license": "^2.5",
-        "squizlabs/php_codesniffer": "^3.10",
-        "friendsofphp/php-cs-fixer": "^3.64",
-        "ergebnis/composer-normalize": "^2.44",
-        "phpunit/phpunit": "^11.4",
-        "laminas/laminas-coding-standard": "*"
-    },
+    "minimum-stability": "stable",
     "scripts": {
         "cs": [
             "@cs:fix",
+            "@cs:check"
+        ],
+        "cs:cbf": "phpcbf",
+        "cs:check": "phpcs",
+        "cs:composer-normalize": "composer normalize",
+        "cs:fix": [
+            "@cs:cbf",
+            "@cs:fixer",
             "@cs:composer-normalize"
         ],
-        "cs:fix": "php-cs-fixer fix --config=.php-cs-fixer.php --verbose",
-        "cs:composer-normalize": "composer normalize --dry-run"
-    },
-    "config": {
-        "allow-plugins": {
-            "ergebnis/composer-normalize": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
-        }
-    },
-    "extra": {
-        "composer-normalize": {
-            "indent-size": 4,
-            "indent-style": "space"
-        }
+        "cs:fixer": "php-cs-fixer fix --config=.php-cs-fixer.php",
+        "test": [
+            "@test:unit",
+            "@test:contract",
+            "@test:integration"
+        ],
+        "test:contract": "phpunit --testsuite=Contract",
+        "test:coverage": "phpunit --coverage-html=var/test/coverage",
+        "test:integration": "phpunit --testsuite=Integration",
+        "test:unit": "phpunit --testsuite=Unit"
     }
 }

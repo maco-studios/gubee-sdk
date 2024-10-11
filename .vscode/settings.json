@@ -1,5 +1,25 @@
 {
-  "files.associations": {
-    "*.neon": "yaml"
-  }
+    "files.associations": {
+        "*.neon": "yaml"
+    },
+    "php.version": "7.4",
+    // make folders collapsible
+    "workbench.tree.indent": 25,
+    "workbench.tree.renderIndentGuides": "always",
+    "editor.folding": true,
+    "editor.foldingStrategy": "auto",
+    "files.exclude": {
+        ".phpcs-cache": true,
+        ".php**cache": true,
+        ".vscode/**": true,
+        ".warden/**": true,
+    },
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "composer.json": "composer.*,auth.json*,.php-cs*",
+        ".env": ".env.*,.git*,*.ini, *.sample,.htaccess,.editorconfig",
+        ".env.example": ".env.*,.git*,*.ini, *.sample,.htaccess,.editorconfig",
+        "README.md": "*.md, COPYING.txt, LICENSE*",
+        "package.json": "package*.json, Gruntfile.js*"
+    }
 }
