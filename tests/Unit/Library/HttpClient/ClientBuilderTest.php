@@ -30,14 +30,14 @@ class ClientBuilderTest extends TestCase
     public function testGetHttpClient()
     {
         $clientBuilder = new ClientBuilder();
-        $httpClient = $clientBuilder->getHttpClient();
+        $httpClient    = $clientBuilder->getHttpClient();
 
         $this->assertInstanceOf(HttpMethodsClient::class, $httpClient);
     }
 
     public function testAddPlugin()
     {
-        $plugin = $this->createMock(Plugin::class);
+        $plugin        = $this->createMock(Plugin::class);
         $clientBuilder = new ClientBuilder();
         $clientBuilder->addPlugin($plugin);
 
@@ -58,7 +58,7 @@ class ClientBuilderTest extends TestCase
 
     public function testRemovePlugin()
     {
-        $plugin = $this->createMock(Plugin::class);
+        $plugin        = $this->createMock(Plugin::class);
         $clientBuilder = new ClientBuilder();
         $clientBuilder->addPlugin($plugin);
         $clientBuilder->removePlugin(get_class($plugin));
@@ -80,7 +80,7 @@ class ClientBuilderTest extends TestCase
 
     public function testAddCache()
     {
-        $cachePool = $this->createMock(CacheItemPoolInterface::class);
+        $cachePool     = $this->createMock(CacheItemPoolInterface::class);
         $clientBuilder = new ClientBuilder();
         $clientBuilder->addCache($cachePool);
 
@@ -98,7 +98,7 @@ class ClientBuilderTest extends TestCase
 
     public function testRemoveCache()
     {
-        $cachePool = $this->createMock(CacheItemPoolInterface::class);
+        $cachePool     = $this->createMock(CacheItemPoolInterface::class);
         $clientBuilder = new ClientBuilder();
         $clientBuilder->addCache($cachePool);
         $clientBuilder->removeCache();
@@ -117,7 +117,7 @@ class ClientBuilderTest extends TestCase
 
     public function testGetRequestFactory()
     {
-        $clientBuilder = new ClientBuilder();
+        $clientBuilder  = new ClientBuilder();
         $requestFactory = $clientBuilder->getRequestFactory();
 
         $this->assertInstanceOf(RequestFactoryInterface::class, $requestFactory);
@@ -134,7 +134,7 @@ class ClientBuilderTest extends TestCase
     public function testGetUriFactory()
     {
         $clientBuilder = new ClientBuilder();
-        $uriFactory = $clientBuilder->getUriFactory();
+        $uriFactory    = $clientBuilder->getUriFactory();
 
         $this->assertInstanceOf(UriFactoryInterface::class, $uriFactory);
     }

@@ -51,13 +51,13 @@ class ClientBuilder
         ?StreamFactoryInterface $streamFactory = null,
         ?UriFactoryInterface $uriFactory = null
     ) {
-        $this->client = $client
+        $this->client         = $client
             ?: Psr18ClientDiscovery::find();
         $this->requestFactory = $requestFactory
             ?: Psr17FactoryDiscovery::findRequestFactory();
-        $this->streamFactory = $streamFactory
+        $this->streamFactory  = $streamFactory
             ?: Psr17FactoryDiscovery::findStreamFactory();
-        $this->uriFactory = $uriFactory
+        $this->uriFactory     = $uriFactory
             ?: Psr17FactoryDiscovery::findUriFactory();
     }
 
@@ -67,7 +67,7 @@ class ClientBuilder
             if (null !== $this->cachePlugin) {
                 $this->addPlugin($this->cachePlugin);
             }
-            $plugins = $this->plugins;
+            $plugins            = $this->plugins;
             $this->pluginClient = new HttpMethodsClient(
                 (new PluginClientFactory())
                     ->createClient(
@@ -111,7 +111,7 @@ class ClientBuilder
      */
     public function addPlugin(Plugin $plugin): void
     {
-        $this->plugins[] = $plugin;
+        $this->plugins[]    = $plugin;
         $this->pluginClient = null;
     }
 
@@ -133,7 +133,6 @@ class ClientBuilder
         return $this->plugins;
     }
 
-
     /**
      * Add a cache plugin to cache responses locally.
      *
@@ -143,7 +142,7 @@ class ClientBuilder
         CacheItemPoolInterface $cachePool,
         array $config = []
     ): void {
-        if (!isset($config['cache_key_generator'])) {
+        if (! isset($config['cache_key_generator'])) {
             $config['cache_key_generator'] = new HeaderCacheKeyGenerator(
                 [
                     'Authorization',
@@ -154,7 +153,7 @@ class ClientBuilder
             );
         }
 
-        $this->cachePlugin = CachePlugin::clientCache(
+        $this->cachePlugin  = CachePlugin::clientCache(
             $cachePool,
             $this->streamFactory,
             $config
@@ -167,7 +166,7 @@ class ClientBuilder
      */
     public function removeCache(): void
     {
-        $this->cachePlugin = null;
+        $this->cachePlugin  = null;
         $this->pluginClient = null;
     }
 }

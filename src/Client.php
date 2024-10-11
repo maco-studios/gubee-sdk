@@ -15,7 +15,12 @@ declare(strict_types=1);
 namespace Gubee\SDK;
 
 use Gubee\SDK\Library\HttpClient\ClientBuilder;
+use Gubee\SDK\Library\HttpClient\Plugin\History;
 use Http\Client\Common\HttpMethodsClientInterface;
+use Http\Client\Common\Plugin\BaseUriPlugin;
+use Http\Client\Common\Plugin\DecoderPlugin;
+use Http\Client\Common\Plugin\HistoryPlugin;
+use Http\Client\Common\Plugin\Journal;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\StreamFactoryInterface;
 use Psr\Log\LoggerInterface;
@@ -25,13 +30,30 @@ class Client
 {
     protected ClientBuilder $httpClientBuilder;
     protected LoggerInterface $logger;
+    protected Journal $responseHistory;
 
     public function __construct(
         ?ClientBuilder $clientBuilder = null,
         ?LoggerInterface $logger = null
     ) {
         $this->httpClientBuilder = $clientBuilder ?: new ClientBuilder();
-        $this->logger = $logger ?: new NullLogger();
+        $this->logger            = $logger ?: new NullLogger();
+        $this->responseHistory   = new History($this->logger);
+
+        $this->httpClientBuilder->addPlugin(
+            new HistoryPlugin($this->responseHistory)
+        );
+        $this->httpClientBuilder->addPlugin(new DecoderPlugin());
+    }
+
+    public function setUrl(string $url): self
+    {
+        $this->httpClientBuilder->addPlugin(
+            new BaseUriPlugin(
+                $this->httpClientBuilder->getUriFactory()->createUri($url)
+            )
+        );
+        return $this;
     }
 
     /**
@@ -60,10 +82,7 @@ class Client
         return $this->httpClientBuilder;
     }
 
-    /**
-     * @return LoggerInterface
-     */
-    public function getLogger(): \Psr\Log\LoggerInterface
+    public function getLogger(): LoggerInterface
     {
         return $this->logger;
     }
